@@ -16,7 +16,7 @@ if ($this->session->userdata('user_id') == "") {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="icon" type="image/png" sizes="96x96" href="<?php echo base_url(); ?>assets/img/favicon.png">
-    <title><?php echo isset($title) ? $title : 'PT Indometal Asia | Dashboard'; ?></title>
+    <title><?php echo isset($title) ? $title : 'PT Agro Marina Anugerah Lestari | Dashboard'; ?></title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->

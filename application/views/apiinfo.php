@@ -4,7 +4,7 @@
 <head>
     <base href="../../../../">
     <meta charset="utf-8" />
-    <title>PT INDOMETAL ASIA</title>
+    <title>PT Agro Marina Anugerah Lestari</title>
     <meta name="description" content="Login page example" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="canonical" href="https://keenthemes.com/metronic" />
@@ -45,7 +45,7 @@
                     <!--begin::Login Sign in form-->
                     <div class="login-signin">
                         <div class="mb-20">
-                            <h1 class="opacity-80 font-weight-normal"><strong>PT INDOMETAL ASIA</strong> </h1>
+                            <h1 class="opacity-80 font-weight-normal"><strong>PT Agro Marina Anugerah Lestari</strong> </h1>
                             <span class="svg-icon svg-icon-primary svg-icon-10x">
                                 <!--begin::Svg Icon | path:C:\wamp64\www\keenthemes\legacy\metronic\theme\html\demo1\dist/../src/media/svg/icons\General\Shield-check.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

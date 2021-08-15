@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title> PT Indometal Asia </title>
+    <title> PT Agro Marina Anugerah Lestari </title>
     <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none'">
     <link rel="icon" type="image/png" sizes="96x96" href="<?php echo base_url(); ?>assets/img/favicon.png">
     <!-- Tell the browser to be responsive to screen width -->
@@ -33,7 +33,7 @@
     <div class="col-md-4 col-md-offset-4" style="border:1px solid gray; background: rgba(40, 41, 41, 0.48); padding:10px; border-radius:7px;">
         <br /><br />
         <h3 class="text-center" style="font-family: cursive;">
-            <a href="<?php echo base_url('login'); ?>"> <b style="color:#faffbd;">PT Indometal Asia</b></a>
+            <a href="<?php echo base_url('login'); ?>"> <b style="color:#faffbd;">PT Agro Marina Anugerah Lestari</b></a>
         </h3>
         <div class="login-box-body">
             <p class="login-box-msg" style="color: #fffdfde0;font-size: 18px;">Silahkan masukkan Email dan Kata Sandi untuk melanjutkan</p>

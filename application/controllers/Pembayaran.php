@@ -548,7 +548,7 @@ class Pembayaran extends CI_Controller
         $section->addText(strtoupper($dataContent['description']), 'paragraph_bold', array('spaceAfter' => 100, 'align' => 'center'));
         $section->addTextBreak();
         // if ($format == 2) {
-        //     $section->addText("Menurut Surat Perjanjian Nomor 0122.E/Tbk/SP-2000/21-S11.4 tanggal 01 April 2021 antara PT Timah Tbk dengan PT Indometal Asia tentang Kerjasama Kegiatan Eksplorasi Timah di Wilayah Izin Usaha Pertambangan PT Timah Tbk, dengan ini kami sampaikan tagihan atas perjanjian tersebut dengan rincian : ", 'paragraph', array('spaceAfter' => 0, 'align' => 'both'));
+        //     $section->addText("Menurut Surat Perjanjian Nomor 0122.E/Tbk/SP-2000/21-S11.4 tanggal 01 April 2021 antara PT Timah Tbk dengan PT Agro Marina Anugerah Lestari tentang Kerjasama Kegiatan Eksplorasi Timah di Wilayah Izin Usaha Pertambangan PT Timah Tbk, dengan ini kami sampaikan tagihan atas perjanjian tersebut dengan rincian : ", 'paragraph', array('spaceAfter' => 0, 'align' => 'both'));
         // } else {
         //     $section->addText("Bersama ini kami sampaikan tagihan " . $dataContent['description'] . ' sebagai berikut :', 'paragraph', array('spaceAfter' => 0, 'align' => 'both'));
         // }
@@ -708,7 +708,7 @@ class Pembayaran extends CI_Controller
 
         $freame5->addCell(2000, $cellVCentered)->addText('Sudah terima dari', 'paragraph', array('spaceAfter' => 0));
         $freame5->addCell(1, $cellVCentered)->addText(':', 'paragraph', array('spaceAfter' => 0));
-        $freame5->addCell(7000, $cellVCentered)->addText('PT INDOMETAL ASIA', 'paragraph_bold', array('spaceAfter' => 0));
+        $freame5->addCell(7000, $cellVCentered)->addText('PT Agro Marina Anugerah Lestari', 'paragraph_bold', array('spaceAfter' => 0));
 
         $freame5->addRow();
         $freame5->addCell(100, $cellVCentered)->addText('', 'paragraph', array('spaceAfter' => 0));

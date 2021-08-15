@@ -9,7 +9,7 @@ class Api extends CI_Controller
         $data['dataContent'] = $this->ApiModel->getInvoice($token, $id);
         // echo json_encode($data['dataContent']);
         // die();
-        $data['title'] = 'PT Indometal Asia';
+        $data['title'] = 'PT Agro Marina Anugerah Lestari';
 
         // DEFINES PAGE TITLE
         $data['site_title'] = 'Invoice';

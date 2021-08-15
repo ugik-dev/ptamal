@@ -347,7 +347,7 @@ class Statements extends CI_Controller
 		$sheet->mergeCells("A1:F1");
 		$sheet->mergeCells("A2:F2");
 		$sheet->mergeCells("A3:F3");
-		$sheet->setCellValue('A1', 'PT INDOMETAL ASIA');
+		$sheet->setCellValue('A1', 'PT Agro Marina Anugerah Lestari');
 		$sheet->setCellValue('A2', 'Jurnal Umum');
 		$sheet->setCellValue('A3', 'Periode : ' . $from . ' s.d. ' . $to);
 
@@ -397,7 +397,7 @@ class Statements extends CI_Controller
 		$sheet->mergeCells("A1:F1");
 		$sheet->mergeCells("A2:F2");
 		$sheet->mergeCells("A3:F3");
-		$sheet->setCellValue('A1', 'PT INDOMETAL ASIA');
+		$sheet->setCellValue('A1', 'PT Agro Marina Anugerah Lestari');
 		$sheet->setCellValue('A2', 'Buku Besar');
 		$sheet->setCellValue('A3', 'Periode : ' . $filter['from'] . ' s.d. ' . $filter['to']);
 
@@ -611,7 +611,7 @@ class Statements extends CI_Controller
 		$table->addCell(2000, array('vMerge' => 'restart'))->addText('Atas Nama', 'paragraph', $noSpace);
 		$table->addCell(300, array('vMerge' => 'restart'))->addText(':', 'paragraph', $noSpace);
 		$table->addCell(8000, array('vMerge' => 'restart'))->addText(
-			'PT INDOMETAL ASIA',
+			'PT Agro Marina Anugerah Lestari',
 			'paragraph',
 			$noSpace
 		);
@@ -826,7 +826,7 @@ class Statements extends CI_Controller
 			$noSpace_center
 		);;
 		$table->addCell(4000)->addText(
-			'PT INDOMETAL ASIA',
+			'PT Agro Marina Anugerah Lestari',
 			'paragraph_bold_c',
 			$noSpace_center
 		);

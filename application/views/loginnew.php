@@ -4,7 +4,7 @@
 <head>
     <base href="../../../../">
     <meta charset="utf-8" />
-    <title>PT INDOMETAL ASIA</title>
+    <title>PT Agro Marina Anugerah Lestari</title>
     <meta name="description" content="Login page example" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="canonical" href="https://keenthemes.com/metronic" />
@@ -45,7 +45,7 @@
                     <!--begin::Login Sign in form-->
                     <div class="login-signin">
                         <div class="mb-20">
-                            <h1 class="opacity-80 font-weight-normal"><strong>PT INDOMETAL ASIA</strong> </h1>
+                            <h1 class="opacity-80 font-weight-normal"><strong>PT Agro Marina Anugerah Lestari</strong> </h1>
                             <p class="opacity-40">Enter your details to login to your account:</p>
                         </div>
                         <form action="<?= base_url() ?>login/authentication" method="post" class="form" id="kt_login_signin_form">

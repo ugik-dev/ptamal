@@ -101,7 +101,7 @@ class Download extends CI_Controller
         $sheet->mergeCells("A4:H4");
         $sheet->mergeCells("A5:H5");
 
-        $sheet->setCellValue('A1', 'PT INDOMETAL ASIA');
+        $sheet->setCellValue('A1', 'PT Agro Marina Anugerah Lestari');
         $sheet->setCellValue('A2', 'Jalan Sanggul Dewa No.6, Kota Pangkalpinang, Bangka Belitung');
         if (!empty($filter['laba_rugi'])) {
             $sheet->setCellValue('A3', 'Laporan Laba Rugi');
@@ -182,7 +182,7 @@ class Download extends CI_Controller
         $sheet->mergeCells("J6:K6");
         $sheet->mergeCells("J7:K7");
 
-        $sheet->setCellValue('A1', 'PT INDOMETAL ASIA');
+        $sheet->setCellValue('A1', 'PT Agro Marina Anugerah Lestari');
         $sheet->setCellValue('A2', 'Jalan Sanggul Dewa No.6, Kota Pangkalpinang, Bangka Belitung');
         if (!empty($filter['laba_rugi'])) {
             $sheet->setCellValue('A3', 'Laporan Laba Rugi');
