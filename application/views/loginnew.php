@@ -36,16 +36,16 @@
             <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url(<?= base_url() ?>assets/metronic/media/bg/bg-2.jpg);">
                 <div class="login-form text-center text-white p-7 position-relative overflow-hidden">
                     <!--begin::Login Header-->
-                    <div class="d-flex flex-center mb-15">
+                    <div class="d-flex flex-center mb-4">
                         <a href="#">
-                            <img src="<?= base_url() ?>assets/img/favicon.png" class="h-75px" alt="" />
+                            <img src="<?= base_url() ?>assets/img/ptamal-transparent.png" class="h-75px" alt="" />
                         </a>
                     </div>
                     <!--end::Login Header-->
                     <!--begin::Login Sign in form-->
                     <div class="login-signin">
-                        <div class="mb-20">
-                            <h1 class="opacity-80 font-weight-normal"><strong>PT Agro Marina Anugerah Lestari</strong> </h1>
+                        <div class="mb-10">
+                            <h2 class="opacity-90 font-weight-normal"><strong>PT Agro Marina Anugerah Lestari</strong> </h2>
                             <p class="opacity-40">Enter your details to login to your account:</p>
                         </div>
                         <form action="<?= base_url() ?>login/authentication" method="post" class="form" id="kt_login_signin_form">

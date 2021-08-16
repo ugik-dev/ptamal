@@ -7,7 +7,7 @@
                 <div class="brand flex-column-auto" id="kt_brand">
                     <!--begin::Logo-->
                     <a href="index.html" class="brand-logo">
-                        <img alt="Logo" style='max-width : 100% ' src="<?= base_url('assets/img/') . logo ?>" />
+                        <img alt="Logo" style='max-width : 100% ' src="<?= base_url('assets/img/')  ?>ptamal-transparent.png" />
                     </a>
                     <!--end::Logo-->
                     <!--begin::Toggle-->
