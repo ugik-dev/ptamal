@@ -46,7 +46,7 @@ function count_total(edit = false) {
     // console.log(parseFloat(p_jasa) + 100);
     console.log(count_val);
     if (p_jasa != "" && p_jasa != "0") {
-      biaya_jasa = parseFloat((p_jasa / 100) * count_val, 2).toFixed(2);
+      biaya_jasa = Math.ceil(parseFloat((p_jasa / 100) * count_val, 2));
       console.log(biaya_jasa);
       $('input[name="jasa_count"]').val(formatRupiah2(biaya_jasa));
     } else {
