@@ -5,8 +5,6 @@ function count_total(edit = false) {
   timmer = setTimeout(function callback() {
     p_jasa = $('input[name="percent_jasa"]').val();
     p_jasa = p_jasa.replace(",", ".");
-
-    // console.log(p_jasa / 100);
     if (p_jasa == "") p_jasa = 0;
     p_pph = $('input[name="percent_pph"]').val();
     if (p_pph == "") p_pph = 0;

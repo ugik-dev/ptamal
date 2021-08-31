@@ -4,6 +4,79 @@
 */
 class Accounts_model extends CI_Model
 {
+    public function getTree($filter = [])
+    {
+        $this->db->from('mp_head');
+        $this->db->order_by('mp_head.name');
+        $this->db->where("SUBSTRING_INDEX(SUBSTRING_INDEX(mp_head.name, '.', -3), ']', 1) = '00.000.000'");
+        if (!empty($filter['account_head'])) $this->db->where('mp_head.id', $filter['account_head']);
+        $query = $this->db->get();
+        $level1 =  $query->result();
+        $i = 0;
+        $total_credit = 0;
+        $total_debit = 0;
+        foreach ($level1 as $lv1) {
+            $this->db->select('mp_head.*');
+            $this->db->from('mp_head');
+            $this->db->order_by('mp_head.name');
+            $this->db->where("SUBSTRING_INDEX(SUBSTRING_INDEX(mp_head.name, '.', -2), ']', 1) = '000.000'");
+            $this->db->where("SUBSTRING_INDEX(SUBSTRING_INDEX(name, '[', -1), '.', 1) = '" . substr($lv1->name, 1, 1) . "'");
+            $this->db->where('mp_head.id != "' . $lv1->id . '"');
+            $query = $this->db->get();
+
+            $level1[$i]->level2 = $query->result();
+            $j = 0;
+            $k = 0;
+            // $val = $this->count_head_amount_like_name_neraca_saldo(array('name' => substr($lv1->name, 1, 1), 'filter' => $filter, 'lvl' => 1));
+            $debitamt  = 0;
+            $creditamt = 0;
+            $tmp[$i] = array(
+                'id' => $lv1->id,
+                'text' => $lv1->name,
+                // 'data' => $val,
+                'state' => ['opened' => false]
+            );
+
+            foreach ($level1[$i]->level2 as $lv2) {
+
+                $this->db->select('mp_head.*');
+                $this->db->from('mp_head');
+                $this->db->where("SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(mp_head.name, '[', -1), ']', 1),'.',-1) = '000'");
+                $this->db->where("SUBSTRING_INDEX(SUBSTRING_INDEX(name, '[', -1), '.', 2) = '" . substr($lv2->name, 1, 4) . "'");
+                $this->db->where('mp_head.id != "' . $lv2->id . '"');
+                $this->db->order_by('mp_head.name');
+                $query = $this->db->get();
+                $level1[$i]->level2[$j]->level3 = $query->result();
+
+                $tmp[$i]['children'][$k] = array(
+                    'id' => $lv2->id,
+                    'text' => $lv2->name,
+                    // 'data' => $val,
+                    'state' => ['opened' => false]
+                );
+
+                $l = 0;
+                // if ($val['debit'] != 0 or $val['credit'] != 0)
+                foreach ($level1[$i]->level2[$j]->level3 as $lv3) {
+                    $tmp[$i]['children'][$k]['children'][$l] = array(
+                        'id' => $lv3->id,
+                        'text' =>  $lv3->name,
+                        // 'data' => $val,
+                        'state' => ['opened' => false]
+                    );
+
+                    $l++;
+                }
+                $k++;
+            }
+
+            $j++;
+            $i++;
+        }
+        echo json_encode($tmp);
+        die();
+        return $tmp;
+    }
     public function fetch_record_date($tablename, $first_date, $second_date, $customer_id = null)
     {
         $this->db->where('date >=', $first_date);

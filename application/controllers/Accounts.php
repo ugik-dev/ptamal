@@ -9,7 +9,7 @@ class Accounts extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model(array('SecurityModel'));
+    $this->load->model(array('SecurityModel', 'Accounts_model'));
     $this->load->helper(array('DataStructure'));
     $this->db->db_debug = TRUE;
     // $this->SecurityModel->('')
@@ -45,6 +45,40 @@ class Accounts extends CI_Controller
     // DEFINES GO TO MAIN FOLDER FOND INDEX.PHP  AND PASS THE ARRAY OF DATA TO THIS PAGE
     $this->load->view('main/index.php', $data);
   }
+
+  public function tree()
+  {
+    // $this->SecurityModel->MultiplerolesGuard('Users', true);
+
+    // DEFINES PAGE TITLE
+    $data['title'] = 'Daftar Akun';
+
+    // DEFINES NAME OF TABLE HEADING
+    $data['table_name'] = 'Daftar Akun :';
+    $data['accounts_records'] = $this->Accounts_model->getTree();
+
+    // DEFINES WHICH PAGE TO RENDER
+    $data['main_view'] = 'account/tree';
+
+    // DEFINES THE TABLE HEAD
+    $data['table_heading_names_of_coloums'] = array(
+      'Nama Akun',
+      'Kelompok',
+      'Tipe',
+      'Relasi',
+      'Jenis Beban',
+      'Tindakan'
+    );
+
+    // DEFINES TO LOAD THE CATEGORY LIST FROM DATABSE TABLE mp_Categoty
+
+    $result = $this->Crud_model->fetch_record('mp_head', NULL);
+    $data['chart_list'] = $result;
+
+    // DEFINES GO TO MAIN FOLDER FOND INDEX.PHP  AND PASS THE ARRAY OF DATA TO THIS PAGE
+    $this->load->view('main/index.php', $data);
+  }
+
 
   //USED TO ADD CHART OF ACCOUNT
   //Accounts/chart_of_account

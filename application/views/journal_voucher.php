@@ -180,7 +180,7 @@
                                         <label>Disetujui</label>
                                         <select name="acc_1" id="acc_1" class="form-control select2 input-lg">
                                             <option value="0"> ----- </option>
-                                            <option value="7"> SETIAWAN R </option>
+                                            <option value="7"> SADINA </option>
                                         </select>
                                     </div>
                                 </div>
@@ -189,8 +189,8 @@
                                         <label>Diverifikasi</label>
                                         <select name="acc_2" id="acc_2" class="form-control select2 input-lg">
                                             <option value="0"> ----- </option>
-                                            <option value="8"> PURWADI </option>
-                                            <option value="10"> RAHMAT </option>
+                                            <option value="4"> IKA MILAWATI </option>
+                                            <option value="5"> ERIN MEILANI </option>
                                         </select>
                                     </div>
                                 </div>
@@ -199,9 +199,8 @@
                                         <label>Dibuat</label>
                                         <select name="acc_3" id="acc_3" class="form-control select2 input-lg">
                                             <option value="0"> ----- </option>
-                                            <option value="9"> A SISWANTO </option>
-                                            <option value="12"> DEFRYANTO </option>
-                                            <option value="11"> NURHASANAH </option>
+                                            <option value="4"> IKA MILAWATI </option>
+                                            <option value="5"> ERIN MEILANI </option>
                                         </select>
                                     </div>
                                 </div>
