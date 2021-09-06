@@ -375,7 +375,7 @@
           var printContents = `
             <table style="font-size: 17px;width: 100%" border="0">
                 <tr>
-                    <td style="width: 50%"><img style="heigt: 100px; width : 80%" src="<?= base_url() ?>assets/img/ptamal.jpg" alt="Paris" class="center"></td>                 
+                    <td style="width: 50%"><img style="heigt: 20px; width : 65%" src="<?= base_url() ?>assets/img/ptamal.jpg" alt="Paris" class="center"></td>                 
                     <td style="width: 50%">
                                 <h3 style="text-align:center">${tpe == 'AM' ? 'VOUCHER PENERIMAAN' : (tpe == 'AK' ? 'VOUCHER PENGELUARAN' : 'JURNAL UMUM')}</h3>    
                     </td>                 
