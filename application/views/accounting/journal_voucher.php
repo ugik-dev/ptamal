@@ -89,10 +89,10 @@
                         </h4>
                     </div>
                     <div class="col-lg-12">
-                        <table class="datatable-table" style="width : 100%" id="">
+                        <table class="datatable-table table-striped table-hover" style="width : 100%" id="">
                             <thead class="ledger_head" style="width : 30%">
                                 <th style="width: 108px;">TANGGAL</th>
-                                <th class="">AKUN</th>
+                                <th style="width: 408px;" colspan='2'>AKUN</th>
                                 <th class="">KETERANGAN</th>
                                 <th class="">DEBIT</th>
                                 <th class="">KREDIT</th>
@@ -105,7 +105,7 @@
                                         ($vcrud['hk_update'] == 1 ? '<a href="' . base_url() . 'accounting/show_journal/' . $parent['parent_id'] . '" class="btn btn-default btn-outline-primary mr-1 my-1 no-print" style="float: right"><i class="fa fa-eye pull-left"></i> Show </a> ' : '');
 
                                     echo '<tr class="narration" >
-                                        <td class="border-bottom-journal" colspan="5" style=" text-align: center;">
+                                        <td class="border-bottom-journal" colspan="6" style=" text-align: center;">
                                         <div class="row">
                                             <div class="col-md-6" style="text-align: center; margin: auto"> <h7> No Jurnal : ' . $parent['ref_number'] . '</h7> </div>
                                         <div class="col-md-6"> ' .  $btn_lock . ' </div>
@@ -118,8 +118,8 @@
                                         if ($single_trans['type'] == 0) {
                                             echo '<tr>
                                             <td>' . $parent['date'] . '</td>
-                                            <td>
-                                            <p>' . $single_trans['head_name'] . '</p>
+                                            <td style=" text-align: left;">
+                                            [' . $single_trans['head_number'] . ']</td><td style=" text-align: left;">' . $single_trans['head_name'] . '
                                             </td>
                                             <td>
                                             <p>' . $single_trans['sub_keterangan'] . '</p>
@@ -133,8 +133,8 @@
                                         } else if ($single_trans['type'] == 1) {
                                             echo '<tr>
                                             <td>' . $parent['date'] . '</td>
-                                            <td>
-                                            <p>' . $single_trans['head_name'] . '</p>
+                                            <td style=" text-align: left;">
+                                             [' . $single_trans['head_number'] . ']</td><td style=" text-align: left;">' . $single_trans['head_name'] . '
                                             </td>
                                             <td>
                                             <p>' . $single_trans['sub_keterangan'] . '</p>

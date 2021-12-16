@@ -205,6 +205,7 @@ class Accounting_model extends CI_Model
             'naration' => $data['naration'],
             'customer_id' => $data['customer_id'],
         );
+        if (!empty($data['ref_number'])) $trans_data['ref_number'] = $data['ref_number'];
 
         $this->db->where('generated_source', 'Journal Voucher');
         $this->db->update('dt_generalentry', $trans_data);
