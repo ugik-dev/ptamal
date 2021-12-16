@@ -1159,6 +1159,7 @@ class Transaction_model extends CI_Model
             'no_jurnal' => $data['no_jurnal'],
             'generated_source' => 'Journal Voucher'
         );
+
         if (!empty($data['url'])) $trans_data['url'] = $data['url'];
 
         $this->db->trans_start();

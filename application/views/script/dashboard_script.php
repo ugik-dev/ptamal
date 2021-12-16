@@ -76,13 +76,13 @@
                      label: "Pendapatan",
                      backgroundColor: "rgba(60,141,188,0.9)",
                      borderColor: "rgba(120, 120, 114, 1)",
-                     data: <?php echo json_encode($result_sales_arr); ?>
+                     data: <?php echo json_encode($profit_monthly['revenue']); ?>
                  }, {
                      label: "Beban",
                      backgroundColor: "rgba(255, 99, 132, 0.9)",
                      borderColor: "rgba(120, 120, 114, 1)",
 
-                     data: <?php echo json_encode($result_expense_this_year); ?>
+                     data: <?php echo json_encode($profit_monthly['expense']); ?>
 
                  }
 

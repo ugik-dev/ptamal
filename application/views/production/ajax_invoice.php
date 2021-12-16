@@ -3,7 +3,7 @@
     var dataProducts = [];
     var row_id = 1;
     var total_gross_amt = $('#total_gross_amt');
-    var total_tax_amt = $('#total_tax_amt');
+    var total_tax_ppn_amt = $('#total_tax_ppn_amt');
     var net_total_amount = $('#net_total_amount');
     var discountfield = $('#discountfield');
     var amount_recieved = $('#amount_recieved');
@@ -55,7 +55,7 @@
                     swal.fire("Success", 'Invoice berhasil dibuat', "success");
 
                     // swal.fire(swalSuccessConfigure);
-                    window.location.href = '<?= base_url() ?>production/transaction/' + d;
+                    // window.location.href = '<?= base_url() ?>production/transaction/' + d;
                     // renderProducts(dataProducts);
                     // ProductModal.self.modal('hide');
                 },
@@ -186,10 +186,10 @@
         <td> ${dataProducts[id]['product_name']} </td>
         <td> ${dataProducts[id]['name_unit']} </td>
         <td>
-         <input hidden id="fix_tax[]" name="fix_tax[]" >
-         <input hidden id="revenue_account[]" name="revenue_account[]" value="${dataProducts[id]['revenue_account']}" >
-         <input hidden id="item_id[]" name="item_id[]" value="${dataProducts[id]['id']}" >
-         <input hidden id="tax[]" name="tax[]" value="${dataProducts[id]['tax']}" >
+         <input  id="fix_tax_ppn[]" name="fix_tax_ppn[]" >
+         <input  id="revenue_account[]" name="revenue_account[]" value="${dataProducts[id]['revenue_account']}" >
+         <input  id="item_id[]" name="item_id[]" value="${dataProducts[id]['id']}" >
+         <input  id="tax_ppn[]" name="tax_ppn[]" value="${dataProducts[id]['tax_ppn']}" >
          <input onkeyup="invoice_count()" class="mask" id="row_price[]" name="row_price[]" value="${parseInt( dataProducts[id]['default_price']).toFixed()}" >
           </td>
         <td> <input onkeyup="invoice_count()" type="number" id="row_qyt[]" name="row_qyt[]" class="supply_fields" value="1"> </td>
@@ -285,27 +285,27 @@
     function invoice_count() {
         var row_price = document.getElementsByName('row_price[]');
         var row_qyt = document.getElementsByName('row_qyt[]');
-        var tax = document.getElementsByName('tax[]');
-        var fix_tax = document.getElementsByName('fix_tax[]');
+        var tax_ppn = document.getElementsByName('tax_ppn[]');
+        var fix_tax_ppn = document.getElementsByName('fix_tax_ppn[]');
 
         // console.log(row_price[0].value)
         // foreach(row_price)
         i = 0;
         total_price = 0;
-        total_tax = 0;
+        total_tax_ppn = 0;
         row_price.forEach(function() {
             cur_price = (row_price[i].value
                 .split(".").join("") * row_qyt[i].value)
-            cur_tax = (10 / 100) * cur_price;
+            cur_tax_ppn = (10 / 100) * cur_price;
             console.log(cur_price)
-            console.log(cur_tax)
-            fix_tax[i].value = cur_tax;
+            console.log(cur_tax_ppn)
+            fix_tax_ppn[i].value = cur_tax_ppn;
             total_price = total_price + cur_price;
-            total_tax = total_tax + cur_tax;
+            total_tax_ppn = total_tax_ppn + cur_tax_ppn;
             i++;
         });
 
-        total_tax = parseFloat(total_tax).toFixed(2);
+        total_tax_ppn = parseFloat(total_tax_ppn).toFixed(2);
         ar = amount_recieved.val().split(".").join("")
         disc = discountfield.val().split(".").join("").split(",").join(".");
         console.log(disc)
@@ -314,10 +314,10 @@
         } else {
             disc = 0;
         }
-        net = parseInt(total_price) + parseFloat(total_tax) - parseFloat(disc)
-        // console.log('total_tax = ' + disc);
+        net = parseInt(total_price) + parseFloat(total_tax_ppn) - parseFloat(disc)
+        // console.log('total_tax_ppn = ' + disc);
         total_gross_amt.val(invformatRupiah(total_price));
-        total_tax_amt.val(invformatRupiah(total_tax));
+        total_tax_ppn_amt.val(invformatRupiah(total_tax_ppn));
         net_total_amount.html(invformatRupiah(net));
         amount_back.html(ar - net);
     }

@@ -3,6 +3,30 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class SecurityModel extends CI_Model
 {
+
+  public function Aksessbility_VCRUD($parent, $sub, $hk, $ajax = false)
+  {
+    $this->db->select('hak_aksess.*,mp_menu.id as parent_id');
+    $this->db->from('hak_aksess');
+    $this->db->join('mp_menulist', 'mp_menulist.id = hak_aksess.id_menulist');
+    $this->db->join('mp_menu', 'mp_menulist.menu_id = mp_menu.id');
+    $this->db->where('hak_aksess.id_user', $this->session->userdata('user_id')['id']);
+    if ($hk == 'view')   $this->db->where('hak_aksess.view', 1);
+    if ($hk == 'create')   $this->db->where('hak_aksess.hk_create', 1);
+    if ($hk == 'update')   $this->db->where('hak_aksess.hk_update', 1);
+    if ($hk == 'delete')   $this->db->where('hak_aksess.hk_delete', 1);
+    $this->db->where('mp_menulist.link', $sub);
+    $this->db->where('mp_menu.slug', $parent);
+    $res = $this->db->get();
+    $res = $res->result_array();;
+    if (empty($res)) {
+      if ($ajax) throw new UserException('Kamu tidak berhak mengakses resource ini', UNAUTHORIZED_CODE);
+      redirect('/');
+    } else {
+      return $res[0];
+    }
+  }
+
   public function MultiplerolesGuard($rolename, $ajax = false)
   {
     $this->db->select('mp_multipleroles.id');
@@ -59,14 +83,14 @@ class SecurityModel extends CI_Model
     }
   }
 
-  public function apiKeyGuard()
-  {
-    $headers = getallheaders();
-    if (!isset($headers['X-Api-Key']) || NetworkIO::$apiKeys['sim'] != $headers['X-Api-Key']) {
-      header("HTTP/1.1 401 Unauthorized");
-      exit;
-    }
-  }
+  // public function apiKeyGuard()
+  // {
+  //   $headers = getallheaders();
+  //   if (!isset($headers['X-Api-Key']) || NetworkIO::$apiKeys['sim'] != $headers['X-Api-Key']) {
+  //     header("HTTP/1.1 401 Unauthorized");
+  //     exit;
+  //   }
+  // }
 
   public function hasUserdataKeyGuard($key, $ajax = FALSE)
   {

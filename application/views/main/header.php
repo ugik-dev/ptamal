@@ -53,13 +53,14 @@
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/plugins/input-mask/jquery.mask.min.js">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/dist/js/core.js">
     <!-- trree -->
-    <script type='text/javascript' src='http://code.jquery.com/jquery-2.1.0.js'></script>
-    <script type='text/javascript' src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <!-- <script type='text/javascript' src='http://code.jquery.com/jquery-2.1.0.js'></script> -->
+
+    <!-- <script type='text/javascript' src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script> -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
     <script src="<?= base_url('assets/') ?>js/FileUploader.js"></script>
 
 
-    <script src="<?= base_url() ?>assets/dist/js/jstreetable.js"></script>
+    <!-- <script src="<?= base_url() ?>assets/dist/js/jstreetable.js"></script> -->
 
     <style type="text/css">
         /* @import url('http://getbootstrap.com/dist/css/bootstrap.css'); */

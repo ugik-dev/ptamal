@@ -1,6 +1,6 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h4 class="modal-title"><i class="fa fa-plus-square" aria-hidden="true"></i> Tambah Hak Akses</h4>
+    <h4 class="modal-title"><i class="fa fa-plus-square" aria-hidden="true"></i> Edit Hak Akses</h4>
 </div>
 <div class="modal-body">
     <!-- <div class="row"> -->
@@ -26,6 +26,7 @@
                 }
                 ?>
             </div>
+            <!-- NEW -->
             <hr />
             <div class="row">
                 <?php
@@ -35,7 +36,43 @@
 
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <?php echo form_label($obj_result_roles->menu_name . $obj_result_roles->roleid . '  :'); ?>
+                                <?php echo form_label($obj_result_roles->menu_name . '  :'); ?>
+                                <?php
+                                $data = array('class' => '', 'type' => 'hidden', 'value' => $obj_result_roles->menu_id, 'name' => 'menu_id[]', 'reqiured' => '');
+                                echo form_input($data);
+                                if ($obj_result_roles->roleid == NULL) { ?>
+                                    <select class="form-control input-lg" name="role_id[]" style="width: 100%;">
+                                        <option value="0" selected> Tidak</option>
+                                        <option value="1"> Ya</option>
+                                    </select>
+                                <?php } else { ?>
+                                    <select class="form-control input-lg" name="role_id[]" style="width: 100%;">
+                                        <option value="0"> Tidak</option>
+                                        <option value="1" selected> Ya</option>
+                                    </select>
+                                <?php } ?>
+
+                            </div>
+                        </div>
+
+                <?php
+                    }
+                } else {
+                    echo "No Menu Items Found";
+                }
+                ?>
+            </div>
+            <!-- END NEW -->
+            <hr />
+            <div class="row">
+                <?php
+                if ($result_roles != NULL) {
+                    foreach ($result_roles as $obj_result_roles) {
+                ?>
+
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <?php echo form_label($obj_result_roles->menu_name . '  :'); ?>
                                 <?php
                                 $data = array('class' => '', 'type' => 'hidden', 'value' => $obj_result_roles->menu_id, 'name' => 'menu_id[]', 'reqiured' => '');
                                 echo form_input($data);

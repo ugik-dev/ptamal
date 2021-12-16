@@ -1,7 +1,7 @@
    <div id="kt_header_mobile" class="header-mobile align-items-center header-mobile-fixed">
        <!--begin::Logo-->
-       <a href="index.html">
-           <!-- <img alt="Logo" src="<?= base_url() ?>assets/img/ima.png" /> -->
+       <a href="<?= base_url() . 'dashboard' ?>">
+           <!-- <img alt="Logo" src="assets/img/ima.png" /> -->
 
            <img alt="Logo" style='max-width : 40px ' src="<?= base_url() ?>assets/img/favicon.png" />
        </a>

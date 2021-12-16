@@ -10,9 +10,25 @@ class Dashboard extends CI_Controller
 	{
 		// DEFINES TO LOAD THE CATEGORY RECORD FROM DATABSE TABLE mp_Categoty
 		$this->load->model('Crud_model');
-		$this->load->model('Statement_model');
+		$this->load->model(array('Statment_model_new', 'General_model'));
 		$this->load->model('Accounts_model');
+		$ref = $this->General_model->getAllRefAccount(array('by_type' => true));
+		if (!empty($ref['dashboard_kas'])) $data['kas_amount'] = $this->Statment_model_new->get_trail_balance($ref['dashboard_kas']['ref_account']);
+		else $data['kas_amount'] = 0;
 
+		if (!empty($ref['dashboard_bank_1'])) $data['bank_amount'] = $this->Statment_model_new->get_trail_balance($ref['dashboard_bank_1']['ref_account']);
+		else $data['bank_amount'] = 0;
+
+		if (!empty($ref['dashboard_piutang'])) $data['piutang_amount'] = $this->Statment_model_new->get_trail_balance($ref['dashboard_piutang']['ref_account']);
+		else $data['piutang_amount'] = 0;
+
+
+		$data['profit_monthly'] = $this->General_model->profit_monthly();
+		// else $data['piutang_amount'] = 0;
+
+
+		// echo json_encode($data);
+		// die();
 		// DEFINES PAGE TITLE
 		$data['title'] = 'Dashboard';
 
@@ -55,75 +71,75 @@ class Dashboard extends CI_Controller
 		// $data['product_alert_limit'] = $this->Crud_model->fetch_record_product_alert_limit(8);
 
 		//kas dan setara kas
-		$data['cash_in_hand'] = $this->Statement_model->count_current_time(array('acc_number' => '1.11.000.000'));
+		// $data['cash_in_hand'] = $this->Statement_model->count_current_time(array('acc_number' => '1.11.000.000'));
 
-		//piutang
-		$data['account_recieveble'] = $this->Statement_model->count_current_time(array('acc_number' => '1.13.000.000'));
+		// //piutang
+		// $data['account_recieveble'] = $this->Statement_model->count_current_time(array('acc_number' => '1.13.000.000'));
 
-		//CASH IN BANK
-		$data['cash_in_bank'] = $this->Statement_model->count_head_amount_by_id(5);
+		// //CASH IN BANK
+		// $data['cash_in_bank'] = $this->Statement_model->count_head_amount_by_id(5);
 
-		//hutang usaha
-		$data['payables'] = $this->Statement_model->count_current_time(array('acc_number' => '2.11.000.000'));
+		// //hutang usaha
+		// $data['payables'] = $this->Statement_model->count_current_time(array('acc_number' => '2.11.000.000'));
 
-		$data['activity_today'] = $this->Statement_model->my_activity(array('from' => date('Y-m-d'), 'to' => date('Y-m-d') . ' 23.59.59'));
+		// $data['activity_today'] = $this->Statement_model->my_activity(array('from' => date('Y-m-d'), 'to' => date('Y-m-d') . ' 23.59.59'));
 
-		//STOCK ALERT
-		// $data['out_of_stock'] = $this->Accounts_model->out_of_stock();
+		// //STOCK ALERT
+		// // $data['out_of_stock'] = $this->Accounts_model->out_of_stock();
 
-		//RETURN AMOUNT 
-		$data['amount_return'] = $this->Accounts_model->amount_return();
+		// //RETURN AMOUNT 
+		// $data['amount_return'] = $this->Accounts_model->amount_return();
 
-		//EXPENSE AMOUNT 
-		$data['expense_amount'] = $this->Accounts_model->expense_amount();
+		// //EXPENSE AMOUNT 
+		// $data['expense_amount'] = $this->Accounts_model->expense_amount();
 
-		//EXPENSE AMOUNT 
-		$data['purchase_amount'] = $this->Accounts_model->purchase_amount();
+		// //EXPENSE AMOUNT 
+		// $data['purchase_amount'] = $this->Accounts_model->purchase_amount();
 
-		$data['customers_count'] = $this->Crud_model->count_product('mp_payee', 'type', 'customer');
+		// $data['customers_count'] = $this->Crud_model->count_product('mp_payee', 'type', 'customer');
 
-		//Count Suppliers
-		$data['suppliers_count'] = $this->Crud_model->count_product('mp_payee', 'type', 'supplier');
+		// //Count Suppliers
+		// $data['suppliers_count'] = $this->Crud_model->count_product('mp_payee', 'type', 'supplier');
 
-		//SUPPLIERS
-		$data['result_supplier'] = $this->Crud_model->fetch_payee_record('supplier', NULL);
+		// //SUPPLIERS
+		// $data['result_supplier'] = $this->Crud_model->fetch_payee_record('supplier', NULL);
 
-		//CUSTOMER
-		$data['result_customer'] = $this->Crud_model->fetch_payee_record('customer', NULL);
+		// //CUSTOMER
+		// $data['result_customer'] = $this->Crud_model->fetch_payee_record('customer', NULL);
 
-		//CURRENCY 
-		$data['currency'] = '(Rp)';
+		// //CURRENCY 
+		// $data['currency'] = '(Rp)';
 
-		// $data['Sales_today_count'] = $this->Crud_model->count_sales('mp_invoices', date('Y-m-d'), date('Y-m-d'));
-		// $data['Sales_month_count'] = $this->Crud_model->count_sales('mp_invoices', date('Y-m') . '-1', date('Y-m') . '-30');
+		// // $data['Sales_today_count'] = $this->Crud_model->count_sales('mp_invoices', date('Y-m-d'), date('Y-m-d'));
+		// // $data['Sales_month_count'] = $this->Crud_model->count_sales('mp_invoices', date('Y-m') . '-1', date('Y-m') . '-30');
 
-		// COUNTING THE TODO LIST FOR THIS MONTH IN Todolist TABLE
-		// $data['Todos_count'] = $this->Crud_model->count_sales('mp_todolist', date('Y-m') . '-1', date('Y-m') . '-30');
+		// // COUNTING THE TODO LIST FOR THIS MONTH IN Todolist TABLE
+		// // $data['Todos_count'] = $this->Crud_model->count_sales('mp_todolist', date('Y-m') . '-1', date('Y-m') . '-30');
 
-		// AFTER COUNTING FETCHING THE TODO RECORED FROM GIVEN DATE
-		// $data['result_todo'] = $this->Crud_model->fetch_todo_record('mp_todolist', date('Y-m') . '-1', date('Y-m') . '-30');
+		// // AFTER COUNTING FETCHING THE TODO RECORED FROM GIVEN DATE
+		// // $data['result_todo'] = $this->Crud_model->fetch_todo_record('mp_todolist', date('Y-m') . '-1', date('Y-m') . '-30');
 
-		$this->load->model('Accounts_model');
-		//COUNT AMOUNT OF SALES TODAY AND EXPENSE
-		// $data['sales_today_amount'] =  $this->Accounts_model->Statistics_sales_with_date(date('Y-m-d'), date('Y-m-d'));
+		// $this->load->model('Accounts_model');
+		// //COUNT AMOUNT OF SALES TODAY AND EXPENSE
+		// // $data['sales_today_amount'] =  $this->Accounts_model->Statistics_sales_with_date(date('Y-m-d'), date('Y-m-d'));
 
-		// $data['sales_month_amount'] = $this->Accounts_model->Statistics_sales_with_date(date('Y-m' . '-1'), date('Y-m' . '-31'));
+		// // $data['sales_month_amount'] = $this->Accounts_model->Statistics_sales_with_date(date('Y-m' . '-1'), date('Y-m' . '-31'));
 
 
-		// DEFINES TO LOAD THE MODEL Accounts_model
-		$this->load->model('Accounts_model');
+		// // DEFINES TO LOAD THE MODEL Accounts_model
+		// $this->load->model('Accounts_model');
 
-		// FETCHING THE EXPENSE AND REVENUE FOR GRAPH
-		$result_sales_this_year_and_total_profit = $this->Accounts_model->statistics_sales_this_year();
-		$data['result_sales_arr'] = $this->Statement_model->statistics_sales_this_year(array('acc_number' => '4.00.000.000'), 2);
-		$data['result_expense_this_year'] = $this->Statement_model->statistics_sales_this_year(array('acc_number' => '5.00.000.000'), 2, true);
+		// // FETCHING THE EXPENSE AND REVENUE FOR GRAPH
+		// $result_sales_this_year_and_total_profit = $this->Accounts_model->statistics_sales_this_year();
+		// $data['result_sales_arr'] = $this->Statement_model->statistics_sales_this_year(array('acc_number' => '4.00.000.000'), 2);
+		// $data['result_expense_this_year'] = $this->Statement_model->statistics_sales_this_year(array('acc_number' => '5.00.000.000'), 2, true);
 
-		$data['result_profit_this_year'] = json_encode($result_sales_this_year_and_total_profit[1]);
-		// echo json_encode($data);
-		// die();
+		// $data['result_profit_this_year'] = json_encode($result_sales_this_year_and_total_profit[1]);
+		// // echo json_encode($data);
+		// // die();
 
-		// DEFINES GO TO MAIN FOLDER FOND INDEX.PHP  AND PASS THE ARRAY OF DATA TO THIS PAGE
-		// $data['main_view'] = 'errors/maintenance';
+		// // DEFINES GO TO MAIN FOLDER FOND INDEX.PHP  AND PASS THE ARRAY OF DATA TO THIS PAGE
+		// // $data['main_view'] = 'errors/maintenance';
 		$data['main_view'] = 'dashboard';
 
 		$this->load->view('main/index.php', $data);

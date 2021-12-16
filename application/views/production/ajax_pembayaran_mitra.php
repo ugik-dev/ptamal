@@ -3,7 +3,7 @@
     var dataProducts = [];
     var row_id = 1;
     var total_gross_amt = $('#total_gross_amt');
-    var total_tax_amt = $('#total_tax_amt');
+    var total_tax_ppn_amt = $('#total_tax_ppn_amt');
     var net_total_amount = $('#net_total_amount');
     var discountfield = $('#discountfield');
     var amount_recieved = $('#amount_recieved');
@@ -11,6 +11,14 @@
     var pos_form = $('#pos_form');
     var btn_create_invoice = $('#btn_create_invoice');
     var btn_create_bill = $('#btn_create_bill');
+    var percent_ppn = $('#percent_ppn');
+    var percent_pph = $('#percent_pph');
+    var percent_fee = $('#percent_fee');
+    var am_pph = $('#am_pph');
+    var am_ppn = $('#am_ppn');
+    var am_fee = $('#am_fee');
+    var manual_math = $('#manual_math');
+    var manual = false;
 
     btn_create_bill.on('click', function() {
         submit_form('addBill');
@@ -71,6 +79,25 @@
         $('.mask').mask('000.000.000.000.000', {
             reverse: true
         });
+
+        manual_math.on('change', function() {
+            console.log('change')
+            manual = manual_math.is(':checked');
+            if (manual) {
+                am_fee.prop('readonly', false);
+                am_pph.prop('readonly', false);
+                am_ppn.prop('readonly', false);
+                // am_fee.mask('000.000.000.000.000,00', {
+                //     reverse: true
+                // });
+            } else {
+                am_fee.prop('readonly', 'readonly');
+                am_pph.prop('readonly', 'readonly');
+                am_ppn.prop('readonly', 'readonly');
+
+            }
+            invoice_count();
+        })
         getAllProduct()
 
         function getAllProduct() {
@@ -176,6 +203,7 @@
         $('.search_result').css("display", "none");
     }
 
+
     //USED TO ADD ITEM SEARCHED IN TEMP TABLE
 
     function add_search_item_invoice(id) {
@@ -186,10 +214,11 @@
         <td> ${dataProducts[id]['product_name']} </td>
         <td> ${dataProducts[id]['name_unit']} </td>
         <td>
-         <input hidden id="fix_tax[]" name="fix_tax[]" >
+         <input hidden id="product_name[]" name="product_name[]" value="${dataProducts[id]['product_name']}" >
+         <input hidden id="fix_tax_ppn[]" name="fix_tax_ppn[]" >
          <input hidden id="revenue_account[]" name="revenue_account[]" value="${dataProducts[id]['revenue_account']}" >
          <input hidden id="item_id[]" name="item_id[]" value="${dataProducts[id]['id']}" >
-         <input hidden id="tax[]" name="tax[]" value="${dataProducts[id]['tax']}" >
+         <input hidden id="tax_ppn[]" name="tax_ppn[]" value="${dataProducts[id]['tax_ppn']}" >
          <input onkeyup="invoice_count()" class="mask" id="row_price[]" name="row_price[]" value="${parseInt( dataProducts[id]['default_price']).toFixed()}" >
           </td>
         <td> <input onkeyup="invoice_count()" type="number" id="row_qyt[]" name="row_qyt[]" class="supply_fields" value="1"> </td>
@@ -285,41 +314,83 @@
     function invoice_count() {
         var row_price = document.getElementsByName('row_price[]');
         var row_qyt = document.getElementsByName('row_qyt[]');
-        var tax = document.getElementsByName('tax[]');
-        var fix_tax = document.getElementsByName('fix_tax[]');
+        var tax_ppn = document.getElementsByName('tax_ppn[]');
+        var fix_tax_ppn = document.getElementsByName('fix_tax_ppn[]');
 
         // console.log(row_price[0].value)
         // foreach(row_price)
         i = 0;
         total_price = 0;
-        total_tax = 0;
+        // total_tax_ppn = 0;
         row_price.forEach(function() {
             cur_price = (row_price[i].value
                 .split(".").join("") * row_qyt[i].value)
-            cur_tax = (10 / 100) * cur_price;
+            cur_tax_ppn = (10 / 100) * cur_price;
             console.log(cur_price)
-            console.log(cur_tax)
-            fix_tax[i].value = cur_tax;
+            console.log(cur_tax_ppn)
+            fix_tax_ppn[i].value = cur_tax_ppn;
             total_price = total_price + cur_price;
-            total_tax = total_tax + cur_tax;
+            // total_tax_ppn = total_tax_ppn + cur_tax_ppn;
             i++;
         });
 
-        total_tax = parseFloat(total_tax).toFixed(2);
-        ar = amount_recieved.val().split(".").join("")
-        disc = discountfield.val().split(".").join("").split(",").join(".");
-        console.log(disc)
-        if (disc > 0) {
-            disc = disc;
+        // total_tax_ppn = parseFloat(total_tax_ppn).toFixed(2);
+        // ar = amount_recieved.val().split(".").join("")
+        // disc = discountfield.val().split(".").join("").split(",").join(".");
+        // console.log(disc)
+        // if (disc > 0) {
+        //     disc = disc;
+        // } else {
+        //     disc = 0;
+        // }
+        // net = parseInt(total_price);
+        console.log(percent_ppn.val())
+        if (!manual) {
+            if (parseFloat(percent_ppn.val()) > 0) {
+                var_am_ppn = parseInt(parseFloat(percent_ppn.val()) / 100 * total_price);
+                am_ppn.val(invformatRupiah(var_am_ppn));
+            } else {
+                am_ppn.val('');
+                var_am_ppn = 0
+            };
+
+
+            if (parseFloat(percent_pph.val()) > 0) {
+                var_am_pph = parseInt(parseFloat(percent_pph.val()) / 100 * total_price);
+                am_pph.val(invformatRupiah(var_am_pph));
+            } else {
+                am_pph.val('');
+                var_am_pph = 0
+            };
+
+            if (parseFloat(percent_fee.val()) > 0) {
+                var_am_fee = parseInt(parseFloat(percent_fee.val()) / 100 * total_price);
+                console.log(var_am_fee);
+                am_fee.val(invformatRupiah(var_am_fee));
+            } else {
+                am_fee.val('');
+                var_am_fee = 0
+            };
         } else {
-            disc = 0;
+            var_am_fee = parseInt(am_fee.val().replace(/[^0-9]/g, ''));
+            var_am_ppn = parseInt(am_ppn.val().replace(/[^0-9]/g, ''));
+            var_am_pph = parseInt(am_pph.val().replace(/[^0-9]/g, ''));
+            if (!(var_am_fee > 0)) var_am_fee = 0;
+            if (!(var_am_pph > 0)) var_am_pph = 0;
+            if (!(var_am_ppn > 0)) var_am_ppn = 0;
+            console.log('par manual : ')
+            console.log(var_am_fee)
+            console.log(var_am_pph)
+            console.log(var_am_ppn)
         }
-        net = parseInt(total_price) + parseFloat(total_tax) - parseFloat(disc)
-        // console.log('total_tax = ' + disc);
+
+        net = total_price + var_am_ppn + var_am_pph + var_am_fee;
+        console.log(net)
+        // console.log('total_tax_ppn = ' + disc);
         total_gross_amt.val(invformatRupiah(total_price));
-        total_tax_amt.val(invformatRupiah(total_tax));
-        net_total_amount.html(invformatRupiah(net));
-        amount_back.html(ar - net);
+        // total_tax_ppn_amt.val(invformatRupiah(total_tax_ppn));
+        net_total_amount.val(invformatRupiah(net));
+        // amount_back.html(ar - net);
     }
 
     function deleteRow(rowid) {

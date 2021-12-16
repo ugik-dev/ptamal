@@ -180,7 +180,7 @@ class Pembayaran extends CI_Controller
 
                     $this->Crud_model->edit_record_id($args, $data);
                 } else {
-                    $tax_amount = ($result[0]->tax / 100) * $result[0]->retail;
+                    $tax_ppn_amount = ($result[0]->tax_ppn / 100) * $result[0]->retail;
 
                     // ASSIGN THE VALUES OF TEXTBOX TO ASSOCIATIVE ARRAY FOR EVERY ITERATION
                     $temp_data = array(
@@ -192,7 +192,7 @@ class Pembayaran extends CI_Controller
                         'price' => $result[0]->retail,
                         'purchase' => $result[0]->purchase,
                         'qty' => 1,
-                        'tax' => $tax_amount,
+                        'tax_ppn' => $tax_ppn_amount,
                         'agentid' => $user_name['id'],
                         'source' => 'pos'
                     );
@@ -249,7 +249,7 @@ class Pembayaran extends CI_Controller
                     $this->Crud_model->edit_record_id($args, $data);
                 } else {
                     if ($result != NULL) {
-                        $tax_amount = ($result[0]->tax / 100) * $result[0]->retail;
+                        $tax_ppn_amount = ($result[0]->tax_ppn / 100) * $result[0]->retail;
 
                         // ASSIGN THE VALUES OF TEXTBOX TO ASSOCIATIVE ARRAY FOR EVERY ITERATION
                         $args = array(
@@ -261,7 +261,7 @@ class Pembayaran extends CI_Controller
                             'price' => $result[0]->retail,
                             'purchase' => $result[0]->purchase,
                             'qty' => 1,
-                            'tax' => $tax_amount,
+                            'tax_ppn' => $tax_ppn_amount,
                             'agentid' => $user_name['id'],
                             'source' => 'pos'
                         );

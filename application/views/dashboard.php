@@ -20,14 +20,14 @@
                      </span>
 
                      <h3><?php
-                            if ($cash_in_hand < 0) {
-                                echo 'Rp (' . number_format(-$cash_in_hand, 2, ',', '.') . ')';
+                            if ($kas_amount < 0) {
+                                echo 'Rp (' . number_format(-$kas_amount, 2, ',', '.') . ')';
                             } else {
-                                echo 'Rp ' . number_format($cash_in_hand, 2, ',', '.');
+                                echo 'Rp ' . number_format($kas_amount, 2, ',', '.');
                             }
                             ?>
                      </h3>
-                     <h4 class="paragraph">Saldo Setara Kas </h4>
+                     <h4 class="paragraph">SALDO KAS (IDR)</h4>
                      <a href="<?php echo base_url('statements/leadgerAccounst'); ?>" class="small-box-footer">Lihat <i class="fa fa-hand-o-right"></i></a>
                  </div>
                  <div class="col-lg-3 bg-light-danger px-6 py-8 rounded-xl mr-4 ml-4 mb-4">
@@ -43,14 +43,14 @@
                          <!--end::Svg Icon-->
                      </span>
                      <h3>
-                         <?php if ($payables < 0) {
-                                echo 'Rp (' . number_format(-$payables, 2, ',', '.') . ')';
+                         <?php if ($bank_amount < 0) {
+                                echo 'Rp (' . number_format(-$bank_amount, 2, ',', '.') . ')';
                             } else {
-                                echo 'Rp ' . number_format($payables, 2, ',', '.');
+                                echo 'Rp ' . number_format($bank_amount, 2, ',', '.');
                             }   ?>
                      </h3>
 
-                     <h4 class="text-danger font-weight-bold font-size-h6 mt-2">Hutang Usaha (AP) <?php echo $currency; ?></h4>
+                     <h4 class="text-danger font-weight-bold font-size-h6 mt-2">SALDO BANK (IDR) </h4>
                      <a href="<?php echo base_url('statements/leadgerAccounst'); ?>" class="small-box-footer">Lihat <i class="fa fa-hand-o-right"></i></a>
                  </div>
                  <div class="col-lg-4 bg-light-success px-6 py-8 rounded-xl mr-4 ml-4 mb-4">
@@ -67,15 +67,15 @@
                      </span>
                      <!-- <div class="inner"> -->
                      <h3><?php
-                            if ($account_recieveble < 0) {
-                                echo 'Rp (' . number_format(-$account_recieveble, 2, ',', '.') . ')';
+                            if ($piutang_amount < 0) {
+                                echo 'Rp (' . number_format(-$piutang_amount, 2, ',', '.') . ')';
                             } else {
-                                echo 'Rp ' . number_format($account_recieveble, 2, ',', '.');
+                                echo 'Rp ' . number_format($piutang_amount, 2, ',', '.');
                             }   ?></h3>
 
                      <!-- <h4 class="paragraph">Piutang Usaha (AR) <?php echo $currency; ?></h4> -->
                      <!-- </div> -->
-                     <h4 class="text-success font-weight-bold font-size-h6 mt-2">Piutang Usaha (AR)</h4>
+                     <h4 class="text-success font-weight-bold font-size-h6 mt-2">Piutang Usaha (IDR)</h4>
                      <a href="<?php echo base_url('statements/leadgerAccounst'); ?>" class="small-box-footer">Lihat <i class="fa fa-hand-o-right"></i></a>
 
                  </div>
@@ -237,11 +237,8 @@
                                          </span>
                                      </span>
                                  </div>
-                                 <!--end::Symbol-->
-                                 <!--begin::Text-->
                                  <div class="d-flex flex-column font-weight-bold">
                                      <a href="<?php base_url() ?>dashboard/document" class="text-dark text-hover-primary mb-1 font-size-lg">Document</a>
-
                                  </div>
                                  <!--end::Text-->
                              </div>
@@ -412,9 +409,9 @@
              <div id="kt_calendar"></div>
          </div>
      </div>
-     <?php $this->load->view('bootstrap_model.php'); ?>
-
-
+     <?php
+        $this->load->view('bootstrap_model.php');
+        ?>
      <style>
          .small-box>.inner {
              padding: 20px;

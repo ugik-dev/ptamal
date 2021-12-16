@@ -5,11 +5,44 @@ if (!function_exists('Fetch_Users_Access_Control_Menu')) {
 	{
 		$CI	= &get_instance();
 		$CI->load->database();
+		$CI->db->select("mp_menu.id as parent_id,mp_menulist.id as page_id,mp_menu.name,mp_menu.icon,mp_menu.order_number,title as sub_name, link as sub_link,slug as link, , id_hak_aksess, view, hk_create,hk_update, hk_delete");
+		$CI->db->from('mp_menulist');
+		$CI->db->join('mp_menu', "mp_menu.id = mp_menulist.menu_Id");
+		$CI->db->join('hak_aksess', "mp_menulist.id = hak_aksess.id_menulist");
+		$CI->db->where('hak_aksess.id_user ', $para_user_id);
+		$CI->db->where('mp_menulist.active ', 1);
+		$CI->db->order_by('mp_menu.order_number');
+		$res = $CI->db->get();
+		if ($res->num_rows() < 1) {
+			return NULL;
+		}
+		$ret = DataStructure::groupByRecursive2(
+			$res->result_array(),
+			['parent_id'],
+			['page_id'],
+			[
+				['parent_id', 'name', 'link', 'icon'],
+				['page_id', 'sub_name', 'sub_link']
+			],
+			['children'],
+			false
+		);
+		return $ret;
+	}
+}
+
+if (!function_exists('Fetch_Users_Access_Control_Menus')) {
+	function Fetch_Users_Access_Control_Menus($para_user_id = '')
+	{
+		$CI	= &get_instance();
+		$CI->load->database();
 		$CI->db->select("mp_menu.id as id,mp_menu.name,mp_menu.icon,mp_menu.order_number");
 		$CI->db->from('mp_menu');
 		$CI->db->join('mp_multipleroles', "mp_menu.id = mp_multipleroles.menu_Id and mp_multipleroles.user_id = '$para_user_id'");
 		$CI->db->order_by('mp_menu.order_number');
 		$query = $CI->db->get();
+		// echo json_encode($query->result());
+		// die();
 		if ($query->num_rows() > 0) {
 			return $query->result();
 		} else {

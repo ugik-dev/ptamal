@@ -196,6 +196,61 @@ class DataStructure
     return $ret;
   }
 
+
+  public static function TreeAccounts($arr, $columns, $childKeys, $parentFields, $childNames, $assoc = TRUE)
+  {
+    $res = array();
+    foreach ($arr as $k) {
+      if (substr($k['head_number'], 1, 6) == '00000') {
+        $res[substr($k['head_number'], 0, 1)] = array('head_number' => substr($k['head_number'], 0, 1), 'name' => $k['name']);
+        $res[substr($k['head_number'], 0, 1)]['children'] = array();
+      } else
+      if (substr($k['head_number'], 3, 3) == '000') {
+        $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)] =  array('head_number' => substr($k['head_number'], 1, 2), 'name' => $k['name'], 'children' => array());
+      } else {
+        $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)]['children'][substr($k['head_number'], 3, 3)] =  array('head_number' =>  substr($k['head_number'], 3, 3), 'name' => $k['name'], 'id_head' => $k['id']);
+      }
+    }
+    return $res;
+  }
+
+  public static function jstreeStructure($arr, $columns, $childKeys, $parentFields, $childNames, $assoc = TRUE)
+  {
+    if (count($columns) == 0) {
+      return DataStructure::slice2D($arr, $parentFields[0]);
+    }
+    $childName = $childNames[0];
+    $ret = DataStructure::groupBy2($arr, array_shift($columns), array_shift($childKeys), array_shift($parentFields), array_shift($childNames));
+    $ret = !$assoc ? DataStructure::associativeToArray($ret) : $ret;
+    foreach ($ret as $k => $r) {
+      $ret[$k][$childName] = DataStructure::groupByRecursive2(DataStructure::flatten($r[$childName], count($columns) == 0 || !$assoc), $columns, $childKeys, $parentFields, $childNames, $assoc);
+    }
+    $jstree = array();
+    $i = 0;
+    foreach ($ret as $k) {
+      $data = array('text' => $k['name'], 'id' => 'parent_' . $k['parent_id'], 'state' => array('opened' => true));
+      $data['children'] = array();
+      // $jstree[$i] = $data;
+      $l = 0;
+      foreach ($k['children'] as $l) {
+        $tmp = array('text' => $l['sub_name'], 'id' => $l['page_id'],  'state' => array('opened' => false), 'children' => [
+          array('text' => 'View', 'id' => 'v_' . $l['page_id'], 'state' => array('selected' => $l['view'] == 1 ? true : false, 'opened' => false)),
+          array('text' => 'Create', 'id' => 'c_' . $l['page_id'], 'state' => array('selected' => $l['hk_create'] == 1 ? true : false, 'opened' => false)),
+          array('text' => 'Update', 'id' => 'u_' . $l['page_id'], 'state' => array('selected' => $l['hk_update'] == 1 ? true : false, 'opened' => false)),
+          array('text' => 'Delete', 'id' => 'd_' . $l['page_id'], 'state' => array('selected' => $l['hk_delete'] == 1 ? true : false, 'opened' => false))
+        ]);
+        array_push($data['children'], $tmp);
+        // echo json_encode($data);
+        // die();
+        $l++;
+      }
+      array_push($jstree, $data);
+    }
+    // echo json_encode($jstree);
+    // die();
+    return $jstree;
+  }
+
   // arr: [{a: 'gg', b: 'wp'}, {a: 'gg', b: 'tt'}, {a: 'yy', b: 'oo'}]
   // column: a
   // output: ['gg': [{a: 'gg', b: 'wp'}, {a: 'gg', b: 'tt'}], 'yy': [{a: 'yy', b: 'oo'}]]
@@ -215,6 +270,30 @@ class DataStructure
       }
       $ret[$groupKey][$childName][$a[$childKey]][] = $a;
     }
+    return $ret;
+  }
+
+  public static function groupJstree($arr, $column, $childKey, $parentField, $childName)
+  {
+
+    $ret = array();
+    $i = 0;
+    foreach ($arr as $a) {
+      $groupKey = $a[$column];
+      if (!isset($ret[$groupKey])) {
+
+        $ret[$i] = DataStructure::slice($a, $parentField);
+        $ret[$i][$childName] = [];
+      }
+      if ($a[$childKey] == null) continue;
+      if (!isset($ret[$groupKey][$childName][$a[$childKey]])) {
+        $ret[$groupKey][$childName][$a[$childKey]] = [];
+      }
+      $ret[$groupKey][$childName][$a[$childKey]][] = $a;
+      echo json_encode($ret);
+      die();
+    }
+
     return $ret;
   }
 

@@ -12,15 +12,15 @@
         <tbody>
             <?php
             $currency =  $this->db->get_where('mp_langingpage', array('id' => 1))->result_array()[0]['currency'];
-            $total_tax   = 0;
+            $total_tax_ppn   = 0;
             $total_gross = 0;
-            $single_tax  = 0;
+            $single_tax_ppn  = 0;
             if ($temp_data != NULL) {
                 // print "<pre>";
                 // print_r($temp_data);
                 foreach ($temp_data as $single_val) {
-                    $sub_total_tax = $single_val->qty * $single_val->tax;
-                    $total_tax = number_format($total_tax + $sub_total_tax, 2, '.', '');
+                    $sub_total_tax_ppn = $single_val->qty * $single_val->tax_ppn;
+                    $total_tax_ppn = number_format($total_tax_ppn + $sub_total_tax_ppn, 2, '.', '');
                     $total_gross = number_format($total_gross + ($single_val->price * $single_val->qty), 2, '.', '');
             ?>
                     <tr>
@@ -53,7 +53,7 @@
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             Total Pajak (<?php echo $currency; ?>):
-            <input type="number" class=" amount-box text-right outline-cls" name="total_tax_amt" id="total_tax_amt" disabled="disabled" value="<?php echo $total_tax; ?>" />
+            <input type="number" class=" amount-box text-right outline-cls" name="total_tax_ppn_amt" id="total_tax_ppn_amt" disabled="disabled" value="<?php echo $total_tax_ppn; ?>" />
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             Diskon (<?php echo $currency; ?>) :
@@ -69,14 +69,14 @@
         <div class="col-md-4 total_amount_area">
             <div class="">
                 <p> Grand Total (<?php echo $currency; ?>) </p>
-                <h4 id="net_total_amount"> <?php echo number_format($total_tax + $total_gross, '2', '.', ''); ?>
+                <h4 id="net_total_amount"> <?php echo number_format($total_tax_ppn + $total_gross, '2', '.', ''); ?>
                 </h4>
             </div>
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             Tagihan yg dibayar (<?php echo $currency; ?>):
-            <input type="number" name="bill_paid" id="bill_paid" class=" amount-box  text-center" value="<?php echo $total_tax + $total_gross; ?>" />
-            <input type="hidden" name="total_bill" id="total_bill" value="<?php echo $total_tax + $total_gross; ?>" />
+            <input type="number" name="bill_paid" id="bill_paid" class=" amount-box  text-center" value="<?php echo $total_tax_ppn + $total_gross; ?>" />
+            <input type="hidden" name="total_bill" id="total_bill" value="<?php echo $total_tax_ppn + $total_gross; ?>" />
         </div>
     </div>
     <div class="row total_amount_area_row">
@@ -126,14 +126,14 @@
         clearTimeout(discounttimmer);
         discounttimmer = setTimeout(function callback() {
             var total_gross_amt = $('#total_gross_amt').val();
-            var total_tax_amt = $('#total_tax_amt').val();
+            var total_tax_ppn_amt = $('#total_tax_ppn_amt').val();
             if (dis_amt > 0) {
-                var newamt = parseFloat(total_gross_amt - dis_amt) + parseFloat(total_tax_amt);
+                var newamt = parseFloat(total_gross_amt - dis_amt) + parseFloat(total_tax_ppn_amt);
                 $('#net_total_amount').html(newamt.toFixed(2));
                 $('#bill_paid').val(newamt.toFixed(2));
                 $('#total_bill').val(newamt.toFixed(2));
             } else {
-                var pre_val = parseFloat(total_gross_amt) + parseFloat(total_tax_amt);
+                var pre_val = parseFloat(total_gross_amt) + parseFloat(total_tax_ppn_amt);
                 $('#net_total_amount').html(pre_val.toFixed(2));
                 $('#bill_paid').val(pre_val.toFixed(2));
                 $('#total_bill').val(pre_val.toFixed(2));
