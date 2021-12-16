@@ -53,12 +53,13 @@
                 </div>
             </div>
             <div class="dropdown">
-                <?php $notif_datas = notif_data($this->session->userdata('user_id')['id']);
-                if ($notif_datas['not_complete'] != 0) {
-                    $label_notif = 'light-danger';
-                } else {
-                    $label_notif = 'done';
-                }
+                <?php
+                //  $notif_datas = notif_data($this->session->userdata('user_id')['id']);
+                // if ($notif_datas['not_complete'] != 0) {
+                //     $label_notif = 'light-danger';
+                // } else {
+                $label_notif = 'done';
+                // }
                 ?>
 
                 <!--begin::Toggle-->
@@ -86,9 +87,10 @@
                         <!--begin::Title-->
                         <h4 class="d-flex flex-center rounded-top">
                             <span class="text-white">Notifications</span>
-                            <?php if ($notif_datas['not_complete'] != 0) {
-                                echo '<span class="btn btn-text btn-light-danger btn-sm font-weight-bold btn-font-md ml-2">' . $notif_datas['not_complete'] . ' Not Complete </span>';
-                            }
+                            <?php
+                            //  if ($notif_datas['not_complete'] != 0) {
+                            //     echo '<span class="btn btn-text btn-light-danger btn-sm font-weight-bold btn-font-md ml-2">' . $notif_datas['not_complete'] . ' Not Complete </span>';
+                            // }
                             ?>
                         </h4>
                     </div>
@@ -98,21 +100,21 @@
                             <!--begin::Scroll-->
                             <div class="navi navi-hover scroll my-4 ps" data-scroll="true" data-height="300" data-mobile-height="200" style="height: 300px; overflow: hidden;">
                                 <!--begin::Item-->
-                                <?php $notif_datas = notif_data($this->session->userdata('user_id')['id']);
-                                // echo json_encode($notif_datas);
-                                foreach ($notif_datas['notif_data'] as $notif_data) {
-                                    if ($notif_data['jenis'] == 'pembayaran') {
-                                        $ico = 'flaticon2-line-chart';
-                                    } else {
-                                        $ico = 'flaticon2-paper-plane';
-                                    }
-                                    if ($notif_data['status'] == '0') {
-                                        $ico .= ' text-danger';
-                                    } else {
-                                        $ico .= ' text-success';
-                                    }
-                                    echo ' <a href="' . base_url() . $notif_data['notification_url'] . '" class="navi-item"><div class="navi-link"><div class="navi-icon mr-2"><i class="' . $ico . '"></i></div><div class="navi-text"><div class="font-weight-bold">' . $notif_data['deskripsi'] . '</div><div class="text-muted">  ' . $notif_data['date_notification'] . '</div></div></div></a>';
-                                }
+                                <?php
+                                // $notif_datas = notif_data($this->session->userdata('user_id')['id']);
+                                // foreach ($notif_datas['notif_data'] as $notif_data) {
+                                //     if ($notif_data['jenis'] == 'pembayaran') {
+                                //         $ico = 'flaticon2-line-chart';
+                                //     } else {
+                                //         $ico = 'flaticon2-paper-plane';
+                                //     }
+                                //     if ($notif_data['status'] == '0') {
+                                //         $ico .= ' text-danger';
+                                //     } else {
+                                //         $ico .= ' text-success';
+                                //     }
+                                //     echo ' <a href="' . base_url() . $notif_data['notification_url'] . '" class="navi-item"><div class="navi-link"><div class="navi-icon mr-2"><i class="' . $ico . '"></i></div><div class="navi-text"><div class="font-weight-bold">' . $notif_data['deskripsi'] . '</div><div class="text-muted">  ' . $notif_data['date_notification'] . '</div></div></div></a>';
+                                // }
 
                                 ?>
 
