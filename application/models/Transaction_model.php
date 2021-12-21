@@ -299,7 +299,7 @@ class Transaction_model extends CI_Model
         $this->db->delete('mp_sub_entry');
         $QUERY = '
         INSERT INTO mp_sub_entry (parent_id, accounthead, amount, type,sub_keterangan,pos_lock)
-        SELECT "' . - ((int)$filter['tahun'] + 1) . '" as parent_id ,mp_head.id as accounthead ,
+        SELECT "' . - ((int)$filter['tahun'] + 1) . '" as parent_id ,dt_head.id as accounthead ,
         ROUND(ABS(SUM(IF(mp_sub_entry.type = 1, mp_sub_entry.amount, - mp_sub_entry.amount))),2) as amount,
         @var_saldo := if((SUM(IF(mp_sub_entry.type = 1, mp_sub_entry.amount, - mp_sub_entry.amount))) < 0 , 0, 1 ) AS type ,
         "Openning Balance ' . - ((int)$filter['tahun'] + 1) . '" as sub_keterangan,
@@ -307,12 +307,12 @@ class Transaction_model extends CI_Model
                                     FROM
                                         mp_sub_entry
                                     JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
-                                    JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
+                                    JOIN dt_head ON dt_head.id = mp_sub_entry.accounthead
                                     WHERE
-                                    mp_head.nature in ("Assets","Liability","Equity") AND
+                                    dt_head.nature in ("Assets","Liability","Equity") AND
                                    mp_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND mp_generalentry.date <= "' . $filter['tahun'] . '-12-31"
                                     GROUP by 
-                                    mp_head.name';
+                                    dt_head.name';
         $res = $this->db->query($QUERY);
     }
 

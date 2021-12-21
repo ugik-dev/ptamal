@@ -39,7 +39,7 @@ class Accounts extends CI_Controller
 
     // DEFINES TO LOAD THE CATEGORY LIST FROM DATABSE TABLE mp_Categoty
     $this->load->model('Crud_model');
-    $result = $this->Crud_model->fetch_record('mp_head', NULL);
+    $result = $this->Crud_model->fetch_record('dt_head', NULL);
     $data['chart_list'] = $result;
 
     // DEFINES GO TO MAIN FOLDER FOND INDEX.PHP  AND PASS THE ARRAY OF DATA TO THIS PAGE
@@ -72,7 +72,7 @@ class Accounts extends CI_Controller
 
     // DEFINES TO LOAD THE CATEGORY LIST FROM DATABSE TABLE mp_Categoty
 
-    $result = $this->Crud_model->fetch_record('mp_head', NULL);
+    $result = $this->Crud_model->fetch_record('dt_head', NULL);
     $data['chart_list'] = $result;
 
     // DEFINES GO TO MAIN FOLDER FOND INDEX.PHP  AND PASS THE ARRAY OF DATA TO THIS PAGE
@@ -105,10 +105,10 @@ class Accounts extends CI_Controller
     );
 
     // CHECK WEATHER EMAIL ADLREADY EXISTS OR NOT IN THE TABLE
-    $result = $this->Crud_model->check_email_address('mp_head', 'name', $name);
+    $result = $this->Crud_model->check_email_address('dt_head', 'name', $name);
     if ($result == NULL) {
       // DEFINES CALL THE FUNCTION OF insert_data FORM Crud_model CLASS
-      $result = $this->Crud_model->insert_data('mp_head', $args);
+      $result = $this->Crud_model->insert_data('dt_head', $args);
 
       if ($result == 1) {
         $array_msg = array(
@@ -143,7 +143,7 @@ class Accounts extends CI_Controller
     // DEFINES TO DELETE THE ROW FROM TABLE AGAINST ID
     $result = $this->Crud_model->check_head_transaction($args);
     if ($result == 1) {
-      $result = $this->Crud_model->delete_record('mp_head', $args);
+      $result = $this->Crud_model->delete_record('dt_head', $args);
       $array_msg = array(
         'msg' => '<i style="color:#fff" class="fa fa-trash-o" aria-hidden="true"></i> Record removed',
         'alert' => 'info'
@@ -177,7 +177,7 @@ class Accounts extends CI_Controller
 
     // TABLENAME AND ID FOR DATABASE Actions
     $args = array(
-      'table_name' => 'mp_head',
+      'table_name' => 'dt_head',
       'id' => $head_id
     );
 
@@ -226,7 +226,7 @@ class Accounts extends CI_Controller
       $this->load->view('admin_models/add_models/add_chart_of_account_model.php', $data);
     } else if ($page_name  == 'edit_chart_of_accounts') {
 
-      $data['head_data'] = $this->Crud_model->fetch_record_by_id('mp_head', $param);
+      $data['head_data'] = $this->Crud_model->fetch_record_by_id('dt_head', $param);
       $this->load->view('admin_models/edit_models/edit_chart_of_accounts', $data);
     } else if ($page_name  == 'edit_customer_payment_model') {
 

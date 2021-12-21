@@ -129,7 +129,7 @@ class Invoice_model extends CI_Model
         $this->db->select('dt.* , head.name as head_name, ru.name_unit');
         $this->db->from('dt_jenis_invoice as dt');
         $this->db->join('ref_unit as ru', 'ru.id_unit = dt.default_unit', 'LEFT');
-        $this->db->join('mp_head as head', 'head.id = dt.revenue_account', 'LEFT');
+        $this->db->join('dt_head as head', 'head.id = dt.revenue_account', 'LEFT');
         if (!empty($filter['id'])) $this->db->where('dt.id', $filter['id']);
 
         $query = $this->db->get();

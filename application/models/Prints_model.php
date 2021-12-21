@@ -23,9 +23,9 @@ class Prints_model extends CI_Model
                     $debit_amt = NULL;
                     $credit_amt = NULL;
 
-                    $this->db->select("mp_sub_entry.*,mp_head.name");
+                    $this->db->select("mp_sub_entry.*,dt_head.name");
                     $this->db->from('mp_sub_entry');
-                    $this->db->join('mp_head', 'mp_head.id = mp_sub_entry.accounthead');
+                    $this->db->join('dt_head', 'dt_head.id = mp_sub_entry.accounthead');
                     $this->db->where('mp_sub_entry.parent_id =', $transaction_record->transaction_id);
                     $sub_query = $this->db->get();
                     if ($sub_query->num_rows() > 0) {

@@ -9,7 +9,7 @@ class General_model extends CI_Model
     {
         $this->db->from('dt_head');
         // $this->db->order_by('dt_head.name');
-        // $this->db->where("SUBSTRING_INDEX(SUBSTRING_INDEX(mp_head.name, '.', -3), ']', 1) = '00.000.000'");
+        // $this->db->where("SUBSTRING_INDEX(SUBSTRING_INDEX(dt_head.name, '.', -3), ']', 1) = '00.000.000'");
         if (!empty($filter['account_head'])) $this->db->where('dt_head.id', $filter['account_head']);
         if (!empty($filter['id'])) $this->db->where('dt_head.id', $filter['id']);
         if (!empty($filter['nature'])) {
@@ -186,7 +186,7 @@ class General_model extends CI_Model
 
         // if (!empty($filter['account_head'])) $this->db->where('dt_head.id', $filter['account_head']);
         // if (!empty($filter['id'])) $this->db->where('dt_head.id', $filter['id']);
-        // SUBSTRING_INDEX(SUBSTRING_INDEX(mp_head.name, '.', -2), ']', 1)
+        // SUBSTRING_INDEX(SUBSTRING_INDEX(dt_head.name, '.', -2), ']', 1)
         $this->db->where(
             "SUBSTRING_INDEX(SUBSTRING_INDEX(ref_number, '/', 2),'/',-1) = '" . $type . "'"
         );
@@ -241,11 +241,11 @@ class General_model extends CI_Model
 
         $this->db->select('ref.*,head_ppn.name as name_ppn ,head_ppn_piut.name as name_ppn_piut,head_paid.name as name_paid, head_unpaid.name as name_unpaid ,head_piutang.name as name_piutang');
         $this->db->from('ref_jenis_invoice as ref');
-        $this->db->join('mp_head as head_paid', 'head_paid.id = ref.ac_paid', 'LEFT');
-        $this->db->join('mp_head as head_unpaid', 'head_unpaid.id = ref.ac_unpaid', 'LEFT');
-        $this->db->join('mp_head as head_piutang', 'head_piutang.id = ref.ac_piutang', 'LEFT');
-        $this->db->join('mp_head as head_ppn', 'head_ppn.id = ref.ac_ppn', 'LEFT');
-        $this->db->join('mp_head as head_ppn_piut', 'head_ppn_piut.id = ref.ac_ppn_piut', 'LEFT');
+        $this->db->join('dt_head as head_paid', 'head_paid.id = ref.ac_paid', 'LEFT');
+        $this->db->join('dt_head as head_unpaid', 'head_unpaid.id = ref.ac_unpaid', 'LEFT');
+        $this->db->join('dt_head as head_piutang', 'head_piutang.id = ref.ac_piutang', 'LEFT');
+        $this->db->join('dt_head as head_ppn', 'head_ppn.id = ref.ac_ppn', 'LEFT');
+        $this->db->join('dt_head as head_ppn_piut', 'head_ppn_piut.id = ref.ac_ppn_piut', 'LEFT');
         // echo 'sds';
         if (!empty($filter['id'])) $this->db->where('ref.id', $filter['id']);
 

@@ -1169,9 +1169,9 @@ class Statements extends CI_Controller
 		$this->SecurityModel->MultiplerolesGuard('Akuntansi');
 
 		$data['title'] = 'Pembukaan Saldo';
-
+s
 		$this->load->model('Crud_model');
-		$data['heads_record'] = $this->Crud_model->fetch_record('mp_head', NULL);
+		$data['heads_record'] = $this->Crud_model->fetch_record('dt_head', NULL);
 		$result =  $this->Crud_model->fetch_payee_record('customer', 'status');
 		$supplierresult =  $this->Crud_model->fetch_payee_record('supplier', 'status');
 		$employeeresult =  $this->Crud_model->fetch_payee_record('employee', 'status');
@@ -1726,7 +1726,7 @@ class Statements extends CI_Controller
 		$this->load->model('Crud_model');
 		$c_count = count($data['account_head']);
 		for ($i = 0; $i < $c_count; $i++) {
-			$name = $this->Crud_model->fetch_record_v2('mp_head', $data['account_head'][$i])[0]['name'];
+			$name = $this->Crud_model->fetch_record_v2('dt_head', $data['account_head'][$i])[0]['name'];
 			if (!empty($data['debitamount'][$i]))
 				$amount = substr($data['debitamount'][$i], 0, -2) . '.' . substr($data['debitamount'][$i], -2);
 			if (!empty($data['creditamount'][$i]))
