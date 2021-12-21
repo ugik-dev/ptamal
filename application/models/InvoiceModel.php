@@ -6,20 +6,23 @@ class InvoiceModel extends CI_Model
 {
     public function getAllInvoice($filter = [])
     {
-        $this->db->select("mp_invoice_v2.*,notification.id as notif_id,notification.parent2_id, notification.status as notif_status,mp_payee.customer_name, cus_address , branch as bank_name, accountno as bank_number,title as title_bank,mp_users.title_user as title_acc_1,mp_users.agentname as name_acc_1");
+        $this->db->select("mp_invoice_v2.*,gen.ref_number , gen_ppn.ref_number as ref_number_ppn ,mp_payee.customer_name, cus_address, cus_town , branch as bank_name, accountno as bank_number,title as title_bank,mp_users.title_user as title_acc_1,mp_users.agentname as name_acc_1");
+        // $this->db->select("mp_invoice_v2.*,notification.id as notif_id,notification.parent2_id, notification.status as notif_status,mp_payee.customer_name, cus_address, cus_town, head_label , branch as bank_name, accountno as bank_number,title as title_bank,mp_users.title_user as title_acc_1,mp_users.agentname as name_acc_1");
         $this->db->from('mp_invoice_v2');
         // if (!empty($filter['id']))
         if (!empty($filter['id'])) $this->db->where('mp_invoice_v2.id', $filter['id']);
         if (!empty($filter['no_invoice'])) {
             $this->db->where('no_invoice like "%' . $filter['no_invoice'] . '%"');
         } else {
-            if (!empty($filter['first_date'])) $this->db->where('date >=', $filter['first_date']);
-            if (!empty($filter['second_date'])) $this->db->where('date <=', $filter['second_date']);
+            if (!empty($filter['first_date'])) $this->db->where('mp_invoice_v2.date >=', $filter['first_date']);
+            if (!empty($filter['second_date'])) $this->db->where('mp_invoice_v2.date <=', $filter['second_date']);
         }
         $this->db->join('mp_banks', 'mp_banks.id = mp_invoice_v2.payment_metode', 'LEFT');
-        $this->db->join('mp_payee', 'mp_payee.id = mp_invoice_v2.customer_id');
+        $this->db->join('mp_payee', 'mp_payee.id = mp_invoice_v2.customer_id', 'LEFT');
         $this->db->join('mp_users', 'mp_users.id = mp_invoice_v2.acc_1', 'LEFT');
-        $this->db->join('notification', 'notification.parent_id = mp_invoice_v2.id AND notification.jenis = "invoice"', 'LEFT');
+        $this->db->join('dt_generalentry gen', 'gen.id = mp_invoice_v2.general_id', 'LEFT');
+        $this->db->join('dt_generalentry gen_ppn', 'gen_ppn.id = mp_invoice_v2.general_id_ppn', 'LEFT');
+        // $this->db->join('notification', 'notification.parent_id = mp_invoice_v2.id AND notification.jenis = "invoice"', 'LEFT');
         // $this->db->where('notification.jenis', 'pembayaran');
 
         // $this->db->where('date >=', $date1);
@@ -54,8 +57,8 @@ class InvoiceModel extends CI_Model
         $this->db->from('mp_pembayaran');
         // if (!empty($filter['id']))
         if (!empty($filter['id'])) $this->db->where('mp_pembayaran.id', $filter['id']);
-        if (!empty($filter['no_pembayaran'])) {
-            $this->db->where('no_pembayaran like "%' . $filter['no_pembayaran'] . '%"');
+        if (!empty($filter['search'])) {
+            $this->db->where('description like "%' . $filter['search'] . '%" OR mp_payee.customer_name like "%' . $filter['search'] . '%"  OR mp_pembayaran.id = "' . $filter['search'] . '"');
         } else {
             if (!empty($filter['first_date'])) $this->db->where('date >=', $filter['first_date']);
             if (!empty($filter['second_date'])) $this->db->where('date <=', $filter['second_date']);
@@ -63,8 +66,8 @@ class InvoiceModel extends CI_Model
         $this->db->join('mp_banks', 'mp_banks.id = mp_pembayaran.payment_metode', 'LEFT');
         $this->db->join('mp_payee', 'mp_payee.id = mp_pembayaran.customer_id', 'LEFT');
         $this->db->join('mp_users', 'mp_users.id = mp_pembayaran.acc_1', 'LEFT');
-        $this->db->join('notification', 'notification.parent_id = mp_pembayaran.id', 'LEFT');
-        $this->db->where('notification.jenis', 'pembayaran');
+        $this->db->join('notification', 'notification.parent_id = mp_pembayaran.id AND notification.jenis = "pembayaran"', 'LEFT');
+        // $this->db->where('notification.jenis', 'pembayaran');
         // $this->db->where('date <=', $date2);
         $this->db->order_by('mp_pembayaran.id', 'DESC');
         $query = $this->db->get();
@@ -131,10 +134,33 @@ class InvoiceModel extends CI_Model
     }
 
 
-    public function delete($id)
+    public function delete($id, $data)
     {
         $this->db->where('id', $id);
         $this->db->delete('mp_invoice_v2');
+
+
+        $this->db->where('parent_id', $id);
+        $this->db->delete('mp_sub_invoice');
+        $this->db->where('parent_id', $data['id']);
+        $this->db->delete('dt_pelunasan_invoice');
+
+
+        if (!empty($data['general_id'])) {
+            $this->db->where('id', $data['general_id']);
+            $this->db->delete('dt_generalentry');
+        }
+        if (!empty($data['data_pelunasan'])) {
+            foreach ($data['data_pelunasan'] as $dp) {
+
+                $this->db->where('id', $dp['general_id']);
+                $this->db->delete('dt_generalentry');
+            }
+        }
+
+
+
+
 
         $this->record_activity(array('jenis' => 6, 'sub_id' => $id, 'desk' => 'Delete Invoice'));
     }
@@ -142,7 +168,7 @@ class InvoiceModel extends CI_Model
     public function delete_pembayaran($id)
     {
         $this->db->where('id', $id);
-        $this->db->delete('mp_invoice_v2');
+        $this->db->delete('mp_pembayaran');
 
         $this->record_activity(array('jenis' => 9, 'sub_id' => $id, 'desk' => 'Delete Pembayaran'));
     }

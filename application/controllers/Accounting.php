@@ -8,7 +8,7 @@ class Accounting extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('SecurityModel', 'Accounting_model'));
+        $this->load->model(array('SecurityModel', 'Accounting_model', 'General_model'));
         // $this->load->helper(array('DataStructure'));
         $this->db->db_debug = TRUE;
     }
@@ -129,34 +129,14 @@ class Accounting extends CI_Controller
     }
 
 
-    public function journal_voucher2()
-    {
-        try {
-            $crud = $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'view');
-            $filter['ref_number'] = '';
-            $filter['search'] = '';
-            $filter['date_start'] = '';
-            $filter['date_start'] = date('Y-m-' . '01');
-            $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
-            $data['journals'] = array();
-            $data['journals'] = $this->Accounting_model->getAllJournalVoucher($filter);
 
-            $data['title'] = 'Jurnal Umum';
-            $data['table_name'] = 'Jurnal Umum';
-            $data['main_view'] = 'accounting/journal_voucher';
-            $data['vcrud'] = $crud;
-            $data['filter'] = $filter;
-            $this->load->view('main/index2.php', $data);
-        } catch (Exception $e) {
-            ExceptionHandler::handle($e);
-        }
-    }
 
     public function journal_voucher()
     {
         try {
             $crud = $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'create');
             $data['accounts'] = $this->Accounting_model->getAllBaganAkun(array('by_DataStructure' => true));
+            $data['patner_record'] = $this->General_model->getAllPayee();
             $data['title'] = 'Buat Jurnal';
             $data['table_name'] = 'Buat Jurnal Umum';
             $data['main_view'] = 'accounting/add_journal_voucher';
@@ -182,6 +162,7 @@ class Accounting extends CI_Controller
                 header("Refresh:0; url='" . base_url() . "statement/journal");
                 return;
             }
+            $data['patner_record'] = $this->General_model->getAllPayee();
             $data['accounts'] = $this->Accounting_model->getAllBaganAkun(array('by_DataStructure' => true));
             $data['form_url'] = 'editJournalVoucher';
             $data['title'] = 'Edit Jurnal';

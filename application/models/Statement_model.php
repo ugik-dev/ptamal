@@ -12,22 +12,22 @@ class Statement_model extends CI_Model
         $total_credit = 0;
         $form_content = '';
 
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.customer_id,mp_generalentry.arr_cars,mp_generalentry.date,mp_generalentry.naration,mp_generalentry.no_jurnal, gen_lock,url");
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.customer_id,dt_generalentry.date,dt_generalentry.naration,dt_generalentry.ref_number, ref_url");
         if (!empty($filter['draft'])) {
             if ($filter['draft'] == 'draft') {
-                $this->db->select("mp_generalentry.notif_id");
-                $this->db->from('draft_generalentry as mp_generalentry');
+                $this->db->select("dt_generalentry.notif_id");
+                $this->db->from('draft_generalentry as dt_generalentry');
             } else
-                $this->db->from('mp_generalentry');
+                $this->db->from('dt_generalentry');
         } else {
 
-            $this->db->from('mp_generalentry');
+            $this->db->from('dt_generalentry');
         }
         // if (!empty($filter['id']))
         $this->db->where('id', $filter['id']);
         // $this->db->where('date >=', $date1);
         // $this->db->where('date <=', $date2);
-        $this->db->order_by('mp_generalentry.id', 'DESC');
+        $this->db->order_by('dt_generalentry.id', 'DESC');
         $query = $this->db->get();
         $transaction_records =  $query->result()['0'];
         if ($transaction_records  != NULL) {
@@ -66,21 +66,21 @@ class Statement_model extends CI_Model
         $form_content = '';
         $return_data = [];
 
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.date,mp_generalentry.naration,mp_generalentry.no_jurnal, gen_lock");
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.naration,dt_generalentry.ref_number, gen_lock");
 
         if (!empty($filter['draft']))
-            $this->db->from('draft_generalentry as mp_generalentry');
+            $this->db->from('draft_generalentry as dt_generalentry');
         else
-            $this->db->from('mp_generalentry');
+            $this->db->from('dt_generalentry');
 
-        if (!empty($filter['no_jurnal']))
-            $this->db->where(' no_jurnal like "%' . $filter['no_jurnal'] . '%"');
+        if (!empty($filter['ref_number']))
+            $this->db->where(' ref_number like "%' . $filter['ref_number'] . '%"');
         if (!empty($filter['search']))
             $this->db->where('naration like "%' . $filter['search'] . '%"');
         if (!empty($filter['from'])) $this->db->where('date >=', $filter['from']);
         if (!empty($filter['to'])) $this->db->where('date <=', $filter['to']);
 
-        $this->db->order_by('mp_generalentry.id', 'DESC');
+        $this->db->order_by('dt_generalentry.id', 'DESC');
 
         $query = $this->db->get();
         $i = 0;
@@ -138,8 +138,8 @@ class Statement_model extends CI_Model
     {
         $filter['from'] = date('Y-m-d', strtotime('-30 days'));
         $filter['to'] =  date('Y-m-d', strtotime('+30 days'));
-        $url = base_url() . 'Administration/document/';
-        $this->db->select("nama_dokumen as nama_event,date_end as end_event ,'warning' as label_event ,DATE(date_end - INTERVAL notification DAY) as start_event , CONCAT('" . $url . "', id_dokumen) as url");
+        $ref_url = base_url() . 'Administration/document/';
+        $this->db->select("nama_dokumen as nama_event,date_end as end_event ,'warning' as label_event ,DATE(date_end - INTERVAL notification DAY) as start_event , CONCAT('" . $ref_url . "', id_dokumen) as ref_url");
         $this->db->from('adm_dokumen');
         $this->db->where('date_end >= "' . $filter['from'] . '"');
         $this->db->where('date_end <= "' . $filter['to'] . '"');
@@ -168,7 +168,7 @@ class Statement_model extends CI_Model
         if (!empty($filter['to'])) $this->db->where('date_activity <=', $filter['to']);
         if (!empty($filter['user_id'])) $this->db->where('user_id', $filter['user_id']);
 
-        // $this->db->order_by('mp_generalentry.id', 'DESC');
+        // $this->db->order_by('dt_generalentry.id', 'DESC');
 
         $query = $this->db->get();
         $i = 0;
@@ -190,14 +190,14 @@ class Statement_model extends CI_Model
         $total_credit = 0;
         $form_content = '';
 
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.date,mp_generalentry.naration,mp_generalentry.no_jurnal, gen_lock");
-        $this->db->from('mp_generalentry');
-        if (!empty($filter['no_jurnal']))
-            $this->db->where('no_jurnal like "%' . $filter['no_jurnal'] . '%"');
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.naration,dt_generalentry.ref_number, gen_lock");
+        $this->db->from('dt_generalentry');
+        if (!empty($filter['ref_number']))
+            $this->db->where('ref_number like "%' . $filter['ref_number'] . '%"');
         $this->db->where('date >=', $filter['from']);
         $this->db->where('date <=', $filter['to']);
 
-        $this->db->order_by('mp_generalentry.id', 'DESC');
+        $this->db->order_by('dt_generalentry.id', 'DESC');
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -263,7 +263,7 @@ class Statement_model extends CI_Model
                     <td class="border-bottom-journal" colspan="5">
                      <h6 id="naration_' . $transaction_record->transaction_id . '">' . (empty($transaction_record->naration) ? '-' : $transaction_record->naration) . '</h6>
                        
-                       <h7> No Jurnal : ' . $transaction_record->no_jurnal . '</h7> 
+                       <h7> No Jurnal : ' . $transaction_record->ref_number . '</h7> 
                        <br>
                        <a href="' . base_url() . 'statements/delete_jurnal/' . $transaction_record->transaction_id . '" class="btn btn-default btn-outline-danger mr-1 my-1 no-print" style="float: right"><i class="fa fa-trash  pull-left"></i> Delete </a>
                       <a href="' . base_url() . 'statements/copy_jurnal/' . $transaction_record->transaction_id . '" class="btn btn-default btn-outline-primary  mr-1 my-1  no-print" style="float: right"><i class="fa fa-copy  pull-left"></i> Copy </a>
@@ -297,11 +297,11 @@ class Statement_model extends CI_Model
         $total_credit = 0;
         $form_content = '';
 
-        $this->db->select("mp_g.id as transaction_id,mp_payee.customer_name,mp_g.date,mp_g.customer_id,arr_cars,mp_g.naration,mp_g.no_jurnal, gen_lock, url");
+        $this->db->select("mp_g.id as transaction_id,mp_payee.customer_name,mp_g.date,mp_g.customer_id,arr_cars,mp_g.naration,mp_g.ref_number, gen_lock, ref_url");
         if ($filter['draft'])
             $this->db->from('draft_generalentry as mp_g');
         else
-            $this->db->from('mp_generalentry as mp_g');
+            $this->db->from('dt_generalentry as mp_g');
         // $this->db->where('date >=', $date1);
         $this->db->join('mp_payee', 'mp_payee.id = mp_g.customer_id', 'LEFT');
         $this->db->where('mp_g.id', $filter['id']);
@@ -351,11 +351,11 @@ class Statement_model extends CI_Model
     {
 
 
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.date,mp_generalentry.customer_id,arr_cars,mp_generalentry.naration,mp_generalentry.no_jurnal, gen_lock");
-        $this->db->from('mp_generalentry');
-        if (!empty($filter['id'])) $this->db->where('mp_generalentry.id', $filter['id']);
-        if (!empty($filter['no_jurnal'])) $this->db->where('mp_generalentry.no_jurnal', $filter['no_jurnal']);
-        $this->db->order_by('mp_generalentry.id', 'DESC');
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.customer_id,arr_cars,dt_generalentry.naration,dt_generalentry.ref_number, gen_lock");
+        $this->db->from('dt_generalentry');
+        if (!empty($filter['id'])) $this->db->where('dt_generalentry.id', $filter['id']);
+        if (!empty($filter['ref_number'])) $this->db->where('dt_generalentry.ref_number', $filter['ref_number']);
+        $this->db->order_by('dt_generalentry.id', 'DESC');
         $data = [];
         $query = $this->db->get();
         $transaction_records =  $query->result();
@@ -394,11 +394,11 @@ class Statement_model extends CI_Model
     {
         $sheetrow = 6;
         // $sheet->setCellValue('A2', 'Hello from model !');
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.date,mp_generalentry.naration,mp_generalentry.no_jurnal, gen_lock");
-        $this->db->from('mp_generalentry');
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.naration,dt_generalentry.ref_number, gen_lock");
+        $this->db->from('dt_generalentry');
         $this->db->where('date >=', $date1);
         $this->db->where('date <=', $date2);
-        $this->db->order_by('mp_generalentry.id', 'DESC');
+        $this->db->order_by('dt_generalentry.id', 'DESC');
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -420,7 +420,7 @@ class Statement_model extends CI_Model
                         if ($sub_query != NULL) {
                             foreach ($sub_query as $single_trans) {
                                 $sheet->setCellValue('A' . $sheetrow, $transaction_record->date);
-                                $sheet->setCellValue('B' . $sheetrow, $transaction_record->no_jurnal);
+                                $sheet->setCellValue('B' . $sheetrow, $transaction_record->ref_number);
                                 $sheet->setCellValue('C' . $sheetrow, $single_trans->name);
                                 $sheet->setCellValue('D' . $sheetrow, $single_trans->sub_keterangan);
 
@@ -491,7 +491,7 @@ class Statement_model extends CI_Model
                             $creditamount = '';
                             // $total_ledger = number_format($total_ledger, '2', '.', '');
                             $sheet->setCellValue('A' . $sheetrow, $single_ledger->date);
-                            $sheet->setCellValue('B' . $sheetrow, $single_ledger->no_jurnal);
+                            $sheet->setCellValue('B' . $sheetrow, $single_ledger->ref_number);
                             $sheet->setCellValue('C' . $sheetrow, $single_ledger->sub_keterangan);
                             if ($single_ledger->type == 0) {
                                 $debitamount = $single_ledger->amount;
@@ -523,21 +523,21 @@ class Statement_model extends CI_Model
         $this->db->select("SUM(IF(mp_sub_entry.type = 0,amount, -amount)) as saldo_awal");
         $this->db->from('mp_sub_entry');
         $this->db->join('mp_head', "mp_head.id = mp_sub_entry.accounthead");
-        $this->db->join('mp_generalentry', 'mp_generalentry.id = mp_sub_entry.parent_id');
-        $this->db->order_by('mp_generalentry.date', 'asc');
-        $this->db->order_by("SUBSTRING_INDEX(SUBSTRING_INDEX(mp_generalentry.no_jurnal, '/', -3), '/', 1) ASC");
+        $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
+        $this->db->order_by('dt_generalentry.date', 'asc');
+        $this->db->order_by("SUBSTRING_INDEX(SUBSTRING_INDEX(dt_generalentry.ref_number, '/', -3), '/', 1) ASC");
         $year = explode('-', $date1)[0];
         $this->db->where('mp_head.id', $head_id);
-        // $this->db->where('mp_generalentry.date >=', $year. '1-1');
-        // $this->db->where('mp_generalentry.date <', $date1);
+        // $this->db->where('dt_generalentry.date >=', $year. '1-1');
+        // $this->db->where('dt_generalentry.date <', $date1);
         if ($date1 == $year . '-1-1' or $date1 == $year . '-01-1' or $date1 == $year . '-1-01' or $date1 == $year . '-01-01') {
-            $this->db->where('mp_generalentry.id = -' . explode('-', $date1)[0]);
+            $this->db->where('dt_generalentry.id = -' . explode('-', $date1)[0]);
             $this->db->where('mp_sub_entry.parent_id = -' . explode('-', $date1)[0]);
-            // $this->db->where('mp_generalentry.date >=', $year. '1-1');
-            // $this->db->where('mp_generalentry.date <', $date1);
+            // $this->db->where('dt_generalentry.date >=', $year. '1-1');
+            // $this->db->where('dt_generalentry.date <', $date1);
         } else {
-            $this->db->where('mp_generalentry.date >=', $year . '-1-1');
-            $this->db->where('mp_generalentry.date <', $date1);
+            $this->db->where('dt_generalentry.date >=', $year . '-1-1');
+            $this->db->where('dt_generalentry.date <', $date1);
         }
         $query = $this->db->get();
         $query = $query->result_array();
@@ -551,21 +551,21 @@ class Statement_model extends CI_Model
 
 
 
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.date,mp_generalentry.no_jurnal,mp_generalentry.naration,mp_generalentry.no_jurnal,mp_head.name,mp_head.nature,mp_sub_entry.*");
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.ref_number,dt_generalentry.naration,dt_generalentry.ref_number,mp_head.name,mp_head.nature,mp_sub_entry.*");
         $this->db->from('mp_sub_entry');
         $this->db->join('mp_head', "mp_head.id = mp_sub_entry.accounthead");
-        $this->db->join('mp_generalentry', 'mp_generalentry.id = mp_sub_entry.parent_id');
-        $this->db->where('mp_generalentry.id > 0');
+        $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
+        $this->db->where('dt_generalentry.id > 0');
         $this->db->where('mp_sub_entry.parent_id > 0');
         if (!empty($filter['search'])) {
-            $this->db->where('(mp_sub_entry.sub_keterangan like "%' . $filter['search'] . '%" OR mp_generalentry.naration like "%' . $filter['search'] . '%")');
+            $this->db->where('(mp_sub_entry.sub_keterangan like "%' . $filter['search'] . '%" OR dt_generalentry.naration like "%' . $filter['search'] . '%")');
         }
 
         $this->db->where('mp_head.id', $head_id);
-        $this->db->where('mp_generalentry.date >=', $date1);
-        $this->db->where('mp_generalentry.date <=', $date2);
-        $this->db->order_by('mp_generalentry.date', 'asc');
-        $this->db->order_by("SUBSTRING_INDEX(SUBSTRING_INDEX(mp_generalentry.no_jurnal, '/', -3), '/', 1) ASC");
+        $this->db->where('dt_generalentry.date >=', $date1);
+        $this->db->where('dt_generalentry.date <=', $date2);
+        $this->db->order_by('dt_generalentry.date', 'asc');
+        $this->db->order_by("SUBSTRING_INDEX(SUBSTRING_INDEX(dt_generalentry.ref_number, '/', -3), '/', 1) ASC");
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -649,7 +649,7 @@ class Statement_model extends CI_Model
                             // $total_ledger = number_format($total_ledger, '2', '.', '');
 
                             $form_content .= '<tr>
-                        <td>' . $single_ledger->date . '</td><td> <a href="' . base_url('statements/show/') . $single_ledger->parent_id . '">' . $single_ledger->no_jurnal . '</td><td><a >' . $single_ledger->sub_keterangan . '</a></td><td>
+                        <td>' . $single_ledger->date . '</td><td> <a href="' . base_url('statements/show/') . $single_ledger->parent_id . '">' . $single_ledger->ref_number . '</td><td><a >' . $single_ledger->sub_keterangan . '</a></td><td>
                             <a  class="currency">' .
                                 (!empty($debitamount) ? number_format($debitamount, 2, ',', '.') : '') .
                                 '</a>
@@ -676,12 +676,12 @@ class Statement_model extends CI_Model
     public function count_head_amount($head_id, $date1, $date2)
     {
         $count_total_amt = 0;
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.date,mp_generalentry.naration,mp_generalentry.no_jurnal,mp_sub_entry.*");
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.naration,dt_generalentry.ref_number,mp_sub_entry.*");
         $this->db->from('mp_sub_entry');
-        $this->db->join('mp_generalentry', 'mp_generalentry.id = mp_sub_entry.parent_id');
+        $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
         $this->db->where('mp_sub_entry.accounthead', $head_id);
-        $this->db->where('mp_generalentry.date >=', $date1);
-        $this->db->where('mp_generalentry.date <=', $date2);
+        $this->db->where('dt_generalentry.date >=', $date1);
+        $this->db->where('dt_generalentry.date <=', $date2);
 
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
@@ -722,7 +722,7 @@ class Statement_model extends CI_Model
         $this->db->select("h.*");
         $this->db->from('mp_head as h');
         $this->db->order_by('name', 'ASC');
-        // $this->db->join('mp_generalentrys as g', 'g.id = h.id_parent');
+        // $this->db->join('dt_generalentrys as g', 'g.id = h.id_parent');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             $ledger_data =  $query->result();
@@ -1198,14 +1198,14 @@ class Statement_model extends CI_Model
     public function count_head_amount_like_name($filter)
     {
         $count_total_amt = 0;
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.date,mp_generalentry.naration,mp_generalentry.no_jurnal,mp_sub_entry.*");
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.naration,dt_generalentry.ref_number,mp_sub_entry.*");
         $this->db->from('mp_sub_entry');
-        $this->db->join('mp_generalentry', 'mp_generalentry.id = mp_sub_entry.parent_id');
+        $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
         $this->db->join('mp_head', 'mp_head.id = mp_sub_entry.accounthead');
         $this->db->where('mp_head.name like "[' . $filter['name'] . '%"');
-        if (!empty($filter['year'])) $this->db->where('mp_generalentry.date like "' . $filter['year'] . '%"');
-        if (!empty($filter['filter']['from'])) $this->db->where('mp_generalentry.date >= "' . $filter['filter']['from'] . '"');
-        if (!empty($filter['filter']['to'])) $this->db->where('mp_generalentry.date <= "' . $filter['filter']['to'] . '"');
+        if (!empty($filter['year'])) $this->db->where('dt_generalentry.date like "' . $filter['year'] . '%"');
+        if (!empty($filter['filter']['from'])) $this->db->where('dt_generalentry.date >= "' . $filter['filter']['from'] . '"');
+        if (!empty($filter['filter']['to'])) $this->db->where('dt_generalentry.date <= "' . $filter['filter']['to'] . '"');
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             $ledger_data =  $query->result();
@@ -1237,14 +1237,14 @@ class Statement_model extends CI_Model
         $filter
     ) {
         $count_total_amt = 0;
-        $this->db->select("mp_generalentry.id as transaction_id,mp_generalentry.date,mp_generalentry.naration,mp_generalentry.no_jurnal,mp_sub_entry.*");
+        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.naration,dt_generalentry.ref_number,mp_sub_entry.*");
         $this->db->from('mp_sub_entry');
-        $this->db->join('mp_generalentry', 'mp_generalentry.id = mp_sub_entry.parent_id');
+        $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
         $this->db->join('mp_head', 'mp_head.id = mp_sub_entry.accounthead');
         $this->db->where('mp_head.name like "[' . $filter['name'] . '%"');
-        // $this->db->where('mp_generalentry.date like "2020%"');
-        if (!empty($filter['filter']['from'])) $this->db->where('mp_generalentry.date >= "' . $filter['filter']['from'] . '"');
-        if (!empty($filter['filter']['to'])) $this->db->where('mp_generalentry.date <= "' . $filter['filter']['to'] . '"');
+        // $this->db->where('dt_generalentry.date like "2020%"');
+        if (!empty($filter['filter']['from'])) $this->db->where('dt_generalentry.date >= "' . $filter['filter']['from'] . '"');
+        if (!empty($filter['filter']['to'])) $this->db->where('dt_generalentry.date <= "' . $filter['filter']['to'] . '"');
 
         $debit = 0;
         $credit = 0;
@@ -1483,7 +1483,7 @@ class Statement_model extends CI_Model
                             ) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
                         mp_head.name LIKE CONCAT(@names, "%") AND mp_sub_entry.parent_id = " -' . $filter['tahun'] . '"
@@ -1499,11 +1499,11 @@ class Statement_model extends CI_Model
                             ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
                         mp_sub_entry.parent_id > 0 AND
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-12-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-12-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name
@@ -1535,10 +1535,10 @@ class Statement_model extends CI_Model
                                 ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date < "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date >= "' . $filter['tahun'] . '-1-1"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date < "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date >= "' . $filter['tahun'] . '-1-1"
                         ),0) saldo_sebelum,
                        COALESCE((
                         SELECT
@@ -1549,10 +1549,10 @@ class Statement_model extends CI_Model
                                         ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name
@@ -1587,10 +1587,10 @@ class Statement_model extends CI_Model
                             ) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date = "' . $filter['tahun'] . '-01-01"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date = "' . $filter['tahun'] . '-01-01"
                         ),0) saldo_sebelum,
                        COALESCE((
                         SELECT
@@ -1603,10 +1603,10 @@ class Statement_model extends CI_Model
                             ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name
@@ -1733,10 +1733,10 @@ class Statement_model extends CI_Model
                                         ),2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date < "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND	mp_generalentry.date >= "' . $filter['tahun'] . '-1-1"
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date < "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND	dt_generalentry.date >= "' . $filter['tahun'] . '-1-1"
                                     ),0) saldo_sebelum,
                                 COALESCE((
                                     SELECT
@@ -1747,10 +1747,10 @@ class Statement_model extends CI_Model
                                         ),2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
                                     ),0)  mutasi,
                                 mp_head.id,
                                 mp_head.name
@@ -1782,11 +1782,11 @@ class Statement_model extends CI_Model
                                             ,2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
                                     mp_sub_entry.parent_id =  "-' . $filter['tahun'] . '"  AND 
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date = "' . $filter['tahun'] . '-1-1" 
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date = "' . $filter['tahun'] . '-1-1" 
                                     ),0) saldo_sebelum,
                                 COALESCE((
                                     SELECT
@@ -1797,11 +1797,11 @@ class Statement_model extends CI_Model
                                         ),2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
                                     mp_sub_entry.parent_id > 0  AND 
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-12-31"
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-12-31"
                                     ),0)  mutasi,
                                 mp_head.id,
                                 mp_head.name
@@ -1831,11 +1831,11 @@ class Statement_model extends CI_Model
                                         ),2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
                                     mp_sub_entry.parent_id =  "-' . $filter['tahun'] . '"  AND 
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date = "' . $filter['tahun'] . '-1-1" 
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date = "' . $filter['tahun'] . '-1-1" 
                                     ),0) saldo_sebelum,
                                 COALESCE((
                                     SELECT
@@ -1847,11 +1847,11 @@ class Statement_model extends CI_Model
                                         ),2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
                                     mp_sub_entry.parent_id > 0  AND 
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
                                     ),0)  mutasi,
                                 mp_head.id,
                                 mp_head.name
@@ -1945,20 +1945,20 @@ class Statement_model extends CI_Model
         $debit = 0;
         $kredit = 0;
         for ($i = 1; $i <= 12; $i++) {
-            $this->db->select("YEAR(mp_generalentry.date) as year, MONTH(mp_generalentry.date) as month,
+            $this->db->select("YEAR(dt_generalentry.date) as year, MONTH(dt_generalentry.date) as month,
             ROUND(sum(IF(mp_sub_entry.type = 1,  mp_sub_entry.amount,-mp_sub_entry.amount)),2) mutasi, 
             ROUND(sum(IF(mp_sub_entry.type = 0, mp_sub_entry.amount,'0')),2) debit,
             ROUND(sum(IF(mp_sub_entry.type = 0, ,'0',mp_sub_entry.amount)),2) kredit");
             $this->db->from('mp_sub_entry');
-            $this->db->join('mp_generalentry', 'mp_generalentry.id = mp_sub_entry.parent_id');
+            $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
             $this->db->join('mp_head', 'mp_head.id = mp_sub_entry.accounthead');
             $this->db->where('mp_head.name like "[' . $filter['name'] . '%"');
             if (!empty($filter['filter']['year'])) {
                 $filter['filter']['from'] = $filter['filter']['year'] . '-' . $i . '-01';
                 $filter['filter']['to'] = $filter['filter']['year'] . '-' . $i . '-31';
             }
-            $this->db->where('mp_generalentry.date >= "' . $filter['filter']['from'] . '"');
-            $this->db->where('mp_generalentry.date <= "' . $filter['filter']['to'] . '"');
+            $this->db->where('dt_generalentry.date >= "' . $filter['filter']['from'] . '"');
+            $this->db->where('dt_generalentry.date <= "' . $filter['filter']['to'] . '"');
             $query = $this->db->get();
             $res[$i] = $query->result_array();
 
@@ -2055,10 +2055,10 @@ class Statement_model extends CI_Model
                                         ),2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date < "' . date('Y') . '-' . date('m') . '-1" AND 			mp_generalentry.date >= "' . date('Y')  . '-1-1"
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date < "' . date('Y') . '-' . date('m') . '-1" AND 			dt_generalentry.date >= "' . date('Y')  . '-1-1"
                                     ),0) saldo_sebelum,
                                 COALESCE((
                                     SELECT
@@ -2069,10 +2069,10 @@ class Statement_model extends CI_Model
                                                    ),2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . date('Y') . '-' .  date('m') . '-1" AND 			mp_generalentry.date <="' . date('Y') . '-' . date('m') . '-31"
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . date('Y') . '-' .  date('m') . '-1" AND 			dt_generalentry.date <="' . date('Y') . '-' . date('m') . '-31"
                                     ),0)  mutasi,
                                 mp_head.id,
                                 mp_head.name
@@ -2113,11 +2113,11 @@ class Statement_model extends CI_Model
                                         ROUND(SUM(IF(mp_sub_entry.type = 1,mp_sub_entry.amount,-mp_sub_entry.amount)),2) 
                                     FROM
                                         mp_sub_entry
-                                    JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                                    JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                                     JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                                     WHERE
-                                    mp_generalentry.id > 0 AND
-                                    mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' .  $i . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $i . '-31"
+                                    dt_generalentry.id > 0 AND
+                                    mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' .  $i . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $i . '-31"
                                     ),0) mutasi,
                                 mp_head.id,
                                 mp_head.name
@@ -2152,20 +2152,20 @@ class Statement_model extends CI_Model
         $debit = 0;
         $kredit = 0;
         for ($i = 1; $i <= 12; $i++) {
-            $this->db->select("YEAR(mp_generalentry.date) as year, MONTH(mp_generalentry.date) as month,
+            $this->db->select("YEAR(dt_generalentry.date) as year, MONTH(dt_generalentry.date) as month,
             ROUND(sum(IF(mp_sub_entry.type = 1,  mp_sub_entry.amount,-mp_sub_entry.amount)),2) mutasi, 
             ROUND(sum(IF(mp_sub_entry.type = 0, mp_sub_entry.amount,'0')),2) debit,
             ROUND(sum(IF(mp_sub_entry.type = 0, ,'0',mp_sub_entry.amount)),2) kredit");
             $this->db->from('mp_sub_entry');
-            $this->db->join('mp_generalentry', 'mp_generalentry.id = mp_sub_entry.parent_id');
+            $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
             $this->db->join('mp_head', 'mp_head.id = mp_sub_entry.accounthead');
             $this->db->where('mp_head.name like "[' . $filter['name'] . '%"');
             if (!empty($filter['filter']['year'])) {
                 $filter['filter']['from'] = $filter['filter']['year'] . '-' . $i . '-01';
                 $filter['filter']['to'] = $filter['filter']['year'] . '-' . $i . '-31';
             }
-            $this->db->where('mp_generalentry.date >= "' . $filter['filter']['from'] . '"');
-            $this->db->where('mp_generalentry.date <= "' . $filter['filter']['to'] . '"');
+            $this->db->where('dt_generalentry.date >= "' . $filter['filter']['from'] . '"');
+            $this->db->where('dt_generalentry.date <= "' . $filter['filter']['to'] . '"');
             $query = $this->db->get();
             $res[$i] = $query->result_array();
 
@@ -2313,7 +2313,7 @@ class Statement_model extends CI_Model
                             ) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
                         mp_head.name LIKE CONCAT(@names, "%") AND mp_sub_entry.parent_id = " -' . $filter['tahun'] . '"
@@ -2329,11 +2329,11 @@ class Statement_model extends CI_Model
                             ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
                         mp_sub_entry.parent_id > 0 AND
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-12-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-12-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name
@@ -2365,10 +2365,10 @@ class Statement_model extends CI_Model
                                 ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date < "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date >= "' . $filter['tahun'] . '-1-1"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date < "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date >= "' . $filter['tahun'] . '-1-1"
                         ),0) saldo_sebelum,
                        COALESCE((
                         SELECT
@@ -2379,10 +2379,10 @@ class Statement_model extends CI_Model
                                         ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name
@@ -2417,10 +2417,10 @@ class Statement_model extends CI_Model
                             ) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date = "' . $filter['tahun'] . '-01-01"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date = "' . $filter['tahun'] . '-01-01"
                         ),0) saldo_sebelum,
                        COALESCE((
                         SELECT
@@ -2433,10 +2433,10 @@ class Statement_model extends CI_Model
                             ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name
@@ -2568,7 +2568,7 @@ class Statement_model extends CI_Model
                             ) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
                         mp_head.name LIKE CONCAT(@names, "%") AND mp_sub_entry.parent_id = " -' . $filter['tahun'] . '"
@@ -2584,11 +2584,11 @@ class Statement_model extends CI_Model
                             ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
                         mp_sub_entry.parent_id > 0 AND
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-12-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-1-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-12-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name
@@ -2620,10 +2620,10 @@ class Statement_model extends CI_Model
                                 ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date < "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date >= "' . $filter['tahun'] . '-1-1"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date < "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date >= "' . $filter['tahun'] . '-1-1"
                         ),0) saldo_sebelum,
                        COALESCE((
                         SELECT
@@ -2634,10 +2634,10 @@ class Statement_model extends CI_Model
                                         ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name
@@ -2672,10 +2672,10 @@ class Statement_model extends CI_Model
                             ) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date = "' . $filter['tahun'] . '-01-01"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date = "' . $filter['tahun'] . '-01-01"
                         ),0) saldo_sebelum,
                        COALESCE((
                         SELECT
@@ -2688,10 +2688,10 @@ class Statement_model extends CI_Model
                             ),2) 
                         FROM
                             mp_sub_entry
-                        JOIN mp_generalentry ON mp_generalentry.id = mp_sub_entry.parent_id
+                        JOIN dt_generalentry ON dt_generalentry.id = mp_sub_entry.parent_id
                         JOIN mp_head ON mp_head.id = mp_sub_entry.accounthead
                         WHERE
-                        mp_head.name LIKE CONCAT(@names, "%") AND mp_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			mp_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
+                        mp_head.name LIKE CONCAT(@names, "%") AND dt_generalentry.date >= "' . $filter['tahun'] . '-' . $filter['bulan'] . '-1" AND 			dt_generalentry.date <="' . $filter['tahun'] . '-' . $filter['bulan'] . '-31"
                         ),0)  mutasi,
                     mp_head.id,
                     mp_head.name

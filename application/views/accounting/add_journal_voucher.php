@@ -19,7 +19,10 @@
 											<select name="customer_id" id="customer_id" class="form-control select2 input-lg">
 												<option value="0"> ------- </option>
 												<?php
-												// echo $patner_record; 
+												// echo $patner_record;
+												foreach ($patner_record as $pr) {
+													echo '<option value="' . $pr['id'] . '">' . $pr['customer_name'] . '</option>';
+												}
 												?>
 											</select>
 										</div>

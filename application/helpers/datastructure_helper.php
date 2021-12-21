@@ -197,7 +197,7 @@ class DataStructure
   }
 
 
-  public static function TreeAccounts($arr, $columns, $childKeys, $parentFields, $childNames, $assoc = TRUE)
+  public static function TreeAccounts($arr, $assoc = TRUE)
   {
     $res = array();
     foreach ($arr as $k) {

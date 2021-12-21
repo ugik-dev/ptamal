@@ -38,18 +38,39 @@ function count_total(edit = false) {
 
       i++;
     });
+
+    if (
+      $('input[name="percent_fee"]').val() != "" ||
+      $('input[name="percent_fee"]').val() != 0
+    ) {
+      fee = ($('input[name="percent_fee"]').val() / 100) * count_val;
+      $('input[name="fee_amount"]').val(formatRupiah(fee));
+    } else {
+      fee = 0;
+    }
     if (count_val != "" && count_val != "0") {
-      $('input[name="sub_total"]').val(formatRupiah(count_val));
+      $('input[name="sub_total"]').val(formatRupiah(count_val + fee));
     } else {
       $('input[name="sub_total"]').val(0);
     }
+    if (count_val != "" && count_val != "0") {
+      $('input[name="jumlah"]').val(formatRupiah(count_val));
+    } else {
+      $('input[name="jumlah"]').val(0);
+    }
     if ($('input[name="ppn_pph"]').is(":checked") == true) {
-      ppn_pph = count_val * 0.1;
+      console.log(count_val);
+      str_count_val = count_val.toString();
+      str_count_val = str_count_val.substring(0, str_count_val.length - 2);
+      ppn_pph = Math.floor(str_count_val * 0.1) + "00";
+      ppn_pph = parseInt(ppn_pph);
+      // console.log(ppn_pph + "00");
       $('input[name="ppn_pph_count"]').val(formatRupiah(ppn_pph));
     } else {
       $('input[name="ppn_pph_count"]').val(0);
     }
-    total_final = ppn_pph + count_val;
+
+    total_final = fee + ppn_pph + count_val;
     if (total_final != "" && total_final != "0") {
       $('input[name="total_final"]').val(formatRupiah(total_final));
     } else {

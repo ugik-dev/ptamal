@@ -27,13 +27,7 @@ class Accounting_model extends CI_Model
         if (!empty($filter['by_DataStructure'])) {
             return DataStructure::TreeAccounts(
                 $query->result_array(),
-                ['id'],
-                ['page_id'],
-                [
-                    ['parent_id', 'name', 'link', 'icon'],
-                    ['page_id', 'sub_name', 'sub_link']
-                ],
-                ['children'],
+
                 false
             );
         }
@@ -44,10 +38,11 @@ class Accounting_model extends CI_Model
 
     public function getAllJournalVoucher($filter = [])
     {
-        $this->db->select("gen.id as parent_id,generated_source, sub.id as sub_id,gen.ref_number,gen.date,gen.naration,gen.customer_id,gen.user_update,sub.accounthead,sub.amount,sub.type,sub.sub_keterangan,head.name as head_name, head_number    ");
+        $this->db->select("gen.id as parent_id,generated_source, paye.customer_name, sub.id as sub_id,gen.ref_number,gen.date,gen.naration,gen.customer_id,gen.user_update,sub.accounthead,sub.amount,sub.type,sub.sub_keterangan,head.name as head_name, head_number    ");
         $this->db->from('dt_generalentry as gen');
         $this->db->join('mp_sub_entry as sub', "gen.id = sub.parent_id", 'LEFT');
         $this->db->join('dt_head as head', "head.id = sub.accounthead", 'LEFT');
+        $this->db->join('mp_payee as paye', "paye.id = gen.customer_id", 'LEFT');
         if (!empty($filter['id'])) $this->db->where('gen.id', $filter['id']);
         if (!empty($filter['source'])) $this->db->where('gen.generated_source', $filter['source']);
         $this->db->order_by('gen.date, gen.id,  sub.id ', 'DESC');
@@ -61,7 +56,7 @@ class Accounting_model extends CI_Model
             ['parent_id'],
             ['sub_id'],
             [
-                ['parent_id', 'generated_source', 'ref_number', 'date', 'naration', 'customer_id', 'user_update'],
+                ['parent_id', 'generated_source', 'ref_number', 'date', 'naration', 'customer_id', 'user_update', 'customer_name'],
                 ['sub_id', 'accounthead', 'head_name', 'amount', 'type', 'sub_keterangan', 'head_number']
             ],
             ['children'],

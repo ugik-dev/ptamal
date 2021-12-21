@@ -17,7 +17,7 @@
                                   <div class="col-md-6">
                                       <label>Nama Mitra</label>
 
-                                      <h4><strong id="mitra_name"><?= $journals['customer_id'] ?> </strong></h4>
+                                      <h4><strong id="mitra_name"><?= $journals['customer_name'] ?> </strong></h4>
                                       <hr>
                                   </div>
                               </div>

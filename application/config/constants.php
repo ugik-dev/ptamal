@@ -31,7 +31,7 @@ defined('FILE_WRITE_MODE') or define('FILE_WRITE_MODE', 0666);
 defined('DIR_READ_MODE')   or define('DIR_READ_MODE', 0755);
 defined('DIR_WRITE_MODE')  or define('DIR_WRITE_MODE', 0755);
 defined('company_name')  or define('company_name', 'PT Agro Marina Anugerah Lestari');
-defined('logo')  or define('logo', 'ima.png');
+defined('logo')  or define('logo', 'ptamal.jpg');
 
 /*
 |--------------------------------------------------------------------------
