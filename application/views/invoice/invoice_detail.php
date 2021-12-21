@@ -639,11 +639,11 @@
                 if (result.isConfirmed == false) {
                     return;
                 }
-                // swal.fire({
-                //     title: 'Loading ...',
-                //     allowOutsideClick: false
-                // });
-                // swal.showLoading();
+                swal.fire({
+                    title: 'Loading ...',
+                    allowOutsideClick: false
+                });
+                swal.showLoading();
                 $.ajax({
                     url: url,
                     'type': 'POST',
@@ -658,7 +658,7 @@
                         }
                         swal.fire("Simpan Berhasil", "", "success");
 
-                        // location.reload();
+                        location.reload();
                         //  return;
                         // var d = json['data']
                         // dataPayments[d['id']] = d;
