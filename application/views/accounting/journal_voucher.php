@@ -122,7 +122,7 @@
                                             [' . $single_trans['head_number'] . ']</td><td style=" text-align: left;">' . $single_trans['head_name'] . '
                                             </td>
                                             <td>
-                                            <p>' . $single_trans['sub_keterangan'] . '</p>
+                                            <p>' . $parent['naration'] . ' ' . $single_trans['sub_keterangan'] . '</p>
                                                 </td>
                                             <td>
                                                 <p>' . number_format($single_trans['amount'], 2, ',', '.') . '</p>
@@ -137,7 +137,7 @@
                                              [' . $single_trans['head_number'] . ']</td><td style=" text-align: left;">' . $single_trans['head_name'] . '
                                             </td>
                                             <td>
-                                            <p>' . $single_trans['sub_keterangan'] . '</p>
+                                            <p>' . $parent['naration'] . ' ' . $single_trans['sub_keterangan'] . '</p>
                                                 </td>
                                             <td>
                                             </td>

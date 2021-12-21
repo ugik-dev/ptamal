@@ -1414,19 +1414,11 @@ class Invoice extends CI_Controller
 
             $data['old_data'] = $this->Invoice_model->getAllInvoice(array('id' => $data['parent_id'], 'by_id' => true))[$data['parent_id']];
             $data['data_pelunasan'] = $this->General_model->getAllPelunasanInvoice(array('parent_id' => $data['parent_id']));
-            $total_bayar = 0;
+            $total_in_data_pelunasan = 0;
             foreach ($data['data_pelunasan'] as $p) {
-                $total_bayar = $total_bayar + $p['sum_child'];
+                $total_in_data_pelunasan = $total_in_data_pelunasan + $p['sum_child'];
             }
-            $data['total_bayar'] = $total_bayar;
-            if ($total_bayar >= $data['old_data']['total_final']) {
-                throw new UserException('Data ini sudah lunas!');
-            }
-            if ($data['total_bayar'] + $data['nominal'] >= $data['old_data']['total_final']) {
-                $data['status'] = 'paid';
-            } else {
-                $data['status'] = 'unpaid';
-            }
+
             // $jp = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['old_data']['jenis_invoice']))[$data['old_data']['jenis_invoice']];
             $jp = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['old_data']['jenis_invoice']))[$data['old_data']['jenis_invoice']];
             // $data['status'] = 'unpaid';
@@ -1487,8 +1479,15 @@ class Invoice extends CI_Controller
                 'sub_keterangan' => 'Piut ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
             );
             $i++;
-            // echo json_encode($data);
-            // die();
+            // $data['total_bayar'] = $total_bayar;
+            if ($total_in_data_pelunasan >= $data['old_data']['total_final']) {
+                throw new UserException('Data ini sudah lunas!');
+            }
+            if ($total + $total_in_data_pelunasan >= $data['old_data']['total_final']) {
+                $data['status'] = 'paid';
+            } else {
+                $data['status'] = 'unpaid';
+            };
 
             $result = $this->Invoice_model->add_pelunasan($data);
             echo json_encode(array('error' => false, 'data' => $data));

@@ -222,7 +222,7 @@ class Accounting extends CI_Controller
             if ($deb != $kred) {
                 throw new UserException('Nilai debit dan kredit tidak imbang!');
             }
-            $data['ref_number'] = $this->Accounting_model->gen_number($data);
+            $data['ref_number'] = $this->General_model->gen_number($data['date'], 'JV');
             $order_id = $this->Accounting_model->addJournalVoucher($data);
 
             echo json_encode(array('error' => false, 'data' => $order_id));
@@ -280,8 +280,8 @@ class Accounting extends CI_Controller
             $old_data = $this->Accounting_model->getAllJournalVoucher(array('id' => $data['id']))[0];
             // var_dump($old_data);
             // echo 'arrasdasda ';
-            if (substr($old_data['date'], 0, -3) != substr($data['date'], 0, -3))
-                $data['ref_number'] = $this->Accounting_model->gen_number($data);
+            // if (substr($old_data['date'], 0, -3) != substr($data['date'], 0, -3))
+            $data['ref_number'] = $this->General_model->gen_number($data, 'JV');
             // die();
             $accounts = $this->Accounting_model->editJournalVoucher($data);
             echo json_encode(array('error' => false, 'data' => $data['id']));
