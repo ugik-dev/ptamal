@@ -38,6 +38,11 @@ function count_total(edit = false) {
 
       i++;
     });
+    if (count_val != "" && count_val != "0") {
+      $('input[name="jumlah"]').val(formatRupiah(count_val));
+    } else {
+      $('input[name="jumlah"]').val(0);
+    }
 
     if (
       $('input[name="percent_fee"]').val() != "" ||
@@ -48,23 +53,23 @@ function count_total(edit = false) {
     } else {
       fee = 0;
     }
+
     if (count_val != "" && count_val != "0") {
       $('input[name="sub_total"]').val(formatRupiah(count_val + fee));
     } else {
       $('input[name="sub_total"]').val(0);
     }
-    if (count_val != "" && count_val != "0") {
-      $('input[name="jumlah"]').val(formatRupiah(count_val));
-    } else {
-      $('input[name="jumlah"]').val(0);
-    }
+
     if ($('input[name="ppn_pph"]').is(":checked") == true) {
       console.log(count_val);
-      str_count_val = count_val.toString();
-      str_count_val = str_count_val.substring(0, str_count_val.length - 2);
-      ppn_pph = Math.floor(str_count_val * 0.1) + "00";
-      ppn_pph = parseInt(ppn_pph);
-      // console.log(ppn_pph + "00");
+      // str_count_val = count_val.toString();
+      // str_count_val = str_count_val.substring(0, str_count_val.length - 2);
+      // ppn_pph =
+      //   Math.floor((parseInt(str_count_val) + parseInt(fee)) * 0.1) + "00";
+      // ppn_pph = parseInt(ppn_pph);
+
+      ppn_pph = (fee + count_val) * 0.1;
+      console.log(ppn_pph);
       $('input[name="ppn_pph_count"]').val(formatRupiah(ppn_pph));
     } else {
       $('input[name="ppn_pph_count"]').val(0);

@@ -38,7 +38,7 @@ class Accounting_model extends CI_Model
 
     public function getAllJournalVoucher($filter = [])
     {
-        $this->db->select("gen.id as parent_id,generated_source, paye.customer_name, sub.id as sub_id,gen.ref_number,gen.date,gen.naration,gen.customer_id,gen.user_update,sub.accounthead,sub.amount,sub.type,sub.sub_keterangan,head.name as head_name, head_number    ");
+        $this->db->select("gen.id as parent_id,generated_source,gen.ref_url, paye.customer_name, sub.id as sub_id,gen.ref_number,gen.date,gen.naration,gen.customer_id,gen.user_update,sub.accounthead,sub.amount,sub.type,sub.sub_keterangan,head.name as head_name, head_number    ");
         $this->db->from('dt_generalentry as gen');
         $this->db->join('mp_sub_entry as sub', "gen.id = sub.parent_id", 'LEFT');
         $this->db->join('dt_head as head', "head.id = sub.accounthead", 'LEFT');
@@ -56,7 +56,7 @@ class Accounting_model extends CI_Model
             ['parent_id'],
             ['sub_id'],
             [
-                ['parent_id', 'generated_source', 'ref_number', 'date', 'naration', 'customer_id', 'user_update', 'customer_name'],
+                ['parent_id', 'generated_source', 'ref_number', 'ref_url', 'date', 'naration', 'customer_id', 'user_update', 'customer_name'],
                 ['sub_id', 'accounthead', 'head_name', 'amount', 'type', 'sub_keterangan', 'head_number']
             ],
             ['children'],

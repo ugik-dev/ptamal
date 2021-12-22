@@ -202,7 +202,9 @@
 
                     <?php } else {
                         $fee = 0;
-                    } ?>
+                    }
+
+                    $total = $total + $fee ?>
                     <?php
                     if ($dataContent['ppn_pph'] == 1) {
                         $tmp1 = floor($total * 0.10);
@@ -263,7 +265,7 @@
                         <!--end::Shape-->
                         <div class="font-weight-boldest font-size-h5">TOTAL</div>
                         <div class="text-right d-flex flex-column">
-                            <span class="font-weight-boldest font-size-h3 line-height-sm"><?= number_format(($total + $fee), 0, ',', '.') ?></span>
+                            <span class="font-weight-boldest font-size-h3 line-height-sm"><?= number_format(($total), 0, ',', '.') ?></span>
                         </div>
                     </div>
                 </div>

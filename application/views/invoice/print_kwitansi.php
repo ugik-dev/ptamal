@@ -122,12 +122,24 @@
                                 <table border="0" style="margin-left : 50px" width="400">
                                     <?php
                                     $i = 0;
+                                    $tot_item = 0;
                                     foreach ($transaction['items'] as $it) {
                                     ?>
                                         <tr>
                                             <td width="200px" class="value" style="margin-right: 1px;"><?= $it['keterangan_item'] ?></td>
                                             <td width="10px" class="value" style="margin-right: 1px;">Rp</td>
                                             <td width='' class="value" style="text-align: right; margin-right: 0"><?= number_format($it['amount'] * $it['qyt'], 0, ',', '.') ?></td>
+                                        </tr>
+                                    <?php
+                                        $i++;
+                                        $tot_item = $tot_item + ($it['amount'] * $it['qyt']);
+                                    }
+                                    if ($transaction['percent_fee'] > 0) {
+                                    ?>
+                                        <tr>
+                                            <td width="200px" class="value" style="margin-right: 2px;">FEE <?= $transaction['percent_fee'] ?>%</td>
+                                            <td width="10px" class="value" style="margin-right: 1px;">Rp</td>
+                                            <td width='' class="value" style="text-align: right; margin-right: 0"><?= number_format($transaction['percent_fee'] / 100 * $tot_item, 0, ',', '.') ?></td>
                                         </tr>
                                     <?php
                                         $i++;

@@ -249,7 +249,7 @@
     </div>
 </div>
 
-<script src="<?php echo base_url(); ?>assets/dist/js/backend/invoice.js?v=0.4"></script>
+<script src="<?php echo base_url(); ?>assets/dist/js/backend/invoice.js?v=0.6"></script>
 <script src="<?php echo base_url(); ?>assets/plugins/input-mask/jquery.mask.min.js"></script>
 
 <script>
@@ -295,6 +295,8 @@
     description = $('#description');
     date_jurnal = $('#date');
     date2 = $('#date2');
+    percent_fee = $('#percent_fee');
+
     invoice_form = $('#invoice_form');
     acc_1 = $('#acc_1');
     acc_2 = $('#acc_2');
@@ -413,6 +415,7 @@
         date_jurnal.val('<?= $data_return['date'] ?>');
         date2.val('<?= $data_return['date2'] ?>');
         description.val('<?= $data_return['description'] ?>');
+        percent_fee.val('<?= $data_return['percent_fee'] ?>');
         acc_1.val('<?= $data_return['acc_1'] ?>');
         acc_2.val('<?= $data_return['acc_2'] ?>');
         acc_3.val('<?= $data_return['acc_3'] ?>');
@@ -463,11 +466,11 @@
             if (result.isConfirmed == false) {
                 return;
             }
-            swal.fire({
-                title: 'Loading...',
-                allowOutsideClick: false
-            });
-            swal.showLoading();
+            // swal.fire({
+            //     title: 'Loading...',
+            //     allowOutsideClick: false
+            // });
+            // swal.showLoading();
             $.ajax({
                 url: url,
                 'type': 'POST',
@@ -484,7 +487,7 @@
                     var d = json['data']
 
                     swal.fire(swalSuccessConfigure);
-                    window.location = '<?= base_url() ?>invoice/show/' + d;
+                    // window.location = '<?= base_url() ?>invoice/show/' + d;
                 },
                 error: function(e) {}
             });

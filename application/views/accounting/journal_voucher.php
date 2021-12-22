@@ -100,19 +100,30 @@
                             <tbody>
                                 <?php
                                 foreach ($journals as $parent) {
-                                    $btn_lock =  ($vcrud['hk_delete'] == 1 ? '<a href="' . base_url() . 'accounting/delete_jurnal/' . $parent['parent_id'] . '" class="btn btn-default btn-outline-danger mr-1 my-1 no-print" style="float: right"><i class="fa fa-trash  pull-left"></i> Delete </a> ' : '') .
-                                        ($vcrud['hk_update'] == 1 ? '<a href="' . base_url() . 'accounting/edit_jurnal/' . $parent['parent_id'] . '" class="btn btn-default btn-outline-primary mr-1 my-1 no-print" style="float: right"><i class="fa fa-list-alt pull-left"></i> Edit </a> ' : '') .
-                                        ($vcrud['hk_update'] == 1 ? '<a href="' . base_url() . 'accounting/show_journal/' . $parent['parent_id'] . '" class="btn btn-default btn-outline-primary mr-1 my-1 no-print" style="float: right"><i class="fa fa-eye pull-left"></i> Show </a> ' : '');
+                                    // var_dump($parent);
+                                    if (!empty($parent['ref_url'])) {
+                                        // echo explode('/', $parent['ref_url'])[0];
+                                        $btn_lock =  '<a href="' . base_url() . $parent['ref_url'] . '" class="btn btn-default btn-outline-primary mr-1 my-1 no-print" style="float: right"><i class="fa fa-list-alt pull-left"></i> ' . ucfirst(explode('/', $parent['ref_url'])[0]) . ' </a> ' .
+                                            ($vcrud['view'] == 1 ? '<a href="' . base_url() . 'accounting/show_journal/' . $parent['parent_id'] . '" class="btn btn-default btn-outline-primary mr-1 my-1 no-print" style="float: right"><i class="fa fa-eye pull-left"></i> Show </a> ' : '');
+                                    } else {
+                                        $btn_lock =  ($vcrud['hk_delete'] == 1 ? '<a href="' . base_url() . 'accounting/delete_jurnal/' . $parent['parent_id'] . '" class="btn btn-default btn-outline-danger mr-1 my-1 no-print" style="float: right"><i class="fa fa-trash  pull-left"></i> Delete </a> ' : '') .
+                                            ($vcrud['hk_update'] == 1 ? ($parent['generated_source'] == 'Journal Voucher' ? '<a href="' . base_url() . 'accounting/edit_jurnal/' . $parent['parent_id'] . '" class="btn btn-default btn-outline-primary mr-1 my-1 no-print" style="float: right"><i class="fa fa-list-alt pull-left"></i> Edit </a> ' : '') : '') .
+                                            ($vcrud['view'] == 1 ? '<a href="' . base_url() . 'accounting/show_journal/' . $parent['parent_id'] . '" class="btn btn-default btn-outline-primary mr-1 my-1 no-print" style="float: right"><i class="fa fa-eye pull-left"></i> Show </a> ' : '');
+                                    }
 
                                     echo '<tr class="narration" >
                                         <td class="border-bottom-journal" colspan="6" style=" text-align: center;">
                                         <div class="row">
-                                            <div class="col-md-6" style="text-align: center; margin: auto"> <h7> No Jurnal : ' . $parent['ref_number'] . '</h7> </div>
-                                        <div class="col-md-6"> ' .  $btn_lock . ' </div>
+                                            <div class="col-md-6" style="text-align: center; margin: auto">
+                                             <h7> No Jurnal : ' . $parent['ref_number'] . '</h7> <br>
+                                             <h7> Deskripsi : ' . $parent['naration'] . '</h7> 
+                                             <h7> Deskripsi : ' . $parent['customer_name'] . '</h7> 
+                                             </div>
+                                            <div class="col-md-6"> ' .  $btn_lock . ' </div>
                                         </div>
                                        </td>
                                         </tr>';
-
+                                    // $parent['naration'] . ' '
                                     foreach ($parent['children'] as $single_trans) {
 
                                         if ($single_trans['type'] == 0) {
@@ -122,7 +133,7 @@
                                             [' . $single_trans['head_number'] . ']</td><td style=" text-align: left;">' . $single_trans['head_name'] . '
                                             </td>
                                             <td>
-                                            <p>' . $parent['naration'] . ' ' . $single_trans['sub_keterangan'] . '</p>
+                                            <p>'  . $single_trans['sub_keterangan'] . '</p>
                                                 </td>
                                             <td>
                                                 <p>' . number_format($single_trans['amount'], 2, ',', '.') . '</p>
@@ -148,7 +159,7 @@
                                         }
                                     }
                                     echo '<tr class="" >
-                                    <td class="" colspan="5" style=" text-align: center;"> <hr style="border : 2px solid #b8d3ff ">
+                                    <td class="" colspan="6" style=" text-align: center;"> <hr style="border : 2px solid #b8d3ff ">
                                     </td></tr>';
                                 }
                                 ?>
