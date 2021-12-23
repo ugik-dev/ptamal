@@ -116,6 +116,8 @@ class Administrator extends CI_Controller
             $this->SecurityModel->Aksessbility_VCRUD('administrator', 'hak_aksess', 'update', true);
 
             $privileges = $this->Administrator_model->getHakAksess2(array('user_id' => $id));
+            // echo json_encode($privileges);
+            // die();
             $data['result_roles'] = $privileges;
             $data['user_id'] = $id;
             $data['main_view'] = 'administrator/edit_hak_aksess';

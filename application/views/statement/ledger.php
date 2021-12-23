@@ -27,8 +27,21 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <?php echo form_label('Akun'); ?>
-                            <select name="account_head" id="account_head" class="form-control select2">
-                                <?php echo $accounts_records; ?>
+                            <select name="account_head_struckter" id="account_head_struckter" class="form-control select2">
+                                <?php
+                                foreach ($accounts as $lv1) {
+                                    echo '<optgroup label="[' . $lv1['head_number'] . '] ' . $lv1['name'] . '">';
+                                    foreach ($lv1['children'] as $lv2) {
+                                        echo '<optgroup label="&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '] ' . $lv2['name'] . '">';
+                                        foreach ($lv2['children'] as $lv3) {
+                                            echo '<option value="' . $lv3['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
+                                            echo '</option>';
+                                        }
+                                        echo '</optgroup>';
+                                    }
+                                    echo '</optgroup>';
+                                }
+                                ?>
                             </select>
                         </div>
                     </div>
@@ -90,71 +103,73 @@
             <?php
             foreach ($journals as $lv1) {
                 // echo $lv1['name'];
-                echo '<h4 class=""><b>' . $lv1['name']  . ' : </b></h4>';
+                echo '<h4 class=""><b>' . $lv1['head_number']  . ' ' . $lv1['name'] . ' : </b></h4>';
                 foreach ($lv1['children'] as $lv2) {
                     if ($lv2['open']) {
                         echo '<h7 class=""><b>' . $lv1['head_number'] . '.' . $lv2['head_number'] . ' - ' . $lv2['name']  . ' : </b></h7>';
 
                         foreach ($lv2['children'] as $lv3) {
 
+                            if (!empty($lv3['data'])) {
 
-                            if ($lv3['data']['saldo_awal'] == 0) {
-                                $total_ledger = 0;
-                            } else {
-                                $total_ledger = $lv3['data']['saldo_awal'];
-                            }
-
-                            echo '<hr />                                       
-                    
-                        <table id="1" class="table table-striped table-hover">
-                        <div class=" ledger_row_head" style=" text-transform:uppercase;">
-                                <b>' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number']  . ' - ' . $lv3['name'] . '</b>
-                        </div>
-         
-                        <thead class="ledger-table-head">
-                             <th class="">TANGGAL</th>
-                             <th class="">NO JURNAL</th>
-                             <th class="">TRANSAKSI</th>
-                             <th class="">DEBIT</th>                
-                             <th class="">KREDIT</th>
-                             <th class="">SALDO</th>
-                        </thead>
-                        <tbody><tr>
-                        <td></td><td></td><td>Saldo Sebelum</td><td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>' . ($total_ledger < 0 ? '( <a class="currency">' . number_format(-$total_ledger, 2, ',', '.') . '</a>)' : '<a class="currency">' . number_format($total_ledger, 2, ',', '.') . '</a>') . '</td>            
-                        </tr>
-                        ';
-
-                            foreach ($lv3['data']['transactions'] as $lv4) {
-                                $debitamount = '';
-                                $creditamount = '';
-
-                                if ($lv4['type'] == 0) {
-                                    $debitamount = $lv4['amount'];
-                                    $total_ledger = $total_ledger + $debitamount;
-                                } else if ($lv4['type'] == 1) {
-                                    $creditamount = $lv4['amount'];
-                                    $total_ledger = $total_ledger - $creditamount;
+                                if ($lv3['data']['saldo_awal'] == 0) {
+                                    $total_ledger = 0;
+                                } else {
+                                    $total_ledger = $lv3['data']['saldo_awal'];
                                 }
-                                // var_dump($lv4);
-                                echo '<tr>
-                        <td>' . $lv4['date'] . '</td><td> <a href="' . base_url('accounting/show_journal/') . $lv4['parent_id'] . '">' . $lv4['ref_number'] . '</td><td><a >' . $lv4['sub_keterangan'] . '</a></td><td>
-                            <a  class="currency">' .
-                                    (!empty($debitamount) ? number_format($debitamount, 2, ',', '.') : '') .
-                                    '</a>
-                        </td>
-                        <td>
-                            <a   class="currency">' .
-                                    (!empty($creditamount) ? number_format($creditamount, 2, ',', '.') : '')
-                                    . '</a>
-                        </td>
-                        <td  >' . ($total_ledger < 0 ? '( <a class="currency">' . number_format(-$total_ledger, 2, ',', '.') . '</a>)' : '<a class="currency">' . number_format($total_ledger, 2, ',', '.') . '</a>') . '</td>            
-                    </tr>';
+
+                                echo '<hr />                                       
+
+                                                    <table id="1" class="table table-striped table-hover">
+                                                    <div class=" ledger_row_head" style=" text-transform:uppercase;">
+                                                            <b>' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number']  . ' - ' . $lv3['name'] . '</b>
+                                                    </div>
+
+                                                    <thead class="ledger-table-head">
+                                                        <th class="">TANGGAL</th>
+                                                        <th class="">NO JURNAL</th>
+                                                        <th class="">TRANSAKSI</th>
+                                                        <th class="">DEBIT</th>                
+                                                        <th class="">KREDIT</th>
+                                                        <th class="">SALDO</th>
+                                                    </thead>
+                                                    <tbody><tr>
+                                                    <td></td><td></td><td>Saldo Sebelum</td><td>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                    <td>' . ($total_ledger < 0 ? '( <a class="currency">' . number_format(-$total_ledger, 2, ',', '.') . '</a>)' : '<a class="currency">' . number_format($total_ledger, 2, ',', '.') . '</a>') . '</td>            
+                                                    </tr>
+                                                    ';
+
+                                foreach ($lv3['data']['transactions'] as $lv4) {
+                                    $debitamount = '';
+                                    $creditamount = '';
+
+                                    if ($lv4['type'] == 0) {
+                                        $debitamount = $lv4['amount'];
+                                        $total_ledger = $total_ledger + $debitamount;
+                                    } else if ($lv4['type'] == 1) {
+                                        $creditamount = $lv4['amount'];
+                                        $total_ledger = $total_ledger - $creditamount;
+                                    }
+                                    // var_dump($lv4);
+                                    echo '<tr>
+                                        <td>' . $lv4['date'] . '</td><td> <a href="' . base_url('accounting/show_journal/') . $lv4['parent_id'] . '">' . $lv4['ref_number'] . '</td><td><a >' . $lv4['sub_keterangan'] . '</a></td><td>
+                                            <a  class="currency">' .
+                                        (!empty($debitamount) ? number_format($debitamount, 2, ',', '.') : '') .
+                                        '</a>
+                                        </td>
+                                        <td>
+                                            <a   class="currency">' .
+                                        (!empty($creditamount) ? number_format($creditamount, 2, ',', '.') : '')
+                                        . '</a>
+                                        </td>
+                                        <td  >' . ($total_ledger < 0 ? '( <a class="currency">' . number_format(-$total_ledger, 2, ',', '.') . '</a>)' : '<a class="currency">' . number_format($total_ledger, 2, ',', '.') . '</a>') . '</td>            
+                                    </tr>';
+                                }
+                                echo '</tbody></table>';
                             }
-                            echo '</tbody></table>';
                         }
                     }
                 }

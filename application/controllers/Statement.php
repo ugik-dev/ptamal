@@ -8,7 +8,7 @@ class Statement extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('SecurityModel', 'Accounting_model', 'Statment_model_new'));
+        $this->load->model(array('SecurityModel', 'Accounting_model', 'Statment_model_new', 'General_model'));
         // $this->load->helper(array('DataStructure'));
         $this->db->db_debug = TRUE;
     }
@@ -58,12 +58,16 @@ class Statement extends CI_Controller
             if (empty($filter['search'])) $filter['search'] =  '';
             if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
             if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
-            $data['journals'] = array();
+            $filter['by_DataStructure'] = true;
+            $data['accounts'] = $this->General_model->getAllBaganAkun(array('by_DataStructure' => true));
 
-            $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
+            $data['journals'] = array();
+            $data['journals'] = $this->General_model->getAllBaganAkun($filter);
+
+            // $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
+            $data['journals'] = $this->Statment_model_new->the_ledger($data['journals'], $filter);
             // echo json_encode($data);
             // die();
-            $data['journals'] = $this->Statment_model_new->the_ledger($data['journals'], $filter);
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';
             $data['main_view'] = 'statement/ledger';

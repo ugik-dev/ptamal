@@ -233,7 +233,7 @@ class DataStructure
       // $jstree[$i] = $data;
       $l = 0;
       foreach ($k['children'] as $l) {
-        $tmp = array('text' => $l['sub_name'], 'id' => $l['page_id'],  'state' => array('opened' => false), 'children' => [
+        $tmp = array('text' => $l['sub_name'], 'id' => $l['page_id'],  'state' => array('opened' => false), 'li_attr' => array('class' => 'custom_row'), 'children' => [
           array('text' => 'View', 'id' => 'v_' . $l['page_id'], 'state' => array('selected' => $l['view'] == 1 ? true : false, 'opened' => false)),
           array('text' => 'Create', 'id' => 'c_' . $l['page_id'], 'state' => array('selected' => $l['hk_create'] == 1 ? true : false, 'opened' => false)),
           array('text' => 'Update', 'id' => 'u_' . $l['page_id'], 'state' => array('selected' => $l['hk_update'] == 1 ? true : false, 'opened' => false)),

@@ -39,6 +39,37 @@
         </div>
     </div>
 </div>
+<!-- <style>
+    .custom_row ul {
+        /* background-color: red !important; */
+        /* display: inline !important; */
+        display: flex !important;
+
+        list-style: block !important;
+        /* width: 100px !important; */
+
+    }
+
+    .custom_row ul div {
+        /* background-color: black !important; */
+        /* display: inline !important; */
+        display: flex !important;
+
+        list-style: block !important;
+        /* width: 100px !important; */
+
+    }
+
+    .custom_row .jstree-wholerow-clicked {
+        /* background-color: red !important; */
+        /* display: inline !important; */
+        display: flex !important;
+
+        list-style: block !important;
+        width: 100px !important;
+
+    }
+</style> -->
 <script type="text/javascript">
     var data = <?= json_encode($result_roles) ?>;
 
@@ -104,14 +135,16 @@
                 success: function(data) {
                     // buttonIdle(button);
                     var json = JSON.parse(data);
-                    if (json['error']) {
-                        swal("Simpan Gagal", json['message'], "error");
-                        return;
-                    }
-                    var user = json['data']
+                    // if (json['error']) {
+                    //     swal("Simpan Gagal", json['message'], "error");
+                    //     return;
+                    // }
+                    // var user = json['data']
                     // dataUser[user['id_user']] = user;
-                    swal("Simpan Berhasil", "", "success");
+                    // swal("Simpan Berhasil", "", "success");
                     // renderUser(dataUser);
+                    window.location = '<?= base_url() ?>administrator/hak_aksess';
+
                     // UserModal.self.modal('hide');
                 },
                 error: function(e) {}

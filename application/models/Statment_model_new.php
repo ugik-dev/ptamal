@@ -7,23 +7,40 @@ class Statment_model_new extends CI_Model
 
     public function the_ledger($data, $filter = [])
     {
-        foreach ($data as $k) {
-            if (substr($k['head_number'], 1, 6) == '00000') {
-                $res[substr($k['head_number'], 0, 1)] = array('head_number' => substr($k['head_number'], 0, 1), 'name' => $k['name']);
-                $res[substr($k['head_number'], 0, 1)]['children'] = array();
-            } else if (substr($k['head_number'], 3, 3) == '000') {
-                $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)] =  array('open' => false, 'head_number' => substr($k['head_number'], 1, 2), 'name' => $k['name'], 'children' => array());
-            } else {
-                $cur = $this->get_ledger_transactions($k['id'], $filter);
-                if (!empty($cur)) {
-                    $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)]['open'] = true;
-                    // echo json_encode($cur);
-                    // die();
-                    $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)]['children'][substr($k['head_number'], 3, 3)] =  array('head_number' =>  substr($k['head_number'], 3, 3), 'name' => $k['name'], 'id_head' => $k['id'], 'data' => $cur);
+        foreach ($data as $k => $s) {
+            $data[$k]['open'] = true;
+            foreach ($data[$k]['children'] as $l => $t) {
+                $data[$k]['children'][$l]['open'] = false;
+                // echo $l;
+                foreach ($data[$k]['children'][$l]['children'] as $m => $u) {
+                    $cur = $this->get_ledger_transactions($u['id_head'], $filter);
+                    if (!empty($cur)) {
+                        $data[$k]['open'] = true;
+                        $data[$k]['children'][$l]['open'] = true;
+                        $data[$k]['children'][$l]['children'][$m]['data'] = $cur;
+                    }
                 }
             }
         }
-        return $res;
+        return $data;
+        // OLD
+        // foreach ($data as $k) {
+        //     if (substr($k['head_number'], 1, 6) == '00000') {
+        //         $res[substr($k['head_number'], 0, 1)] = array('head_number' => substr($k['head_number'], 0, 1), 'name' => $k['name']);
+        //         $res[substr($k['head_number'], 0, 1)]['children'] = array();
+        //     } else if (substr($k['head_number'], 3, 3) == '000') {
+        //         $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)] =  array('open' => false, 'head_number' => substr($k['head_number'], 1, 2), 'name' => $k['name'], 'children' => array());
+        //     } else {
+        //         $cur = $this->get_ledger_transactions($k['id'], $filter);
+        //         if (!empty($cur)) {
+        //             $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)]['open'] = true;
+        //             // echo json_encode($cur);
+        //             // die();
+        //             $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)]['children'][substr($k['head_number'], 3, 3)] =  array('head_number' =>  substr($k['head_number'], 3, 3), 'name' => $k['name'], 'id_head' => $k['id'], 'data' => $cur);
+        //         }
+        //     }
+        // }
+        // return $res;
         // foreach ($data as $key => $lv1) {
         //     var_dump($lv1);
         //     die();

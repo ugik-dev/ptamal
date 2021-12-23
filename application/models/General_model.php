@@ -7,10 +7,42 @@ class General_model extends CI_Model
 
     public function getAllBaganAkun($filter = [])
     {
+
+        if (!empty($filter['account_head_struckter'])) {
+            $this->db->select("head_number");
+            $this->db->from('dt_head');
+            $this->db->where('dt_head.id',  $filter['account_head_struckter']);
+            // $this->db->where("SUBSTRING(dt_head.head_number, 0 , 2) = COALESCE(SUBSTRING(dt_head.head_number, 0 , 2),'00000')");
+            $query = $this->db->get();
+            $head_numbers = $query->result_array()[0]['head_number'];
+            // $head_number = '1234567';
+            // echo substr($head_numbers, 0, 4);
+            // echo "<br>";
+            // echo substr($head_numbers, 2, 2);
+            // echo "<br>";
+            if (substr($head_numbers, 3, 3) != '000') {
+                $headnumber[0] = substr($head_numbers, 0, 1) . '00000';
+                $headnumber[1] = substr($head_numbers, 0, 3) . '000';
+                $headnumber[2] = $head_numbers;
+                // echo 'it lv3';
+            }
+            // echo json_encode($head_number[0]);
+            // die();
+        }
+
+        $this->db->select("dt_head.*");
         $this->db->from('dt_head');
         // $this->db->order_by('dt_head.name');
-        // $this->db->where("SUBSTRING_INDEX(SUBSTRING_INDEX(dt_head.name, '.', -3), ']', 1) = '00.000.000'");
-        if (!empty($filter['account_head'])) $this->db->where('dt_head.id', $filter['account_head']);
+        if (!empty($filter['account_head'])) {
+            $this->db->where('dt_head.id', $filter['account_head']);
+            // $this->db->where("SUBSTRING(dt_head.head_number, 0 , 2) = COALESCE(SUBSTRING(dt_head.head_number, 0 , 2),'00000')");
+
+            // die();
+        }
+        if (!empty($filter['account_head_struckter'])) {
+
+            $this->db->where_in('dt_head.head_number', $headnumber);
+        }
         if (!empty($filter['id'])) $this->db->where('dt_head.id', $filter['id']);
         if (!empty($filter['nature'])) {
             if (is_array($filter['nature'])) {
@@ -29,6 +61,7 @@ class General_model extends CI_Model
                 FALSE
             );
         }
+        // echo $this->db->last_query();
         $res = $query->result_array();
         return $res;
     }
