@@ -64,10 +64,10 @@ class Statement extends CI_Controller
             $data['journals'] = array();
             $data['journals'] = $this->General_model->getAllBaganAkun($filter);
 
+            // echo json_encode($data['journals']);
+            // die();
             // $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
             $data['journals'] = $this->Statment_model_new->the_ledger($data['journals'], $filter);
-            // echo json_encode($data);
-            // die();
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';
             $data['main_view'] = 'statement/ledger';

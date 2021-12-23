@@ -8,27 +8,37 @@ class General_model extends CI_Model
     public function getAllBaganAkun($filter = [])
     {
 
-        if (!empty($filter['account_head_struckter'])) {
-            $this->db->select("head_number");
-            $this->db->from('dt_head');
-            $this->db->where('dt_head.id',  $filter['account_head_struckter']);
-            // $this->db->where("SUBSTRING(dt_head.head_number, 0 , 2) = COALESCE(SUBSTRING(dt_head.head_number, 0 , 2),'00000')");
-            $query = $this->db->get();
-            $head_numbers = $query->result_array()[0]['head_number'];
-            // $head_number = '1234567';
-            // echo substr($head_numbers, 0, 4);
-            // echo "<br>";
-            // echo substr($head_numbers, 2, 2);
-            // echo "<br>";
-            if (substr($head_numbers, 3, 3) != '000') {
-                $headnumber[0] = substr($head_numbers, 0, 1) . '00000';
-                $headnumber[1] = substr($head_numbers, 0, 3) . '000';
-                $headnumber[2] = $head_numbers;
-                // echo 'it lv3';
-            }
-            // echo json_encode($head_number[0]);
-            // die();
-        }
+        // if (!empty($filter['s_head_number'])) {
+        //     $head_numbers = $filter['s_head_number'];
+        //     // echo substr($head_numbers, 0, 4);
+        //     // echo "<br>";
+        //     echo substr($head_numbers, 1, 5);
+        //     // echo "<br>";
+        //     if (substr($head_numbers, 1, 5) == '00000') {
+        //         // lvl2
+        //         echo 'lv1';
+        //         $headnumber[0] = substr($head_numbers, 0, 1) . '00000';
+        //         $headnumber[1] = substr($head_numbers, 0, 3) . '000';
+        //         $headnumber[2] = $head_numbers;
+        //         // echo 'it lv3';
+        //     } else
+        //     if (substr($head_numbers, 3, 3) == '000') {
+        //         // lvl2
+        //         echo 'lv2';
+        //         $headnumber[0] = substr($head_numbers, 0, 1) . '00000';
+        //         $headnumber[1] = substr($head_numbers, 0, 3) . '000';
+        //         $headnumber[2] = $head_numbers;
+        //         // echo 'it lv3';
+        //     }
+        //     if (substr($head_numbers, 3, 3) != '000') {
+        //         $headnumber[0] = substr($head_numbers, 0, 1) . '00000';
+        //         $headnumber[1] = substr($head_numbers, 0, 3) . '000';
+        //         $headnumber[2] = $head_numbers;
+        //         // echo 'it lv3';
+        //     }
+        //     echo json_encode($headnumber[0]);
+        //     die();
+        // }
 
         $this->db->select("dt_head.*");
         $this->db->from('dt_head');
@@ -39,9 +49,24 @@ class General_model extends CI_Model
 
             // die();
         }
-        if (!empty($filter['account_head_struckter'])) {
-
-            $this->db->where_in('dt_head.head_number', $headnumber);
+        if (!empty($filter['s_head_number'])) {
+            $head_numbers = $filter['s_head_number'];
+            if (substr($head_numbers, 1, 5) == '00000') {
+                $like = substr($head_numbers, 0, 1);
+                $this->db->where('dt_head.head_number like "' . $like . '%"');
+            } else
+            if (substr($head_numbers, 3, 3) == '000') {
+                $like = substr($head_numbers, 0, 3);
+                $headnumber[0] = substr($head_numbers, 0, 1) . '00000';
+                $this->db->where_in('dt_head.head_number', $headnumber);
+                $this->db->or_where('dt_head.head_number like "' . $like . '%"');
+            }
+            if (substr($head_numbers, 3, 3) != '000') {
+                $headnumber[0] = substr($head_numbers, 0, 1) . '00000';
+                $headnumber[1] = substr($head_numbers, 0, 3) . '000';
+                $headnumber[2] = $head_numbers;
+                $this->db->where_in('dt_head.head_number', $headnumber);
+            }
         }
         if (!empty($filter['id'])) $this->db->where('dt_head.id', $filter['id']);
         if (!empty($filter['nature'])) {

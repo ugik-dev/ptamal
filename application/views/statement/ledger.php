@@ -27,19 +27,18 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <?php echo form_label('Akun'); ?>
-                            <select name="account_head_struckter" id="account_head_struckter" class="form-control select2">
+                            <select name="s_head_number" id="s_head_number" class="form-control select2">
                                 <?php
                                 foreach ($accounts as $lv1) {
-                                    echo '<optgroup label="[' . $lv1['head_number'] . '] ' . $lv1['name'] . '">';
+                                    echo '<option value="' . $lv1['head_number'] . '00000" style"font-weight: bold !important;"> <b> [' . $lv1['head_number'] . '] ' . $lv1['name'] . '</b></option>';
                                     foreach ($lv1['children'] as $lv2) {
-                                        echo '<optgroup label="&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '] ' . $lv2['name'] . '">';
+                                        echo '<option value="' . $lv1['head_number'] .  $lv2['head_number'] . '000"> &nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '] ' . $lv2['name'] . '';
+                                        echo '</option>';
                                         foreach ($lv2['children'] as $lv3) {
-                                            echo '<option value="' . $lv3['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
+                                            echo '<option value="' . $lv1['head_number'] . $lv2['head_number'] . $lv3['head_number'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
                                             echo '</option>';
                                         }
-                                        echo '</optgroup>';
                                     }
-                                    echo '</optgroup>';
                                 }
                                 ?>
                             </select>
@@ -197,10 +196,10 @@
 </script>
 <!-- Bootstrap model  -->
 <?php $this->load->view('bootstrap_model.php');
-if (!empty($account_head)) {
+if (!empty($filter['s_head_number'])) {
 ?>
     <script>
-        $('#account_head').val('<?= $account_head ?>')
+        $('#s_head_number').val('<?= $filter['s_head_number'] ?>')
     </script>
 <?php
 }
