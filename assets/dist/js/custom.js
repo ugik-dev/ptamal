@@ -990,6 +990,15 @@ function printDiv(divName) {
     .no-print {
         display: none !important;
     }
+
+    .dataTables_wrapper .dataTables_length {
+        display: none !important;
+    }
+
+      .dataTables_wrapper .dataTables_filter {
+        display: none !important;
+    }
+
 </style>`;
   var originalContents = document.body.innerHTML;
   document.body.innerHTML = printContents;

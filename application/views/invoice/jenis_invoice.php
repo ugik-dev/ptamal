@@ -136,6 +136,33 @@
                                 ?>
                          </select>
                      </div>
+                     <div class="form-group col-sm-12">
+                         <label> Akun Beban / HPP</label>
+                         <select name="ac_expense" id='ac_expense' class="form-control select2 input-lg">
+                             <?php
+                                foreach ($accounts as $lv1) {
+                                    // echo '<optgroup label="[' . $lv1['head_number'] . '] ' . $lv1['name'] . '">';
+                                    foreach ($lv1['children'] as $lv2) {
+                                        echo '<optgroup label="&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '] ' . $lv2['name'] . '">';
+                                        foreach ($lv2['children'] as $lv3) {
+                                            if (empty($lv3['children'])) {
+                                                echo '<option value="' . $lv3['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
+                                                echo '</option>';
+                                            } else {
+                                                echo '<optgroup label="&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '">';
+                                                foreach ($lv3['children'] as $lv4) {
+                                                    echo '<option value="' . $lv4['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '.' . $lv4['head_number']  . '] ' . $lv4['name'] . '';
+                                                    echo '</option>';
+                                                }
+                                                echo '</optgroup>';
+                                            }
+                                        }
+                                        echo '</optgroup>';
+                                    }
+                                }
+                                ?>
+                         </select>
+                     </div>
                      <div class="col-sm-12">
                          <hr>
                      </div>
@@ -285,6 +312,7 @@
              'ac_unpaid_type': $('#accounts_modal').find('#ac_unpaid_type'),
              'ac_paid_type': $('#accounts_modal').find('#ac_paid_type'),
              'ac_paid': $('#accounts_modal').find('#ac_paid'),
+             'ac_expense': $('#accounts_modal').find('#ac_expense'),
              'ac_ppn_type': $('#accounts_modal').find('#ac_ppn_type'),
              'ac_ppn': $('#accounts_modal').find('#ac_ppn'),
              'ac_ppn_piut': $('#accounts_modal').find('#ac_ppn_piut'),
@@ -446,6 +474,7 @@
              PaymentModal.ac_paid_type.val(currentData['ac_paid_type']).change();
              PaymentModal.ac_unpaid.val(currentData['ac_unpaid']).change();
              PaymentModal.ac_paid.val(currentData['ac_paid']).change();
+             PaymentModal.ac_expense.val(currentData['ac_expense']).change();
              PaymentModal.ac_ppn_type.val(currentData['ac_ppn_type']).change();
              PaymentModal.ac_ppn.val(currentData['ac_ppn']).change();
              PaymentModal.ac_ppn_piut.val(currentData['ac_ppn_piut']).change();
@@ -458,6 +487,11 @@
                  if (result.isConfirmed == false) {
                      return;
                  }
+                 swal.fire({
+                     title: 'Loading...',
+                     allowOutsideClick: false
+                 });
+                 swal.showLoading();
                  $.ajax({
                      url: "<?= base_url('invoice/deleteJenisPembayaran') ?>",
                      'type': 'get',

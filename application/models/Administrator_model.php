@@ -17,6 +17,15 @@ class Administrator_model extends CI_Model
             return NULL;
         }
     }
+
+    public function getAllUsers($filter = [])
+    {
+        $this->db->select("*");
+        $this->db->from('mp_users');
+        if (!empty($filter['user_id'])) $this->db->where('mp_users.id', $filter['user_id']);
+        $query = $this->db->get();
+        return DataStructure::keyValue($query->result_array(), 'id');
+    }
     public function getHakAksess($filter)
     {
         $this->db->select("mp_menu.id as parent_id,mp_menulist.id as page_id,mp_menu.name,mp_menu.icon,mp_menu.order_number,title as sub_name, link as sub_link,slug as link");
@@ -108,6 +117,52 @@ class Administrator_model extends CI_Model
 
         $this->db->where('ref_id', $data['ref_id']);
         $this->db->delete('ref_account');
+        // $insert_id = $this->db->insert_id();
+        ExceptionHandler::handleDBError($this->db->error(), "Delete Referensi Akun", "Referensi Akun");
+        // return $insert_id;
+    }
+
+    public function editUser($data)
+    {
+        $trans = array(
+            'user_name' => $data['agentname'],
+            'agentname' => $data['agentname'],
+            'user_email' => $data['user_email'],
+            'user_address' => $data['user_address'],
+            'title_user' => $data['title_user'],
+        );
+        if (!empty($data['password'])) {
+            $trans['user_password'] = $data['password'];
+        }
+
+        $this->db->where('id', $data['id']);
+
+        $this->db->update('mp_users', $trans);
+        ExceptionHandler::handleDBError($this->db->error(), "Edit Pengguna", "");
+        return $data['id'];
+    }
+    public function addUser($data)
+    {
+        $trans = array(
+            'user_name' => $data['agentname'],
+            'agentname' => $data['agentname'],
+            'user_email' => $data['user_email'],
+            'user_address' => $data['user_address'],
+            'title_user' => $data['title_user'],
+            'user_password' => $data['password'],
+        );
+
+        $this->db->insert('mp_users', $trans);
+        $insert_id = $this->db->insert_id();
+        ExceptionHandler::handleDBError($this->db->error(), "Add Pengguna", "");
+        return $insert_id;
+    }
+
+    public function deleteUser($data)
+    {
+
+        $this->db->where('ref_id', $data['ref_id']);
+        $this->db->delete('mp_users');
         // $insert_id = $this->db->insert_id();
         ExceptionHandler::handleDBError($this->db->error(), "Delete Referensi Akun", "Referensi Akun");
         // return $insert_id;

@@ -296,10 +296,14 @@ class Accounting extends CI_Controller
             $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'delete', true);
             // $data = $this->input->get();
             $data['id'] = $id;
+            $old_data = $this->Accounting_model->getAllJournalVoucher(array('id' => $data['id']))[0];
+            // var_dump($old_data);
+            if ($old_data['generated_source'] != 'Journal Voucher')
+                throw new UserException('Maaf data tidak dapat dihapus, harap karna ada transaksi lain!');
+
             $this->Accounting_model->deleteJournalVoucher($data);
 
             header("Refresh:0; url='" . base_url() . "statement/journal");
-            // $this->load->view('accounting/accounts_modal');
         } catch (Exception $e) {
             ExceptionHandler::handle($e);
         }

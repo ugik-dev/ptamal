@@ -35,6 +35,81 @@ class Administrator extends CI_Controller
         }
     }
 
+
+    public function users()
+    {
+        try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('administrator', 'hak_aksess', 'view');
+            $data['title'] = 'Pengguna';
+            $data['table_name'] = 'Pengguna';
+            $data['main_view'] = 'administrator/users';
+            $data['vcrud'] = $crud;
+            $this->load->view('main/index2.php', $data);
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+    public function getAllUsers()
+    {
+        try {
+            $this->SecurityModel->Aksessbility_VCRUD('administrator', 'users', 'create', true);
+            $filter = $this->input->get();
+            $data = $this->Administrator_model->getAllUsers(array($filter));
+
+
+            echo json_encode(array('error' => false, 'data' => $data));
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+
+    public function addUser()
+    {
+        try {
+            $this->SecurityModel->Aksessbility_VCRUD('administrator', 'users', 'create', true);
+            $data = $this->input->post();
+            if (empty($data['password'])) {
+                throw new UserException('Password tidak boleh kosong!', UNAUTHORIZED_CODE);
+            }
+            if ($data['password'] != $data['repassword'])
+                throw new UserException('Password tidak sama!', UNAUTHORIZED_CODE);
+
+            $data['password'] = sha1($data['password']);
+            $accounts = $this->Administrator_model->addUser($data);
+            $data = $this->Administrator_model->getAllUsers(array('id' => $accounts, 'by_id' => true))[$accounts];
+
+
+            echo json_encode(array('error' => false, 'data' => $data));
+            // $this->load->view('accounting/accounts_modal');
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+    public function editUser()
+    {
+        try {
+            $this->SecurityModel->Aksessbility_VCRUD('administrator', 'users', 'update', true);
+            $data = $this->input->post();
+            if (!empty($data['password'])) {
+                if ($data['password'] != $data['repassword'])
+                    throw new UserException('Password tidak sama!', UNAUTHORIZED_CODE);
+                $data['password'] = sha1($data['password']);
+            } else {
+                unset($data['password']);
+                unset($data['repassword']);
+            }
+            $accounts = $this->Administrator_model->editUser($data);
+            $data = $this->Administrator_model->getAllUsers(array('id' => $accounts, 'by_id' => true))[$accounts];
+            echo json_encode(array('error' => false, 'data' => $data));
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+
     public function edit_hak_aksess($id)
     {
         try {

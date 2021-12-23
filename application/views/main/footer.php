@@ -106,7 +106,7 @@
   <!-- bootstrap color picker -->
   <script src="<?php echo base_url(); ?>assets/plugins/colorpicker/bootstrap-colorpicker.min.js"></script>
   <!-- Form Validation -->
-  <script src="<?php echo base_url(); ?>assets/dist/js/custom.js?v=0.0.2"></script>
+  <script src="<?php echo base_url(); ?>assets/dist/js/custom.js?v=0.0.4"></script>
   <!-- ChartJS 1.0.1 -->
   <!-- <script src="<?php echo base_url(); ?>assets/plugins/chartjs/Chart.min.js"></script> -->
   <script src="<?php echo base_url(); ?>assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
