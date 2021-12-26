@@ -12,7 +12,7 @@
                     <input type="hidden" id="id" name="id">
                     <label><i class="fa fa-check-circle"></i> Nama </label>
                     <select onchange="" name="payee_id" id="payee_id" class="form-control select2 ">
-                        <option>---</option>
+                        <option value="">---</option>
                         <?php
                         foreach ($payee as $pa) {
                             echo '<option value="' . $pa['id'] . '">' . $pa['customer_name'] . ' :: ' . $pa['cus_town']  . '</option>';
