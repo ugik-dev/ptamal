@@ -4,6 +4,23 @@
 */
 class Invoice_model extends CI_Model
 {
+    function getLastNoInvoice()
+    {
+        $this->db->select("no_invoice");
+        $this->db->from('mp_invoice_v2');
+        // if (!empty($id)) $this->db->where('id <> "' . $id . '"');
+        // $this->db->where('no_invoice', $data);
+        $this->db->order_by('no_invoice', 'DESC');
+        $this->db->limit('1');
+
+        $query = $this->db->get();
+        $res =  $query->result_array();
+        // echo json_encode($res);
+        // die();
+        if (!empty($res[0]['no_invoice'])) return $res[0]['no_invoice'];
+        else return 0;
+    }
+
     function check_no_invoice($data, $id = '')
     {
         $this->db->select("count(id) as count");
@@ -286,7 +303,7 @@ class Invoice_model extends CI_Model
             'date2' => $data['date2'],
             'description' => $data['description'],
             'customer_id' => $data['customer_id'],
-            // 'no_invoice' => $data['no_invoice'],
+            'no_invoice' => $data['no_invoice'],
             'payment_metode' => $data['payment_metode'],
             'ppn_pph' => $data['ppn_pph'],
             'inv_key' => $generateRandomString,
@@ -323,14 +340,14 @@ class Invoice_model extends CI_Model
         }
 
         $data['generalentry']['ref_url'] = 'invoice/show/' . $order_id;
-        $data['generalentry']['naration'] = 'INV(' . str_pad($order_id, 5, '0', STR_PAD_LEFT) . ') ' . (!empty($data['jp']['text_jurnal']) ? $data['jp']['text_jurnal'] . ' ' : '') . $data['description'];
+        $data['generalentry']['naration'] = 'INV(' . str_pad($data['no_invoice'], 5, '0', STR_PAD_LEFT) . ') ' . (!empty($data['jp']['text_jurnal']) ? $data['jp']['text_jurnal'] . ' ' : '') . $data['description'];
 
         $this->db->insert('dt_generalentry', $data['generalentry']);
         $gen_id = $this->db->insert_id();
 
         if (!empty($data['generalentry_ppn'])) {
             $data['generalentry_ppn']['ref_url'] = 'invoice/show/' . $order_id;
-            $data['generalentry_ppn']['naration'] = 'PPN INV(' . str_pad($order_id, 5, '0', STR_PAD_LEFT) . ') ' . (!empty($data['jp']['text_jurnal']) ? $data['jp']['text_jurnal'] . ' ' : '') . $data['description'];
+            $data['generalentry_ppn']['naration'] = 'PPN INV(' . str_pad($data['no_invoice'], 5, '0', STR_PAD_LEFT) . ') ' . (!empty($data['jp']['text_jurnal']) ? $data['jp']['text_jurnal'] . ' ' : '') . $data['description'];
             $this->db->insert('dt_generalentry', $data['generalentry_ppn']);
             $general_id_ppn = $this->db->insert_id();
             foreach ($data['sub_entry_ppn'] as $sub) {

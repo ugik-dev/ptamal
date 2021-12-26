@@ -1112,7 +1112,6 @@ class Invoice extends CI_Controller
             } else {
                 $data['manual_math'] = 0;
             }
-            $data['generalentry_ppn'] = $this->General_model->gen_number($data['date2'], 'JU');
 
             $count_rows = count($data['amount']);
             if (empty($data['ppn_pph'])) {
@@ -1137,6 +1136,10 @@ class Invoice extends CI_Controller
                     $status = TRUE;
                 $data['amount'][$i] = preg_replace("/[^0-9]/", "", $data['amount'][$i]);
             }
+
+            $data['no_invoice'] = $this->Invoice_model->getLastNoInvoice() + 1;
+            // echo $data['no_invoice'];
+            // die();
 
             if ($status) {
                 $this->load->model('Transaction_model');

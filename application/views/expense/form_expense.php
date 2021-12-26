@@ -12,7 +12,7 @@
                     <input type="hidden" id="id" name="id">
                     <label><i class="fa fa-check-circle"></i> Nama </label>
                     <select onchange="" name="payee_id" id="payee_id" class="form-control select2 ">
-                        <option value="">---</option>
+                        <option value="NULL">---</option>
                         <?php
                         foreach ($payee as $pa) {
                             echo '<option value="' . $pa['id'] . '">' . $pa['customer_name'] . ' :: ' . $pa['cus_town']  . '</option>';
@@ -22,7 +22,7 @@
                 </div>
                 <div class="form-group col-lg-6">
                     <label><i class="fa fa-check-circle"></i> Akun Beban</label>
-                    <select name="head_id" id='head_id' class="form-control select2 ">
+                    <select name="head_id" id='head_id' class="form-control select2 " required>
                         <option>---</option>
                         <?php
                         foreach ($accounts as $lv1) {
@@ -40,8 +40,8 @@
                 </div>
                 <div class="form-group col-lg-6">
                     <label><i class="fa fa-check-circle"></i> Metode Pembayaran </label>
-                    <select onchange="" name="method" id="method" class="form-control select2 ">
-                        <option>---</option>
+                    <select onchange="" name="method" id="method" class="form-control select2 " required>
+                        <!-- <option>---</option> -->
                         <?php
                         foreach ($payment_method as $pa) {
                             echo '<option value="' . $pa['ref_id'] . '">' . $pa['ref_text'] . ' :: Saldo ' . $pa['amount']  . '</option>';
@@ -75,7 +75,7 @@
                 <div class="form-group col-lg-6">
                     <label><i class="fa fa-check-circle"></i> Jumlah</label>
                     <?php
-                    $data = array('class' => 'form-control  mask', 'type' => 'text', 'name' => 'amount', 'id' => 'amount', 'placeholder' => 'e.g 4.400,00');
+                    $data = array('class' => 'form-control  mask', 'type' => 'text', 'name' => 'amount', 'id' => 'amount', 'required' => 'required');
                     echo form_input($data);
                     ?>
                 </div>
