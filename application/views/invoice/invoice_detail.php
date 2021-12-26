@@ -76,22 +76,22 @@
                                 <?php
                                 $total = 0;
                                 $total_qyt = 0;
-                                if ($dataContent['item']  != NULL) {
-                                    foreach ($dataContent['item'] as $item) {
-                                        $total = $total + ($item->amount * $item->qyt);
-                                        $total_qyt =  $total_qyt + ($item->qyt);;
+                                if (!empty($dataContent['items'])) {
+                                    foreach ($dataContent['items'] as $item) {
+                                        $total = $total + ($item['amount'] * $item['qyt']);
+                                        $total_qyt =  $total_qyt + ($item['qyt']);
 
                                 ?>
                                         <tr class="font-weight-bolder border-bottom-0 font-size-lg">
                                             <td class="border-top-0 pl-0 pl-md-5 py-4 d-flex align-items-center">
                                                 <span class="navi-icon mr-2">
                                                     <i class="fa fa-genderless text-primary font-size-h2"></i>
-                                                </span><?= $item->keterangan_item ?>
+                                                </span><?= $item['keterangan_item'] ?>
                                             </td>
-                                            <td class="border-top-0 text-right py-4"><?= $item->date_item ?></td>
-                                            <td class="border-top-0 text-right py-4"><?= $item->qyt . $item->satuan ?></td>
-                                            <td class="border-top-0 pr-0 py-4 font-size-h6 font-weight-boldest text-right"><?= number_format(($item->amount), 0, ',', '.') ?></td>
-                                            <td class="border-top-0 pr-0 py-4 font-size-h6 font-weight-boldest text-right currency"><?= number_format(($item->amount * $item->qyt), 0, ',', '.')  ?></td>
+                                            <td class="border-top-0 text-right py-4"><?= $item['date_item'] ?></td>
+                                            <td class="border-top-0 text-right py-4"><?= $item['qyt'] . $item['satuan'] ?></td>
+                                            <td class="border-top-0 pr-0 py-4 font-size-h6 font-weight-boldest text-right"><?= number_format(($item['amount']), 0, ',', '.') ?></td>
+                                            <td class="border-top-0 pr-0 py-4 font-size-h6 font-weight-boldest text-right currency"><?= number_format(($item['amount'] * $item['qyt']), 0, ',', '.')  ?></td>
                                         </tr>
                                 <?php }
                                 } ?>
@@ -112,22 +112,22 @@
             <div class="row">
                 <div class="col-md-5 border-top pt-14 pb-10 pb-md-10">
                     <?php
-                    if ($dataContent['payment_metode'] != 99) {
+                    if (!empty($payment_metode['bank_name'])) {
                     ?>
                         <div class="d-flex flex-column flex-md-row">
                             <div class="d-flex flex-column">
                                 <div class="font-weight-bold font-size-h6 mb-3">BANK TRANSFER</div>
                                 <div class="d-flex justify-content-between font-size-lg mb-3">
                                     <span class="font-weight-bold mr-15">Bank :</span>
-                                    <span class="text-right"><?= $dataContent['bank_name'] ?></span>
+                                    <span class="text-right"><?= $payment_metode['bank_name'] ?></span>
                                 </div>
                                 <div class="d-flex justify-content-between font-size-lg mb-3">
                                     <span class="font-weight-bold mr-15">Account Name:</span>
-                                    <span class="text-right"><?= $dataContent['title_bank'] ?></span>
+                                    <span class="text-right"><?= $payment_metode['title_bank'] ?></span>
                                 </div>
                                 <div class="d-flex justify-content-between font-size-lg mb-3">
                                     <span class="font-weight-bold mr-15">Account Number:</span>
-                                    <span class="text-right"><?= $dataContent['bank_number'] ?></span>
+                                    <span class="text-right"><?= $payment_metode['bank_number'] ?></span>
                                 </div>
                             </div>
                         </div>
@@ -388,23 +388,16 @@
                              <select name="ac_potongan[]" id="ac_potongan_${row_num}" ${dat ? 'value="'+dat['ac_potongan']+'"' : ''} class="form-control select2">
                                  <?php
                                     foreach ($accounts as $lv1) {
+                                        echo '<optgroup label="[' . $lv1['head_number'] . '] ' . $lv1['name'] . '">';
                                         foreach ($lv1['children'] as $lv2) {
-                                            echo '<optgroup label="&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '] ' . $lv2['name'] . '">';
+                                            echo '<optgroup label="&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . (!empty($lv2['head_number']) ? $lv2['head_number'] : '00') . '] ' . (!empty($lv2['name']) ? $lv2['name'] : '') . '">';
                                             foreach ($lv2['children'] as $lv3) {
-                                                if (empty($lv3['children'])) {
-                                                    echo '<option value="' . $lv3['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
-                                                    echo '</option>';
-                                                } else {
-                                                    echo '<optgroup label="&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '">';
-                                                    foreach ($lv3['children'] as $lv4) {
-                                                        echo '<option value="' . $lv4['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '.' . $lv4['head_number']  . '] ' . $lv4['name'] . '';
-                                                        echo '</option>';
-                                                    }
-                                                    echo '</optgroup>';
-                                                }
+                                                echo '<option value="' . $lv3['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . (!empty($lv2['head_number']) ? $lv2['head_number'] : '00')  . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
+                                                echo '</option>';
                                             }
                                             echo '</optgroup>';
                                         }
+                                        echo '</optgroup>';
                                     }
                                     ?>
                              </select>

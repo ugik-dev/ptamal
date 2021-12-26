@@ -6,7 +6,7 @@
 
                  <!-- Button trigger modal-->
                  <button type="button" class="btn btn-primary" id="add_new_data_btn" data-toggle="modal" data-target="#exampleModalLong">
-                     <i class="fa fa-plus-square" aria-hidden="true"></i> Tambah Jenis Pembayaran
+                     <i class="fa fa-plus-square" aria-hidden="true"></i> Tambah Jenis Invoice
                  </button>
 
                  <!-- Modal-->
@@ -21,7 +21,7 @@
          <div class="col-xs-12">
              <div class="box" id="print-section">
                  <div class="box-header">
-                     <h3 class="box-title"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> Tambah Payment </h3>
+                     <h3 class="box-title"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i> Jenis Invoice </h3>
                  </div>
                  <div class="box-body">
                      <div class="table-responsive col-md-12">
@@ -85,7 +85,7 @@
                              <input class="form-control" type="text" name="ref_nojur" id="ref_nojur" />
                          </div>
                          <div class="form-group col-sm-6">
-                             <label>Nomor Jurnal</label>
+                             <label>Nomor Jurnal Saat Pelunasan</label>
                              <input class="form-control" type="text" name="ref_nojur_pel" id="ref_nojur_pel" />
                          </div>
                      </div>
@@ -97,6 +97,11 @@
                          <label>FORMAT Untuk Pembayaran pada Kwitansi </label>
                          <textarea class="form-control" id="text_kwitansi" name="text_kwitansi" rows=3></textarea>
                      </div>
+                     <div class="form-group col-lg-12">
+                         parameter : {description} , {patner_name}
+                     </div>
+
+
                      <!-- <div class="row"> -->
                      <!-- <div class="col-sm-12">
                          <h4>Akun Pendapatan</h4>

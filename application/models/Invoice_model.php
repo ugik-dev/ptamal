@@ -32,9 +32,10 @@ class Invoice_model extends CI_Model
 
     public function getAllInvoiceDetail($filter = [])
     {
-        $this->db->select('mpp.* ,ac_1.agentname acc_1_name ,payee.cus_address, payee.cus_town, ac_1.title_user as acc_1_title ,ac_2.agentname as acc_2_name,ac_3.agentname acc_3_name ,payee.customer_name as customer_name, gen.ref_number,sub.id as item_id, sub.parent_id as parent_item, amount, qyt, date_item, keterangan_item, satuan');
+        $this->db->select('mpp.* ,ac_1.agentname acc_1_name ,payee.cus_address, payee.cus_town, ac_1.title_user as acc_1_title ,ac_2.agentname as acc_2_name,ac_3.agentname acc_3_name ,payee.customer_name as customer_name, gen.ref_number, gen_ppn.ref_number as ref_number_ppn,sub.id as item_id, sub.parent_id as parent_item, amount, qyt, date_item, keterangan_item, satuan');
         $this->db->from('mp_invoice_v2 mpp');
         $this->db->join('dt_generalentry gen', 'gen.id = mpp.general_id', 'LEFT');
+        $this->db->join('dt_generalentry gen_ppn', 'gen_ppn.id = mpp.general_id_ppn', 'LEFT');
         $this->db->join('mp_sub_invoice sub', 'mpp.id = sub.parent_id', 'LEFT');
         $this->db->join('mp_payee payee', 'payee.id = mpp.customer_id', 'LEFT');
         $this->db->join('mp_users ac_1', 'ac_1.id = mpp.acc_1', 'LEFT');
@@ -50,10 +51,10 @@ class Invoice_model extends CI_Model
             ['item_id'],
             [
                 [
-                    'id', 'ref_number', 'id', 'input_date', 'agen_id', 'acc_0', 'acc_1', 'acc_2', 'acc_3', 'acc_1_name', 'acc_1_title', 'acc_2_name', 'acc_3_name', 'date', 'customer_name', 'cus_address', 'cus_town',
+                    'id', 'ref_number', 'ref_number_ppn', 'id', 'input_date', 'agen_id', 'acc_0', 'acc_1', 'acc_2', 'acc_3', 'acc_1_name', 'acc_1_title', 'acc_2_name', 'acc_3_name', 'date', 'customer_name', 'cus_address', 'cus_town',
                     'description', 'customer_id', 'payment_metode', 'ppn_pph', 'no_invoice', 'inv_key', 'percent_fee', 'percent_pph',
                     'am_jasa', 'am_pph', 'manual_math', 'par_label', 'par_am', 'sub_total', 'total_final', 'jenis_invoice',
-                    'lebih_bayar_ket', 'lebih_bayar_am', 'kurang_bayar_ket', 'kurang_bayar_am', 'pembulatan', 'payed', 'am_back', 'status_invoice', 'general_id'
+                    'lebih_bayar_ket', 'lebih_bayar_am', 'kurang_bayar_ket', 'kurang_bayar_am', 'pembulatan', 'payed', 'am_back', 'status', 'general_id', 'general_id_ppn'
                 ],
                 ["item_id", "amount", "qyt", "date_item", 'nopol', "keterangan_item", "satuan"]
             ],
@@ -694,29 +695,38 @@ class Invoice_model extends CI_Model
 
         $this->db->where('id', $data['id']);
         $this->db->update('dt_pelunasan_invoice', $trans_data);
+
+        $this->db->where('id_pelunasan', $data['id']);
+        $this->db->delete('dt_pel_inv_potongan');
+
+        if (!empty($data['child_pembayaran']))
+            foreach ($data['child_pembayaran'] as $sub) {
+                $sub['id_pelunasan'] = $data['id'];
+                $this->db->insert('dt_pel_inv_potongan', $sub);
+            }
         // $order_id = $this->db->insert_id();
 
 
         //   UPDATE GENERALENTRY
-        // $this->db->where('id', $data['generalentry']['id']);
-        // $this->db->update('dt_generalentry', $data['generalentry']);
+        $this->db->where('id', $data['generalentry']['id']);
+        $this->db->update('dt_generalentry', $data['generalentry']);
 
-        // $this->db->where('parent_id', $data['generalentry']['id']);
-        // $this->db->delete('mp_sub_entry');
+        $this->db->where('parent_id', $data['generalentry']['id']);
+        $this->db->delete('mp_sub_entry');
 
-        // foreach ($data['sub_entry'] as $sub) {
-        //     $sub['parent_id'] = $data['generalentry']['id'];
-        //     $this->db->insert('mp_sub_entry', $sub);
-        // }
+        foreach ($data['sub_entry'] as $sub) {
+            $sub['parent_id'] = $data['generalentry']['id'];
+            $this->db->insert('mp_sub_entry', $sub);
+        }
 
-        // $this->db->set("acc_0", $this->session->userdata('user_id')['name']);
-        // $this->db->set("date_acc_0", date('Y-m-d'));
-        // $this->db->where("id_transaction", $data['generalentry']['id']);
-        // $this->db->update('mp_approv');
+        $this->db->set("acc_0", $this->session->userdata('user_id')['name']);
+        $this->db->set("date_acc_0", date('Y-m-d'));
+        $this->db->where("id_transaction", $data['generalentry']['id']);
+        $this->db->update('mp_approv');
 
         $this->db->set("status", $data['status']);
         $this->db->where("id", $data['parent_id']);
-        $this->db->update('mp_invoice');
+        $this->db->update('mp_invoice_v2');
 
 
         $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'invoice/show/' . $data['parent_id'], 'sub_id' => $data['parent_id'], 'desk' => 'Edit Invoice'));

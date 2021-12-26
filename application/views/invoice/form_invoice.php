@@ -203,7 +203,7 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-12" hidden>
                                 <div class="row">
                                     <div class="col-lg-3">
                                         <div class="form-group"><label>Disetujui</label><select name="acc_1" id="acc_1" class="form-control select2 input-lg">

@@ -155,7 +155,7 @@
                     </tr>
                     <tr cellpadding="4">
                         <td colspan=4 cellpadding="4" style="text-align: justify">
-                            <p>Dengan hormat <?= logo ?>,</p>
+                            <p>Dengan hormat,</p>
                             <p><?= $p1 ?></p>
                         </td>
                     </tr>
@@ -171,11 +171,12 @@
                                 </tr>
                                 <?php
                                 $nopol = false;
+                                $total = 0;
                                 foreach ($transaction['items'] as $item) {
                                     if (!empty($item['nopol'])) $nopol = true;
                                 }
                                 foreach ($transaction['items'] as $item) {
-
+                                    $total = $total + ($item['amount'] * $item['qyt']);
                                 ?>
                                     <tr>
                                         <td style="padding: 4px"><?= $item['keterangan_item'] ?></td>
@@ -190,17 +191,17 @@
                                 } ?>
                                 <tr>
                                     <td style="padding: 4px; text-align: right;" colspan="4"> <b>JUMLAH</b></td>
-                                    <td style="padding: 4px; text-align: right;"><b><?= number_format($transaction['sub_total'], 2, '.', ',') ?></b></td>
+                                    <td style="padding: 4px; text-align: right;"><b><?= number_format($total, 2, '.', ',') ?></b></td>
                                 </tr>
                                 <?php if ($transaction['percent_fee'] > 0) { ?>
                                     <tr>
-                                        <td style="padding: 4px; text-align: right;" colspan="4"> <b>PPN 10%</b></td>
-                                        <td style="padding: 4px; text-align: right;"><b><?= number_format(0.1 * $transaction['sub_total'], 2, '.', ',') ?></b></td>
+                                        <td style="padding: 4px; text-align: right;" colspan="4"> <b>FEE <?= $transaction['percent_fee'] ?>%</b></td>
+                                        <td style="padding: 4px; text-align: right;"><b><?= number_format($transaction['percent_fee'] / 100 * $total, 2, '.', ',') ?></b></td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td style="padding: 4px; text-align: right;" colspan="4"> <b>TOTAL</b></td>
                                         <td style="padding: 4px; text-align: right;"><b><?= number_format($transaction['total_final'], 2, '.', ',') ?></b></td>
-                                    </tr>
+                                    </tr> -->
                                 <?php  } ?>
                                 <?php if ($transaction['ppn_pph'] == 1) { ?>
                                     <tr>

@@ -6,7 +6,7 @@ class InvoiceModel extends CI_Model
 {
     public function getAllInvoice($filter = [])
     {
-        $this->db->select("mp_invoice_v2.*,gen.ref_number , gen_ppn.ref_number as ref_number_ppn ,mp_payee.customer_name, cus_address, cus_town , branch as bank_name, accountno as bank_number,title as title_bank,mp_users.title_user as title_acc_1,mp_users.agentname as name_acc_1");
+        $this->db->select("mp_invoice_v2.*,gen.ref_number , gen_ppn.ref_number as ref_number_ppn ,pay.ref_text as pay_name ,mp_payee.customer_name, cus_address, cus_town ,mp_users.title_user as title_acc_1,mp_users.agentname as name_acc_1");
         // $this->db->select("mp_invoice_v2.*,notification.id as notif_id,notification.parent2_id, notification.status as notif_status,mp_payee.customer_name, cus_address, cus_town, head_label , branch as bank_name, accountno as bank_number,title as title_bank,mp_users.title_user as title_acc_1,mp_users.agentname as name_acc_1");
         $this->db->from('mp_invoice_v2');
         // if (!empty($filter['id']))
@@ -17,7 +17,8 @@ class InvoiceModel extends CI_Model
             if (!empty($filter['first_date'])) $this->db->where('mp_invoice_v2.date >=', $filter['first_date']);
             if (!empty($filter['second_date'])) $this->db->where('mp_invoice_v2.date <=', $filter['second_date']);
         }
-        $this->db->join('mp_banks', 'mp_banks.id = mp_invoice_v2.payment_metode', 'LEFT');
+        $this->db->join('ref_account as pay', 'pay.ref_id = mp_invoice_v2.payment_metode', 'LEFT');
+        // $this->db->join('mp_banks', 'mp_banks.id = mp_invoice_v2.payment_metode', 'LEFT');
         $this->db->join('mp_payee', 'mp_payee.id = mp_invoice_v2.customer_id', 'LEFT');
         $this->db->join('mp_users', 'mp_users.id = mp_invoice_v2.acc_1', 'LEFT');
         $this->db->join('dt_generalentry gen', 'gen.id = mp_invoice_v2.general_id', 'LEFT');
@@ -150,6 +151,11 @@ class InvoiceModel extends CI_Model
             $this->db->where('id', $data['general_id']);
             $this->db->delete('dt_generalentry');
         }
+        if (!empty($data['general_id_ppn'])) {
+            $this->db->where('id', $data['general_id_ppn']);
+            $this->db->delete('dt_generalentry');
+        }
+
         if (!empty($data['data_pelunasan'])) {
             foreach ($data['data_pelunasan'] as $dp) {
 
@@ -157,10 +163,6 @@ class InvoiceModel extends CI_Model
                 $this->db->delete('dt_generalentry');
             }
         }
-
-
-
-
 
         $this->record_activity(array('jenis' => 6, 'sub_id' => $id, 'desk' => 'Delete Invoice'));
     }

@@ -80,14 +80,14 @@ for ($i = 0; $i < count($invoices_Record); $i++) {
             <div class="row col-lg-12">
                 <div class=" col-lg-7"></div>
                 <div class="col-lg-5">
-                    <div class="btn-group">
+                    <!-- <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle mr-1 mr-sm-14 my-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Download File</button>
                         <div class="dropdown-menu">
                             <a type="button" href="<?= base_url('invoice/download_word/') . $invoices_Record[$i]['id'] ?>" class="btn mr-3 my-1">To KA Akuntansi</a>
                             <a type="button" href="<?= base_url('invoice/download_word/') . $invoices_Record[$i]['id'] ?>/2" class="btn mr-3 my-1">To Divisi Eksplorasi</a>
                             <a type="button" href="<?= base_url('invoice/download/') . $invoices_Record[$i]['id'] ?>" class="btn">Invoice PDF</a>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary dropdown-toggle mr-1 mr-sm-14 my-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
                         <div class="dropdown-menu">
@@ -119,7 +119,7 @@ for ($i = 0; $i < count($invoices_Record); $i++) {
                     </b>
                 </div>
                 <div class="col-lg-12 col-sm-12 col-xs-12">
-                    <b> No Tagihan # <?= $invoices_Record[$i]['no_invoice'] ?> </b>
+                    <b> No Tagihan # <?= str_pad($invoices_Record[$i]['id'], 5, '0', STR_PAD_LEFT) ?> </b>
                 </div>
 
                 <div class="col-lg-12 col-sm-12 col-xs-12">
@@ -131,15 +131,8 @@ for ($i = 0; $i < count($invoices_Record); $i++) {
                 <div class="col-lg-12 col-sm-12 col-xs-12">
 
                     <b> Metode Pembayaran: </b>
-                    <?php
-                    if ($invoices_Record[$i]['payment_metode'] != 99) {
-                        echo $invoices_Record[$i]['bank_name'] . ' ' . $invoices_Record[$i]['bank_number'];
-                    } else {
-                        echo "Cash";
-                    }
+                    <?= $invoices_Record[$i]['pay_name']
                     ?>
-
-
                     <b>
                     </b>
                 </div>
@@ -218,20 +211,37 @@ for ($i = 0; $i < count($invoices_Record); $i++) {
                                 <?php echo number_format($total, '2', ',', '.'); ?>
                             </td>
                         </tr>
+                        <tr>
+                            <th style="width:50%">FEE <?= $invoices_Record[$i]['percent_fee'] ?>%</th>
 
-                        <th style="width:50%">PPN 10%
+                            <td class="text-right">
+                                <?php if ($invoices_Record[$i]['percent_fee'] > 0) {
+                                    $fee =  ceil(($invoices_Record[$i]['percent_fee'] / 100 * $total));
+                                    echo number_format($fee, '2', ',', '.');
+                                    $total = $total + $fee;
+                                } else {
+                                    $fee = 0;
+                                    // $total_final = $total;
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                        <tr style="border-bottom: 2px dotted #eee;">
+                        </tr>
+                        <tr>
+                            <th style="width:50%">PPN 10%</th>
 
-                        <td class="text-right">
-                            <?php if ($invoices_Record[$i]['ppn_pph'] == '1') {
-                                $total_final = $total + ceil(($total * 0.10));
-                                echo number_format(ceil($total * 0.10), '2', ',', '.');
-                            } else {
-                                $total_final = $total;
-                                echo '-';
-                            }
-                            ?>
-                            <tr style="border-bottom: 2px dotted #eee;">
-                        </td>
+                            <td class="text-right">
+                                <?php if ($invoices_Record[$i]['ppn_pph'] == '1') {
+                                    $total_final = $total + ceil(($total * 0.10));
+                                    echo number_format(ceil($total * 0.10), '2', ',', '.');
+                                } else {
+                                    $total_final = $total;
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                        <tr style="border-bottom: 2px dotted #eee;">
                         </tr>
                         <?php
                         ?>

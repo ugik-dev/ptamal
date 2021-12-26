@@ -58,14 +58,14 @@
                                         $i = 0;
                                         $doc = false;
                                         if (!empty($journals['children']))
-                                            foreach ($journals['children'] as  $sub) {
+                                            foreach (array_reverse($journals['children']) as  $sub) {
 
                                                 if ($sub['accounthead'] == '13') {
                                                     $doc = true;
                                                 }
                                         ?>
                                           <tr>
-                                              <td class="rinc_name"><?= $sub['head_name'] ?> </td>
+                                              <td class=""><?= substr($sub['head_number'], 0, 1) . '.' . substr($sub['head_number'], 1, 2) . '.' . substr($sub['head_number'], 3, 3) . ' ' . $sub['head_name'] ?> </td>
                                               <?php if ($sub['type'] == '0') {
                                                     $totdeb = $totdeb + $sub['amount'];
                                                 ?>
@@ -101,7 +101,7 @@
                                   </tfoot>
                               </table>
                           </div>
-                          <div class="col-md-12">
+                          <div class="col-md-12" hidden>
                               <div class="row">
                                   <div class="col-md-3">
                                       <div class="form-group">

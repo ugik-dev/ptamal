@@ -155,9 +155,10 @@ class General_model extends CI_Model
 
     public function getAllRefAccount($filter = [])
     {
-        $this->db->select('ref_account.*, head.name as ref_account_name');
+        $this->db->select('ref_account.*, head.name as ref_account_name , bankname as bank_name, branch, title as title_bank, accountno as bank_number');
         $this->db->from('ref_account');
         $this->db->join('dt_head as head', 'head.id = ref_account.ref_account');
+        $this->db->join('mp_banks as bn', 'head.id = bn.relation_head', 'LEFT');
         if (!empty($filter['ref_id'])) $this->db->where('ref_id', $filter['ref_id']);
         if (!empty($filter['ref_type'])) $this->db->where('ref_type', $filter['ref_type']);
 

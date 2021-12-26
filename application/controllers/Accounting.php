@@ -136,6 +136,8 @@ class Accounting extends CI_Controller
         try {
             $crud = $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'create');
             $data['accounts'] = $this->Accounting_model->getAllBaganAkun(array('by_DataStructure' => true));
+            // echo json_encode($data);
+            // die();
             $data['patner_record'] = $this->General_model->getAllPayee();
             $data['title'] = 'Buat Jurnal';
             $data['table_name'] = 'Buat Jurnal Umum';

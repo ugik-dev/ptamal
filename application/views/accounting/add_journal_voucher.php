@@ -200,9 +200,9 @@
 												foreach ($accounts as $lv1) {
 													echo '<optgroup label="[' . $lv1['head_number'] . '] ' . $lv1['name'] . '">';
 													foreach ($lv1['children'] as $lv2) {
-														echo '<optgroup label="&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '] ' . $lv2['name'] . '">';
+														echo '<optgroup label="&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . (!empty($lv2['head_number']) ? $lv2['head_number'] : '00') . '] ' . (!empty($lv2['name']) ? $lv2['name'] : '') . '">';
 														foreach ($lv2['children'] as $lv3) {
-															echo '<option value="' . $lv3['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
+															echo '<option value="' . $lv3['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . (!empty($lv2['head_number']) ? $lv2['head_number'] : '00')  . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
 															echo '</option>';
 														}
 														echo '</optgroup>';
@@ -268,7 +268,7 @@
 	<?php
 	$i = 0;
 	if (!empty($return_data['children']))
-		foreach ($return_data['children'] as $sub_parents) { ?>
+		foreach (array_reverse($return_data['children']) as $key => $sub_parents) { ?>
 		account_head[<?= $i ?>].value = '<?= $sub_parents['accounthead'] ?>';
 		sub_keterangan[<?= $i ?>].value = '<?= $sub_parents['sub_keterangan'] ?>';
 		sub_id[<?= $i ?>].value = '<?= $sub_parents['sub_id'] ?>';
