@@ -114,9 +114,9 @@ class Invoice extends CI_Controller
 
         // DEFINES TO LOAD THE MODEL
         $this->load->model('Accounts_model');
-        $filter['first_date'] = html_escape($this->input->post('date1'));
-        $filter['second_date'] = html_escape($this->input->post('date2'));
-        $filter['no_invoice'] = html_escape($this->input->post('invoice_no'));
+        $filter['first_date'] = html_escape($this->input->get('date1'));
+        $filter['second_date'] = html_escape($this->input->get('date2'));
+        $filter['no_invoice'] = html_escape($this->input->get('invoice_no'));
 
         if ($filter['first_date'] == NULL && $filter['second_date'] == NULL) {
             $filter['first_date'] = date('Y-m-01');

@@ -161,7 +161,7 @@
                     </tr>
                     <tr>
                         <td colspan="4" style=" padding : 10px">
-                            <table border="1px solid black" class="table-item" style="" width="100%">
+                            <table border="1px solid black" class="table-item" width="100%">
                                 <tr>
                                     <th>KETERANGAN</th>
                                     <th>TANGGAL</th>

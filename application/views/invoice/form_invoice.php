@@ -487,7 +487,7 @@
                     var d = json['data']
 
                     swal.fire(swalSuccessConfigure);
-                    // window.location = '<?= base_url() ?>invoice/show/' + d;
+                    window.location = '<?= base_url() ?>invoice/show/' + d;
                 },
                 error: function(e) {}
             });

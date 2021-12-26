@@ -4,9 +4,9 @@
     <div class="alert alert-custom alert-white" role="alert">
         <?php
         $currency =  $this->db->get_where('mp_langingpage', array('id' => 1))->result_array()[0]['currency'];
-        $attributes = array('id' => 'invoice_form', 'method' => 'post', 'class' => 'form col-lg-12');
+        $attributes = array('id' => 'invoice_form', 'method' => 'get', 'class' => 'form col-lg-12');
         ?>
-        <?php echo form_open('invoice/manage', $attributes); ?>
+        <?php echo form_open('invoice/history', $attributes); ?>
         <div class="row col-lg-12">
 
             <div class="col-lg-3 ">
