@@ -33,6 +33,7 @@
                                      <th>Jabatan</th>
                                      <th>Email</th>
                                      <th>Alamat</th>
+                                     <th>Status</th>
                                      <th>Action</th>
                                  </tr>
                              </thead>
@@ -87,6 +88,13 @@
                             echo form_input($data);
                             ?>
                      </div>
+                     <div class="form-group">
+                         <label for="status">Status :</label>
+                         <select class="form-control" name="status" id="status">
+                             <option value="0">Active</option>
+                             <option value="1">Non Active</option>
+                         </select>
+                     </div>
                      <div class="row">
                          <div class="col-md-6">
                              <div class="form-group">
@@ -138,6 +146,7 @@
              'password': $('#user_modal').find('#password'),
              'repassword': $('#user_modal').find('#repassword'),
              'user_address': $('#user_modal').find('#user_address'),
+             'status': $('#user_modal').find('#status'),
          }
          var swalSaveConfigure = {
              title: "Konfirmasi simpan",
@@ -232,7 +241,7 @@
                  var button = `    ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}`;
 
 
-                 renderData.push([d['agentname'], d['title_user'], d['user_email'], d['user_address'], button]);
+                 renderData.push([d['agentname'], d['title_user'], d['user_email'], d['user_address'], d['status'] == 0 ? 'Active' : 'Non Active', button]);
              });
              FDataTable.clear().rows.add(renderData).draw('full-hold');
          }
@@ -248,6 +257,7 @@
              UserModal.title_user.val(currentData['title_user']);
              UserModal.user_email.val(currentData['user_email']);
              UserModal.user_address.val(currentData['user_address']);
+             UserModal.status.val(currentData['status']);
 
          })
 

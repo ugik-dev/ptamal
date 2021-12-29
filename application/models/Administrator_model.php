@@ -130,6 +130,7 @@ class Administrator_model extends CI_Model
             'user_email' => $data['user_email'],
             'user_address' => $data['user_address'],
             'title_user' => $data['title_user'],
+            'status' => $data['status'],
         );
         if (!empty($data['password'])) {
             $trans['user_password'] = $data['password'];
