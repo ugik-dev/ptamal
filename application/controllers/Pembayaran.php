@@ -20,6 +20,10 @@ class Pembayaran extends CI_Controller
     function index($data_return = NULL)
     {
 
+
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'create');
+        $data['vcrud'] = $crud;
+
         $this->load->model('Crud_model');
 
         $data['currency'] = $this->Crud_model->fetch_record_by_id('mp_langingpage', 1)[0]->currency;
@@ -59,6 +63,9 @@ class Pembayaran extends CI_Controller
 
     public function delete($id)
     {
+
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'delete');
+        $data['vcrud'] = $crud;
         $this->load->model(array('SecurityModel', 'PembayaranModel'));
         $dataContent = $this->PembayaranModel->getAllPembayaran(array('id' =>  $id))[0];
         $dataContent['data_pelunasan'] = $this->PembayaranModel->getAllPelunasan(array('parent_id' => $id));
@@ -78,7 +85,8 @@ class Pembayaran extends CI_Controller
     }
     public function history()
     {
-
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'view');
+        $data['vcrud'] = $crud;
         // DEFINES PAGE TITLE
         $data['title'] = 'Pembayaran';
 
@@ -115,6 +123,8 @@ class Pembayaran extends CI_Controller
     public function edit($id)
     {
         try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'update');
+            $data['vcrud'] = $crud;
 
             $this->load->model(array('SecurityModel', 'PembayaranModel'));
 
@@ -182,6 +192,8 @@ class Pembayaran extends CI_Controller
 
     public function copy($id)
     {
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'create');
+        $data['vcrud'] = $crud;
         $this->load->model(array('SecurityModel', 'PembayaranModel'));
         if ($id != NULL) {
             $dataContent = $this->PembayaranModel->getAllPembayaranWithItem(array('id' =>  $id))[0];
@@ -275,6 +287,8 @@ class Pembayaran extends CI_Controller
     public function show($pembayaran_no)
     {
 
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'view');
+        $data['vcrud'] = $crud;
         // DEFINES PAGE TITLE
         $data['title'] = 'Pembayaran';
 
@@ -321,6 +335,8 @@ class Pembayaran extends CI_Controller
     function create_pembayaran()
     {
         try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'create');
+            $data['vcrud'] = $crud;
             $status = FALSE;
             $data = $this->input->post();
             if (empty($data['manual_math'])) {
@@ -458,6 +474,8 @@ class Pembayaran extends CI_Controller
     function edit_process_pembayaran()
     {
         try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'update');
+            $data['vcrud'] = $crud;
             $status = FALSE;
             $data = $this->input->post();
             if (empty($data['manual_math'])) {
@@ -535,6 +553,9 @@ class Pembayaran extends CI_Controller
     function addPelunasan()
     {
         try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'create');
+            $data['vcrud'] = $crud;
+
             $status = FALSE;
             $data = $this->input->post();
             // echo json_encode($data);
@@ -632,6 +653,8 @@ class Pembayaran extends CI_Controller
     function editPelunasan()
     {
         try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'update');
+            $data['vcrud'] = $crud;
             $status = FALSE;
             $data = $this->input->post();
             // echo json_encode($data);
@@ -740,6 +763,8 @@ class Pembayaran extends CI_Controller
     function deletePelunasan()
     {
         try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'delete');
+            $data['vcrud'] = $crud;
             $status = FALSE;
             $data = $this->input->post();
             // echo json_encode($data);

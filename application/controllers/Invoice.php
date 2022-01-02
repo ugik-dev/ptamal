@@ -107,6 +107,8 @@ class Invoice extends CI_Controller
     }
     public function history()
     {
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('invoice', '', 'create');
+        $data['vcrud'] = $crud;
 
         // DEFINES PAGE TITLE
         $data['title'] = 'Invoice';

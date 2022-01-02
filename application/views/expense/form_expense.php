@@ -143,11 +143,11 @@
                 if (result.isConfirmed == false) {
                     return;
                 }
-                // swal.fire({
-                //     title: 'Loading...',
-                //     allowOutsideClick: false
-                // });
-                // swal.showLoading();
+                swal.fire({
+                    title: 'Loading...',
+                    allowOutsideClick: false
+                });
+                swal.showLoading();
                 $.ajax({
                     url: "<?= site_url() . $form_url ?>",
                     'type': 'POST',
