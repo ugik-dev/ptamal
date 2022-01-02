@@ -28,6 +28,7 @@
                         <div class="form-group">
                             <?php echo form_label('Akun'); ?>
                             <select name="s_head_number" id="s_head_number" class="form-control select2">
+                                <option value=""> ----</option>
                                 <?php
                                 foreach ($accounts as $lv1) {
                                     echo '<option value="' . $lv1['head_number'] . '00000" style"font-weight: bold !important;"> <b> [' . $lv1['head_number'] . '] ' . $lv1['name'] . '</b></option>';

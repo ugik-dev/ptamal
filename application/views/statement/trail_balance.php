@@ -6,7 +6,7 @@
             <?php
             $attributes = array('id' => 'leadgerAccounst', 'method' => 'get', 'class' => 'form col-lg-12');
             ?>
-            <?php echo form_open_multipart('statement/trial_balance', $attributes); ?>
+            <?php echo form_open_multipart('statement/trail_balance', $attributes); ?>
             <div class="col-lg-12">
                 <div class="col-lg-12">
                     <!-- <div class="col-lg-3"> -->
@@ -95,6 +95,8 @@
                 </thead>
                 <tbody>
                     <?php
+                    $total_debit = 0;
+                    $total_kredit = 0;
                     foreach ($journals as $lv1) {
                         // echo $lv1['name'];
                         echo '<tr><td style="text-align:left;"><h4><b>' . $lv1['name']  . ' </b></h4></td><td></td><td></td></tr>';
@@ -108,8 +110,10 @@
 
 
                                     if ($lv3['data'] > 0) {
+                                        $total_debit = $total_debit + $lv3['data'];
                                         echo '<td style="text-align:right;">' . number_format($lv3['data'], 2, ',', '.') . '</td><td></td></tr>';
                                     } else {
+                                        $total_kredit = $total_kredit + $lv3['data'];
                                         echo '<td></td><td style="text-align:right;">' . number_format(abs($lv3['data']), 2, ',', '.') . '</td></tr>';
                                     }
 
@@ -128,6 +132,8 @@
                             }
                         }
                     }
+                    echo '<tr><td style="text-align:left;"><h4><b>TOTAL</b></h4></td><td>' . number_format($total_debit, 2, ',', '.') . '</td><td>' . number_format($total_kredit, 2, ',', '.') . '</td></tr>';
+
                     // echo $ledger_records;
                     ?>
                 </tbody>

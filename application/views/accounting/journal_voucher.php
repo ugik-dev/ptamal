@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <?php echo form_label('No Jurnal'); ?>
                             <?php
-                            $data = array('class' => 'form-control input-lg', 'type' => 'text', 'id' => 'ref_number', 'name' => 'ref_number', 'reqiured' => '', 'value' => $filter['ref_number']);
+                            $data = array('class' => 'form-control input-lg', 'type' => 'text', 'id' => 'ref_number', 'name' => 'ref_number', 'reqiured' => '', 'value' => !empty($filter['ref_number']) ? $filter['ref_number'] : '');
                             echo form_input($data);
                             ?>
                         </div>
@@ -40,7 +40,7 @@
                         <div class="form-group">
                             <?php echo form_label('Search'); ?>
                             <?php
-                            $data = array('class' => 'form-control input-lg', 'type' => 'text', 'id' => 'search', 'name' => 'search', 'reqiured' => '', 'value' => $filter['search']);
+                            $data = array('class' => 'form-control input-lg', 'type' => 'text', 'id' => 'search', 'name' => 'search', 'reqiured' => '', 'value' => !empty($filter['search']) ? $filter['search'] : '');
                             echo form_input($data);
                             ?>
                         </div>
@@ -49,7 +49,7 @@
                         <div class="form-group">
                             <?php echo form_label('Dari Tanggal'); ?>
                             <?php
-                            $data = array('class' => 'form-control input-lg', 'type' => 'date', 'id' => 'from', 'name' => 'from', 'reqiured' => '', 'value' => $filter['date_start']);
+                            $data = array('class' => 'form-control input-lg', 'type' => 'date', 'id' => 'from', 'name' => 'from', 'reqiured' => '', 'value' => $filter['from']);
                             echo form_input($data);
                             ?>
                         </div>
@@ -58,7 +58,7 @@
                         <div class="form-group">
                             <?php echo form_label('Sampai Tanggal'); ?>
                             <?php
-                            $data = array('class' => 'form-control input-lg', 'type' => 'date', 'id' => 'to', 'name' => 'to', 'reqiured' => '', 'value' => $filter['date_end']);
+                            $data = array('class' => 'form-control input-lg', 'type' => 'date', 'id' => 'to', 'name' => 'to', 'reqiured' => '', 'value' => $filter['to']);
                             echo form_input($data);
                             ?>
                         </div>
@@ -83,7 +83,7 @@
                             <?php echo $this->db->get_where('mp_langingpage', array('id' => 1))->result_array()[0]['companyname'];
                             ?>
                         </h3>
-                        <h4 style="text-align:center"><b>Dari</b> <?php echo $filter['date_start']; ?> <b> Sampai </b> <?php echo $filter['date_end']; ?>
+                        <h4 style="text-align:center"><b>Dari</b> <?php echo $filter['from']; ?> <b> Sampai </b> <?php echo $filter['to']; ?>
                         </h4>
                         <h4 style="text-align:center">Dibuat <?php echo Date('Y-m-d'); ?>
                         </h4>

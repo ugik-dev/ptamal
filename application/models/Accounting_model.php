@@ -45,6 +45,11 @@ class Accounting_model extends CI_Model
         $this->db->join('mp_payee as paye', "paye.id = gen.customer_id", 'LEFT');
         if (!empty($filter['id'])) $this->db->where('gen.id', $filter['id']);
         if (!empty($filter['source'])) $this->db->where('gen.generated_source', $filter['source']);
+        if (!empty($filter['from'])) $this->db->where('gen.date >=', $filter['from']);
+        if (!empty($filter['to'])) $this->db->where('gen.date <=', $filter['to']);
+        if (!empty($filter['search'])) {
+            $this->db->where('gen.ref_number like "%' . $filter['search'] . '%" OR gen.naration like "%' . $filter['search'] . '%"');
+        }
         $this->db->order_by('gen.date, gen.id,  sub.id ', 'DESC');
         $res = $this->db->get();
         // echo json_encode(DataStructure::groupBy2($query->result_array(), 'parent_id', 'parent_id', ['parent_id', 'name', 'order_number'], 'items'));

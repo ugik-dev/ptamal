@@ -37,6 +37,18 @@ class Bank extends CI_Controller
 		}
 	}
 
+	public function getBook()
+	{
+		try {
+			$filter = $this->input->get();
+			// $filter['nature'] = 'Assets';
+			$data = $this->Bank_model->getBook($filter);
+			echo json_encode(array('error' => false, 'data' => $data));
+		} catch (Exception $e) {
+			ExceptionHandler::handle($e);
+		}
+	}
+
 	public function getBank()
 	{
 		try {
@@ -55,9 +67,26 @@ class Bank extends CI_Controller
 			$crud = $this->SecurityModel->Aksessbility_VCRUD('bank', 'bank_list', 'view');
 			$data['accounts'] = $this->Accounting_model->getAllBaganAkun(array('by_DataStructure' => true, 'nature' => 'Assets'));
 
-			$data['title'] = 'Bagan Akun';
-			$data['table_name'] = 'BAGAN AKUN';
+			$data['title'] = 'Daftar Bank';
 			$data['main_view'] = 'bank/daftar_bank';
+			$data['vcrud'] = $crud;
+			$this->load->view('main/index2.php', $data);
+		} catch (Exception $e) {
+			ExceptionHandler::handle($e);
+		}
+	}
+
+	public function book($id)
+	{
+		try {
+			$crud = $this->SecurityModel->Aksessbility_VCRUD('bank', 'bank_list', 'view');
+			$data['bank'] = $this->Bank_model->getAllBank(array('id' => $id))[0];
+			// var_dump($data);
+			// die();
+			// $data['accounts'] = $this->Accounting_model->getAllBaganAkun(array('by_DataStructure' => true, 'nature' => 'Assets'));
+
+			$data['title'] = 'Buku Bank';
+			$data['main_view'] = 'bank/book';
 			$data['vcrud'] = $crud;
 			$this->load->view('main/index2.php', $data);
 		} catch (Exception $e) {

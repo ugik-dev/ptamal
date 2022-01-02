@@ -185,6 +185,7 @@ class Crud_model extends CI_Model
     public function recover_password($tablename, $email, $attribute)
     {
         $this->db->where([$attribute => $email]);
+        $this->db->where('status', 0);
         $query = $this->db->get($tablename);
         if ($query->num_rows() > 0) {
             return $query->result();

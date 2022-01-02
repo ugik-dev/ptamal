@@ -35,6 +35,28 @@ class Bank_model extends CI_Model
         return $res;
     }
 
+
+    public function getBook($filter = [])
+    {
+        $this->db->select('bt.*, gen.* , pa.customer_name');
+        $this->db->from('mp_sub_entry as bt');
+        $this->db->join('dt_generalentry as gen', 'gen.id = bt.parent_id');
+        $this->db->join('mp_payee as pa', 'pa.id = gen.customer_id', 'LEFT');
+
+        $this->db->where('bt.accounthead', $filter['id']);
+        if (!empty($filter['type'])) $this->db->where('by.type', $filter['type']);
+        // $this->db->where('bt.accounthead', $filter['id']);
+        // $this->db->join('mp_banks as ba', 'ba.id = bt.bank_id', 'LEFT');
+        // $this->db->where('bt.transaction_type', $filter['transaction_type']);
+        $this->db->order_by('date');
+        $query = $this->db->get();
+        // if (!empty($filter['by_id'])) {
+        //     return DataStructure::keyValue($query->result_array(), 'id');
+        // }
+        $res = $query->result_array();
+        return $res;
+    }
+
     public function getAllJournalVoucher($filter = [])
     {
         $this->db->select("gen.id as parent_id, sub.id as sub_id,gen.ref_number,gen.date,gen.naration,gen.customer_id,gen.user_update,sub.accounthead,sub.amount,sub.type,sub.sub_keterangan,head.name as head_name, head_number    ");

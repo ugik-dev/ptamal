@@ -86,13 +86,14 @@ class Statement extends CI_Controller
             $filter = $this->input->get();
             // $filter['by_DataStructure'] = true;
             if (empty($filter['search'])) $filter['search'] =  '';
-            if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
+            // if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
+            if (empty($filter['date_start'])) $filter['date_start'] = '2021-01-01';
             if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
+            // echo json_encode($data['journals']);
+            // die();
             $data['journals'] = array();
             $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
             $data['journals'] = $this->Statment_model_new->trail_balance($data['journals'], $filter);
-            // echo json_encode($data['journals']);
-            // die();
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';
             $data['main_view'] = 'statement/trail_balance';
@@ -136,13 +137,18 @@ class Statement extends CI_Controller
     {
         try {
             $crud = $this->SecurityModel->Aksessbility_VCRUD('statement', 'journal', 'view');
-            $filter['ref_number'] = '';
-            $filter['search'] = '';
-            $filter['date_start'] = '';
-            $filter['date_start'] = date('Y-m-' . '01');
-            $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
+            $filter = $this->input->get();
+            // $filter['ref_number'] = '';
+            // $filter['search'] = '';
+            // $filter['date_start'] = '';
+            if (empty($filter['from']))
+                $filter['from'] = date('Y-m-' . '01');
+            if (empty($filter['to']))
+                $filter['to'] = date('Y-m-' . date('t', strtotime($filter['from'])));
             $data['journals'] = array();
             $data['journals'] = $this->Accounting_model->getAllJournalVoucher($filter);
+            // echo json_encode($filter);
+            // die();
 
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';

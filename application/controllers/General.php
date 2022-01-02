@@ -78,6 +78,17 @@ class General extends CI_Controller
         }
     }
 
+    function getAprovalUsers()
+    {
+        try {
+            $filter = $this->input->get();
+            $data = $this->General_model->getAprovalUsers($filter);
+            echo json_encode(array('error' => false, 'data' => $data));
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
 
     function getAllPelunasanInvoice()
     {
@@ -87,6 +98,22 @@ class General extends CI_Controller
             if (!empty($filter['get_potongan']))
                 foreach ($data as $key => $dt) {
                     $data[$key]['data_potongan'] = $this->General_model->getChildrenPelunasan(array('id_pelunasan' => $dt['id']));
+                }
+            echo json_encode(array('error' => false, 'data' => $data));
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+
+    function getAllPelunasanPembayaran()
+    {
+        try {
+            $filter = $this->input->get();
+            $data = $this->General_model->getAllPelunasanPembayaran($filter);
+            if (!empty($filter['get_potongan']))
+                foreach ($data as $key => $dt) {
+                    $data[$key]['data_potongan'] = $this->General_model->getChildrenPelunasanPembayaran(array('id_pelunasan' => $dt['id']));
                 }
             echo json_encode(array('error' => false, 'data' => $data));
         } catch (Exception $e) {

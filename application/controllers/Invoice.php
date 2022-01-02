@@ -47,6 +47,7 @@ class Invoice extends CI_Controller
 
     function index($data_return = NULL)
     {
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('invoice', '', 'create');
 
         $this->load->model('Crud_model');
 
@@ -87,7 +88,7 @@ class Invoice extends CI_Controller
 
     public function delete($id)
     {
-        $this->load->model(array('SecurityModel', 'InvoiceModel'));
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('invoice', '', 'delete');
         $dataContent = $this->InvoiceModel->getAllInvoice(array('id' =>  $id))[0];
         $dataContent['data_pelunasan'] = $this->Invoice_model->getAllPelunasan(array('parent_id' => $id));
 
@@ -142,7 +143,7 @@ class Invoice extends CI_Controller
     {
         try {
 
-            $this->load->model(array('SecurityModel', 'InvoiceModel'));
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('invoice', '', 'update');
 
             $dataContent = $this->InvoiceModel->getAllInvoice(array('id' =>  $id))[0];
             if ($dataContent['agen_id'] != $this->session->userdata('user_id')['id'])
@@ -184,6 +185,8 @@ class Invoice extends CI_Controller
             // $data['accounts_records'] = $this->Statement_model->chart_list();
             $data['patner_record'] = $this->Statement_model->patners_cars_list();
             $data['jenis_invoice'] = $this->General_model->getAllJenisInvoice();
+            $data['approval_users'] = $this->General_model->getAprovalUsers();
+
             $data['satuan'] = $this->General_model->getAllUnit();
             $data['ref_account'] = $this->General_model->getAllRefAccount(array('ref_type' => 'payment_method'));
 
@@ -200,7 +203,7 @@ class Invoice extends CI_Controller
 
     public function copy($id)
     {
-        $this->load->model(array('SecurityModel', 'InvoiceModel'));
+        $crud = $this->SecurityModel->Aksessbility_VCRUD('invoice', '', 'create');
         if ($id != NULL) {
             $dataContent = $this->InvoiceModel->getAllInvoice(array('id' =>  $id))[0];
             $dataContent['id'] = '';
@@ -1361,7 +1364,7 @@ class Invoice extends CI_Controller
             // $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', 'jenis_pembayaran', 'view');
             $data['accounts'] = $this->General_model->getAllBaganAkun(array('by_DataStructure' => true));
             $data['title'] = 'List Jenis Invoice';
-            $data['main_view'] = 'invoice/jenis_invoice';
+            $data['main_view'] = 'refensi/jenis_invoice';
             // $data['vcrud'] = $crud;
             $data['vcrud'] = array('parent_id' => 32, 'id_menulist' => 89);
             $this->load->view('main/index2.php', $data);

@@ -2,7 +2,7 @@
     <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
         <div class="col-md-9">
             <div class="d-flex font-size-sm flex-wrap">
-                <?php if ($dataContent['status'] == 'paid') {
+                <?php if ($dataContent['status_pembayaran'] == 'paid') {
                     echo '<div class="alert alert-custom alert-outline-2x alert-outline-primary fade show mr-3" style="padding:  5px; margin: 2px" role="alert">
                                 <div class="alert-icon"><i class="flaticon2-checkmark"></i></div>
                                 <div class="alert-text mr-2">Sudah dibayar</div>
@@ -16,49 +16,49 @@
                         ';
                 } ?>
 
-                <button <?= (($dataContent['status'] == 'unpaid') ? '' : 'hidden') ?> type="button" class="btn btn-warning  py-3 mr-2  my-1 font-weight-bolde" id="add_pelunasan" data-toggle="modal" data-target="#exampleModalLong">
+                <button <?= (($dataContent['status_pembayaran'] == 'unpaid') ? '' : 'hidden') ?> type="button" class="btn btn-warning  py-3 mr-2  my-1 font-weight-bolde" id="add_pelunasan" data-toggle="modal" data-target="#exampleModalLong">
                     <i class="fa fa-plus-square" aria-hidden="true"></i> Buat Pelunasan
                 </button>
-                <!-- <button type="button" class="btn btn-primary font-weight-bolder py-4 mr-3 mr-sm-14 my-1" onclick="printDiv('print-section')">Print Invoice</button> -->
+                <!-- <button type="button" class="btn btn-primary font-weight-bolder py-4 mr-3 mr-sm-14 my-1" onclick="printDiv('print-section')">Print Pembayaran</button> -->
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle py-3 mr-3 mr-sm-14 my-1 font-weight-bolder" style="width : 200px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">File</button>
                     <div class="dropdown-menu">
                         <a type="button" id="btn_print_kwitansi" class="dropdown-item"> <i class="fa fa-print mr-2" aria-hidden="true"></i> Print Kwitansi</a>
                         <a type="button" id="btn_print_dokumen" class="dropdown-item"> <i class="fa fa-print mr-2" aria-hidden="true"></i> Print Dokumen</a>
-                        <a type="button" href="<?= base_url('invoice/download/') . $dataContent['id'] ?>" class="btn">Invoice PDF</a>
+                        <a type="button" href="<?= base_url('pembayaran/download/') . $dataContent['id'] ?>" class="btn">Pembayaran PDF</a>
                     </div>
                 </div>
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle py-3 mr-3 mr-sm-14 my-1 font-weight-bolder" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Aksi</button>
                     <div class="dropdown-menu">
-                        <a type="button" href="<?php echo base_url() . 'invoice/edit/' . $dataContent['id'] ?>" class="dropdown-item"><i class="fas fa-pencil-alt mr-2"></i> Edit</a>
-                        <a type="button" href="<?php echo base_url() . 'invoice/copy/' . $dataContent['id'] ?>" class="dropdown-item"><i class="fas fa-copy mr-2"> </i> Copy</a>
-                        <a type="button" class="dropdown-item" href="<?= base_url() . 'invoice/delete/' . $dataContent['id']   ?>"><i class="fa fa-trash mr-2"></i> Delete </a>
+                        <a type="button" href="<?php echo base_url() . 'pembayaran/edit/' . $dataContent['id'] ?>" class="dropdown-item"><i class="fas fa-pencil-alt mr-2"></i> Edit</a>
+                        <a type="button" href="<?php echo base_url() . 'pembayaran/copy/' . $dataContent['id'] ?>" class="dropdown-item"><i class="fas fa-copy mr-2"> </i> Copy</a>
+                        <a type="button" class="dropdown-item" href="<?= base_url() . 'pembayaran/delete/' . $dataContent['id']   ?>"><i class="fa fa-trash mr-2"></i> Delete </a>
                     </div>
                 </div>
-                <!-- <a type="button" href="<?= base_url('invoice') ?>" class="btn btn-light-primary font-weight-bolder mr-3 my-1"><i class="fas fa-reply mr-3 my-1"> </i>Create New Invoice</a> -->
+                <!-- <a type="button" href="<?= base_url('pembayaran') ?>" class="btn btn-light-primary font-weight-bolder mr-3 my-1"><i class="fas fa-reply mr-3 my-1"> </i>Create New Pembayaran</a> -->
             </div>
         </div>
     </div>
     <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
         <div class="col-md-9">
-            <!--begin::Invoice body-->
+            <!--begin::Pembayaran body-->
             <div class="row pb-4">
                 <div class="col-md-3 border-right-md pr-md-10 py-md-10">
-                    <!--begin::Invoice To-->
+                    <!--begin::Pembayaran To-->
                     <div class="text-dark-50 font-size-lg font-weight-bold mb-3">INVOICE TO.</div>
                     <div class="font-size-lg font-weight-bold mb-10"><?= $dataContent['customer_name'] ?>
                         <br /><?= $dataContent['cus_address'] ?>
                     </div>
-                    <!--end::Invoice To-->
-                    <!--begin::Invoice No-->
+                    <!--end::Pembayaran To-->
+                    <!--begin::Pembayaran No-->
                     <div class="text-dark-50 font-size-lg font-weight-bold mb-3">INVOICE NO.</div>
-                    <div class="font-size-lg font-weight-bold mb-10"><?= $dataContent['no_invoice'] ?></div>
-                    <!--end::Invoice No-->
-                    <!--begin::Invoice Date-->
+                    <div class="font-size-lg font-weight-bold mb-10"><?= $dataContent['no_pembayaran'] ?></div>
+                    <!--end::Pembayaran No-->
+                    <!--begin::Pembayaran Date-->
                     <div class="text-dark-50 font-size-lg font-weight-bold mb-3">DATE</div>
                     <div class="font-size-lg font-weight-bold"><?= $dataContent['date'] ?></div>
-                    <!--end::Invoice Date-->
+                    <!--end::Pembayaran Date-->
                 </div>
                 <div class="col-md-9 py-10 pl-md-10">
                     <div class="table-responsive">
@@ -107,8 +107,8 @@
                     </div>
                 </div>
             </div>
-            <!--end::Invoice body-->
-            <!--begin::Invoice footer-->
+            <!--end::Pembayaran body-->
+            <!--begin::Pembayaran footer-->
             <div class="row">
                 <div class="col-md-5 border-top pt-14 pb-10 pb-md-10">
                     <?php
@@ -171,8 +171,8 @@
                         </div>
                     </div>
                     <?php
-                    if ($dataContent['percent_fee'] > 0) {
-                        $fee = $dataContent['percent_fee'] / 100 * $total; ?>
+                    if ($dataContent['percent_jasa'] > 0) {
+                        $fee = $dataContent['percent_jasa'] / 100 * $total; ?>
                         <br>
                         <div class="bg-info rounded d-flex align-items-center justify-content-between text-white max-w-350px position-relative ml-auto p-7">
                             <!--begin::Shape-->
@@ -194,7 +194,7 @@
                                 </span>
                             </div>
                             <!--end::Shape-->
-                            <div class="font-weight-boldest font-size-h5">Fee <?= $dataContent['percent_fee'] ?>%</div>
+                            <div class="font-weight-boldest font-size-h5">Fee <?= floatval($dataContent['percent_jasa']) ?>%</div>
                             <div class="text-right d-flex flex-column">
                                 <span class="font-weight-boldest font-size-h3 line-height-sm"><?= number_format($fee, 0, ',', '.') ?></span>
                             </div>
@@ -204,44 +204,16 @@
                         $fee = 0;
                     }
 
-                    $total = $total + $fee ?>
+                    $total = $total - $fee ?>
                     <?php
                     if ($dataContent['ppn_pph'] == 1) {
                         $tmp1 = floor($total * 0.10);
-                        $total = $total + $tmp1;
+                        $total = $total - $tmp1;
                     } else {
                         $tmp1 = 0;
                     }
                     ?>
-                    <br>
-                    <div class="bg-info rounded d-flex align-items-center justify-content-between text-white max-w-350px position-relative ml-auto p-7">
-                        <!--begin::Shape-->
-                        <div class="position-absolute opacity-30 top-0 right-0">
-                            <span class="svg-icon svg-icon-2x svg-logo-white svg-icon-flip">
-                                <!--begin::Svg Icon | path:assets/media/svg/shapes/abstract-8.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="176" height="165" viewBox="0 0 176 165" fill="none">
-                                    <g clip-path="url(#clip0)">
-                                        <path d="M-10.001 135.168C-10.001 151.643 3.87924 165.001 20.9985 165.001C38.1196 165.001 51.998 151.643 51.998 135.168C51.998 118.691 38.1196 105.335 20.9985 105.335C3.87924 105.335 -10.001 118.691 -10.001 135.168Z" fill="#AD84FF" />
-                                        <path d="M28.749 64.3117C28.749 78.7296 40.8927 90.4163 55.8745 90.4163C70.8563 90.4163 83 78.7296 83 64.3117C83 49.8954 70.8563 38.207 55.8745 38.207C40.8927 38.207 28.749 49.8954 28.749 64.3117Z" fill="#AD84FF" />
-                                        <path d="M82.9996 120.249C82.9996 144.964 103.819 165 129.501 165C155.181 165 176 144.964 176 120.249C176 95.5342 155.181 75.5 129.501 75.5C103.819 75.5 82.9996 95.5342 82.9996 120.249Z" fill="#AD84FF" />
-                                        <path d="M98.4976 23.2928C98.4976 43.8887 115.848 60.5856 137.249 60.5856C158.65 60.5856 176 43.8887 176 23.2928C176 2.69692 158.65 -14 137.249 -14C115.848 -14 98.4976 2.69692 98.4976 23.2928Z" fill="#AD84FF" />
-                                        <path d="M-10.0011 8.37466C-10.0011 20.7322 0.409554 30.7493 13.2503 30.7493C26.0911 30.7493 36.5 20.7322 36.5 8.37466C36.5 -3.98287 26.0911 -14 13.2503 -14C0.409554 -14 -10.0011 -3.98287 -10.0011 8.37466Z" fill="#AD84FF" />
-                                        <path d="M-2.24881 82.9565C-2.24881 87.0757 1.22081 90.4147 5.50108 90.4147C9.78135 90.4147 13.251 87.0757 13.251 82.9565C13.251 78.839 9.78135 75.5 5.50108 75.5C1.22081 75.5 -2.24881 78.839 -2.24881 82.9565Z" fill="#AD84FF" />
-                                        <path d="M55.8744 12.1044C55.8744 18.2841 61.0788 23.2926 67.5001 23.2926C73.9196 23.2926 79.124 18.2841 79.124 12.1044C79.124 5.92653 73.9196 0.917969 67.5001 0.917969C61.0788 0.917969 55.8744 5.92653 55.8744 12.1044Z" fill="#AD84FF" />
-                                    </g>
-                                </svg>
-                                <!--end::Svg Icon-->
-                            </span>
-                        </div>
-                        <!--end::Shape-->
-                        <div class="font-weight-boldest font-size-h5">PPN 10%</div>
-                        <div class="text-right d-flex flex-column">
-                            <span class="font-weight-boldest font-size-h3 line-height-sm"><?= number_format($tmp1, 0, ',', '.') ?></span>
-                        </div>
-                    </div>
-                    <?php
-                    // }
-                    ?>
+
                     <br>
                     <div class="bg-success rounded d-flex align-items-center justify-content-between text-white max-w-350px position-relative ml-auto p-7">
                         <!--begin::Shape-->
@@ -270,12 +242,12 @@
                     </div>
                 </div>
             </div>
-            <!--end::Invoice footer-->
+            <!--end::Pembayaran footer-->
         </div>
     </div>
-    <!-- begin: Invoice action-->
+    <!-- begin: Pembayaran action-->
 
-    <!-- end: Invoice action-->
+    <!-- end: Pembayaran action-->
 </div>
 <div class="card card-custom">
     <div class="card-body">
@@ -496,12 +468,12 @@
 
         function getAllPelunsan() {
             swal.fire({
-                title: 'Loading Invoice...',
+                title: 'Loading Pembayaran...',
                 allowOutsideClick: false
             });
             swal.showLoading();
             return $.ajax({
-                url: `<?php echo base_url('General/getAllPelunasanInvoice') ?>`,
+                url: `<?php echo base_url('General/getAllPelunasanPembayaran') ?>`,
                 'type': 'GET',
                 data: {
                     'parent_id': '<?= $dataContent['id'] ?>',
@@ -603,6 +575,11 @@
                 console.log(child)
                 add_row(child);
             })
+            // tmp = $('')
+            // currentData['data_potongan'].forEach((child) => {
+            //     console.log(child)
+            //     add_row(child);
+            // })
         })
 
         FDataTable.on('click', '.print', function() {
@@ -613,24 +590,24 @@
 
         function print_kwitansi(nominal, date, item) {
             // getss = `to=<?= !empty($dataContent['name_acc_1']) ? $dataContent['name_acc_1'] : 'PT Indometal Asia' ?>&from=<?= !empty($customer_data[0]['customer_name']) ? $customer_data[0]['customer_name']  : '' ?>&date=${date}&nominal=${nominal}&description=<?= $dataContent['description'] ?>${item}`;
-            // url = "<?= base_url('invoice/kwitansi_print/' . $dataContent['id']) ?>?" + getss;
+            // url = "<?= base_url('pembayaran/kwitansi_print/' . $dataContent['id']) ?>?" + getss;
             // window.open(url, "_blank");
         };
 
         btn_print_kwitansi.on('click', () => {
-            url = "<?= base_url('invoice/kwitansi_print/' . $dataContent['id']) ?>?";
+            url = "<?= base_url('pembayaran/kwitansi_print/' . $dataContent['id']) ?>?";
             window.open(url, "_blank");
         });
 
         btn_print_dokumen.on('click', () => {
-            url = "<?= base_url('invoice/print/' . $dataContent['id']) ?>";
+            url = "<?= base_url('pembayaran/print/' . $dataContent['id']) ?>";
             window.open(url, "_blank");
         });
 
         PelunasanModal.form.submit(function(event) {
             event.preventDefault();
             var isAdd = PelunasanModal.addBtn.is(':visible');
-            var url = "<?= base_url('invoice/') ?>";
+            var url = "<?= base_url('pembayaran/') ?>";
             url += isAdd ? "addPelunasan" : "editPelunasan";
             var button = isAdd ? PelunasanModal.addBtn : PelunasanModal.saveEditBtn;
 
@@ -638,10 +615,10 @@
                 if (result.isConfirmed == false) {
                     return;
                 }
-                swal.fire({
-                    title: 'Loading ...',
-                    allowOutsideClick: false
-                });
+                // swal.fire({
+                //     title: 'Loading ...',
+                //     allowOutsideClick: false
+                // });
                 swal.showLoading();
                 $.ajax({
                     url: url,
@@ -657,7 +634,7 @@
                         }
                         swal.fire("Simpan Berhasil", "", "success");
 
-                        location.reload();
+                        // location.reload();
                         //  return;
                         // var d = json['data']
                         // dataPayments[d['id']] = d;
@@ -676,7 +653,7 @@
                     return;
                 }
                 $.ajax({
-                    url: "<?= base_url('invoice/deletePelunasan') ?>",
+                    url: "<?= base_url('pembayaran/deletePelunasan') ?>",
                     'type': 'post',
                     data: {
                         'id': currentData

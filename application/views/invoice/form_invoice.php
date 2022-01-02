@@ -203,22 +203,25 @@
                                     </tfoot>
                                 </table>
                             </div>
-                            <div class="col-lg-12" hidden>
+                            <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-lg-3">
                                         <div class="form-group"><label>Disetujui</label><select name="acc_1" id="acc_1" class="form-control select2 input-lg">
                                                 <option value="0">----- </option>
-                                                <option value="7">SADINA </option>
+                                                <?php foreach ($approval_users as $us)
+                                                    echo '<option value="' . $us['id'] . '">' . $us['agentname'] . '</option>';
+                                                ?>
+                                                <!-- <option value="7">SADINA </option> -->
                                             </select></div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-3" hidden>
                                         <div class="form-group" id='label_kendaraan'><label>Diverifikasi</label><select name="acc_2" id="acc_2" class="form-control select2 input-lg">
                                                 <option value="0">----- </option>
                                                 <option value="4">IKA MILAWATI </option>
                                                 <option value="5">ERIN MEILANI </option>
                                             </select></div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-3" hidden>
                                         <div class="form-group" id='label_kendaraan'><label>Dibuat</label><select name="acc_3" id="acc_3" class="form-control select2 input-lg">
                                                 <option value="0">----- </option>
                                                 <option value="4">IKA MILAWATI </option>
@@ -226,7 +229,7 @@
                                             </select></div>
                                     </div>
                                     <div class="col-lg-3">
-                                        <div class="form-group" id='label_kendaraan'><label>Dibukukan</label><input type="text" disabled id="dibukukan" class="form-control input-lg"></div>
+                                        <div class="form-group" id='label_kendaraan'><label>Diinput </label><input type="text" disabled id="dibukukan" class="form-control input-lg"></div>
                                     </div>
                                 </div>
                             </div>
