@@ -132,7 +132,7 @@
                             }
                         }
                     }
-                    echo '<tr><td style="text-align:left;"><h4><b>TOTAL</b></h4></td><td>' . number_format($total_debit, 2, ',', '.') . '</td><td>' . number_format($total_kredit, 2, ',', '.') . '</td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4><b>TOTAL</b></h4></td><td>' . number_format($total_debit, 2, ',', '.') . '</td><td>' . number_format(abs($total_kredit), 2, ',', '.') . '</td></tr>';
 
                     // echo $ledger_records;
                     ?>
