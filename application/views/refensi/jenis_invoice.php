@@ -33,7 +33,7 @@
                                      <th>Akun Pendapatan</th>
                                      <th>Akun Piutang</th>
                                      <th>Akun PPN</th>
-                                     <th>Akun Piutang PPN</th>
+                                     <th>No Jurnal</th>
                                      <th>Aksi</th>
                                  </tr>
                              </thead>
@@ -351,7 +351,7 @@
      $('#submenu_id_91').addClass('menu-item-active')
      $(document).ready(function() {
          var dataPayments = [];
-         //  var vcrud = <?= json_encode($vcrud) ?>;
+         var vcrud = <?= json_encode($vcrud) ?>;
          var add_new_data_btn = $('#add_new_data_btn');
          //  vcrud['hk_create'] == 0 ? add_new_data_btn.prop('hidden', true) : add_new_data_btn.prop('hidden', false);
          var PaymentModal = {
@@ -418,6 +418,8 @@
          add_new_data_btn.on('click', (e) => {
              PaymentModal.form.trigger('reset');
              PaymentModal.self.modal('show');
+             PaymentModal.id.val('');
+
              PaymentModal.addBtn.show();
              PaymentModal.saveEditBtn.hide();
          });
@@ -493,14 +495,19 @@
 
              var renderData = [];
              Object.values(data).forEach((d) => {
+
+                 var copyButton = `
+                 <button type="button" class="copy btn btn-success  btn-icon" data-id='${d['id']}' title="Copy"><i class='la la-copy'></i></button>
+                 `;
+
                  var editButton = `
                  <button type="button" class="edit btn btn-primary  btn-icon" data-id='${d['id']}' title="Edit"><i class='la la-pencil-alt'></i></button>
                  `;
                  var deleteButton = `
                  <button  type="button" class="delete btn btn-warning btn-icon" data-id='${d['id']}' title="Delete"><i class='la la-trash'></i></button>
                  `;
-                 //  var button = `    ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}`;
-                 var button = `    ${ editButton + deleteButton} `;
+                 var button = `   ${vcrud['hk_create'] == 1 ? copyButton : ''}  ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}`;
+                 //  var button = `    ${ editButton + deleteButton} `;
 
 
                  renderData.push([d['id'], d['jenis_invoice'], d['name_paid'], d['name_unpaid'], d['name_ppn'], d['name_ppn_piut'], button]);
@@ -508,12 +515,46 @@
              FDataTable.clear().rows.add(renderData).draw('full-hold');
          }
 
+         FDataTable.on('click', '.copy', function() {
+             PaymentModal.form.trigger('reset');
+             PaymentModal.self.modal('show');
+             PaymentModal.addBtn.show();
+             PaymentModal.saveEditBtn.hide();
+             var currentData = dataPayments[$(this).data('id')];
+             PaymentModal.id.val('');
+             PaymentModal.to_divisi.val(currentData['to_divisi']);
+             PaymentModal.to_jabatan.val(currentData['to_jabatan']);
+
+             PaymentModal.paragraph_1.val(currentData['paragraph_1']);
+             PaymentModal.text_kwitansi.val(currentData['text_kwitansi']);
+
+             PaymentModal.ref_nojur.val(currentData['ref_nojur']);
+             PaymentModal.ref_nojur_pel.val(currentData['ref_nojur_pel']);
+             PaymentModal.ref_nojur_pembayaran.val(currentData['ref_nojur_pembayaran']);
+             PaymentModal.ref_nojur_pel_pembayaran.val(currentData['ref_nojur_pel_pembayaran']);
+             PaymentModal.text_jurnal.val(currentData['text_jurnal']);
+
+             PaymentModal.jenis_invoice.val(currentData['jenis_invoice']);
+             PaymentModal.ac_unpaid_type.val(currentData['ac_unpaid_type']).change();
+             PaymentModal.ac_expense.val(currentData['ac_expense']).change();
+             PaymentModal.ac_hutang.val(currentData['ac_hutang']).change();
+
+             PaymentModal.ac_paid_type.val(currentData['ac_paid_type']).change();
+             PaymentModal.ac_unpaid.val(currentData['ac_unpaid']).change();
+             PaymentModal.ac_paid.val(currentData['ac_paid']).change();
+             PaymentModal.ac_ppn_type.val(currentData['ac_ppn_type']).change();
+             PaymentModal.ac_ppn.val(currentData['ac_ppn']).change();
+             PaymentModal.ac_ppn_piut.val(currentData['ac_ppn_piut']).change();
+         })
+
+
          FDataTable.on('click', '.edit', function() {
              PaymentModal.form.trigger('reset');
              PaymentModal.self.modal('show');
              PaymentModal.addBtn.hide();
              PaymentModal.saveEditBtn.show();
              var currentData = dataPayments[$(this).data('id')];
+             PaymentModal.id.val('');
              PaymentModal.id.val(currentData['id']);
              PaymentModal.to_divisi.val(currentData['to_divisi']);
              PaymentModal.to_jabatan.val(currentData['to_jabatan']);

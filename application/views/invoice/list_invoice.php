@@ -89,6 +89,14 @@ for ($i = 0; $i < count($invoices_Record); $i++) {
                         </div>
                     </div> -->
                     <div class="btn-group">
+                        <?php if ($invoices_Record[$i]['status'] == 'paid') echo '<div class="alert alert-custom alert-light-info fade show m-1 p-1" >
+                                        <div class="alert-icon ml-1"><i class="flaticon2-checkmark"></i></div>
+                                        <div class="alert-text"><b>Lunas!</b></div>
+                                    </div>';
+                        else echo '<div class="alert alert-custom alert-light-danger fade show m-1 p-1" >
+                                        <div class="alert-icon ml-1"><i class="flaticon-danger"></i></div>
+                                        <div class="alert-text"><b>Belum Lunas!</b></div>
+                                    </div>'; ?>
                         <button type="button" class="btn btn-primary dropdown-toggle mr-1 mr-sm-14 my-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
                         <div class="dropdown-menu">
                             <?php
@@ -102,6 +110,7 @@ for ($i = 0; $i < count($invoices_Record); $i++) {
                                 Copy</a>
                         </div>
                     </div>
+
                     <a class="btn btn-info mr-1 mr-sm-14 my-1" href="<?php echo base_url() . 'invoice/show/' . $invoices_Record[$i]['id'] ?>"><i class="fa fa-eye pull-left"></i>
 
                         Show </a>
@@ -119,7 +128,7 @@ for ($i = 0; $i < count($invoices_Record); $i++) {
                     </b>
                 </div>
                 <div class="col-lg-12 col-sm-12 col-xs-12">
-                    <b> No Tagihan # <?= str_pad($invoices_Record[$i]['id'], 5, '0', STR_PAD_LEFT) ?> </b>
+                    <b> No Tagihan # <?= str_pad($invoices_Record[$i]['no_invoice'], 5, '0', STR_PAD_LEFT) ?> </b>
                 </div>
 
                 <div class="col-lg-12 col-sm-12 col-xs-12">

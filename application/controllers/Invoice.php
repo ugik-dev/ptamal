@@ -70,6 +70,7 @@ class Invoice extends CI_Controller
         $data['data_return'] = $data_return;
         $this->load->model('Statement_model');
         // $data['accounts_records'] = $this->Statement_model->chart_list();
+        $data['approval_users'] = $this->General_model->getAprovalUsers();
         $data['patner_record'] = $this->Statement_model->patners_cars_list();
         $data['jenis_invoice'] = $this->General_model->getAllJenisInvoice();
         $data['satuan'] = $this->General_model->getAllUnit();
@@ -233,14 +234,14 @@ class Invoice extends CI_Controller
     function head_invoice($pdf, $dataContent)
     {
         $pdf->Image(base_url() . 'assets/img/bg-invoice.jpg', 10, 10, 190, 50);
-        $pdf->Image(base_url() . "assets/img/ima-outline-blue.png", 20, 15, 20, 20);
-        $pdf->Image(base_url() . "assets/img/ima-text-white.png", 40, 15, 76, 20);
+        $pdf->Image(base_url() . "assets/img/ptamal-transparent.png", 20, 15, 20, 20);
+        $pdf->Image(base_url() . "assets/img/ptamal-transparent.png", 40, 15, 76, 20);
 
         $pdf->Cell(173, 20, '', 0, 1, 'C');
         $pdf->SetDrawColor(255, 255, 225);
         $pdf->SetTextColor(255, 255, 225);
         $pdf->Cell(10, 30, '', 0, 0, 'C');
-        $pdf->Cell(173, 6, 'Jalan Sanggul Dewa No.6 Pangkalpinang', 0, 1);
+        $pdf->Cell(173, 6, 'Pangkalpinang', 0, 1);
         $pdf->Cell(10, 30, '', 0, 0, 'C');
         $pdf->Cell(173, 6, 'Bangka Belitung - Indonesia', 0, 1);
         $pdf->SetLineWidth(1);
@@ -1143,61 +1144,18 @@ class Invoice extends CI_Controller
             }
 
             $data['no_invoice'] = $this->Invoice_model->getLastNoInvoice() + 1;
-            // echo $data['no_invoice'];
-            // die();
 
+            $result = null;
             if ($status) {
                 $this->load->model('Transaction_model');
                 $this->load->model('Crud_model');
-                $jp = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['jenis_invoice']))[$data['jenis_invoice']];
-                $data['jp'] = $jp;
-                if ($data['ppn_pph'] == 1) {
-                    $data['generalentry_ppn'] = array(
-                        'date' => $data['date2'],
-                        'customer_id' => $data['customer_id'],
-                        'generated_source' => 'invoice_ppn'
-                    );
-                    $data['generalentry_ppn']['ref_number'] = $this->General_model->gen_number($data['date2'], 'JU');
 
-                    $data['sub_entry_ppn'][0] = array(
-                        'accounthead' => $jp['ac_ppn_piut'],
-                        'type' => 0,
-                        'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                        'amount' => $data['ppn_pph_count'],
-                    );
-                    $data['sub_entry_ppn'][1] = array(
-                        'accounthead' => $jp['ac_ppn'],
-                        'type' => 1,
-                        'sub_keterangan' => 'PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                        'amount' => $data['ppn_pph_count'],
-                    );
-                }
-
-                $data['generalentry'] = array(
-                    'date' => $data['date'],
-                    'customer_id' => $data['customer_id'],
-                    'generated_source' => 'invoice'
-                );
-                $data['generalentry']['ref_number'] = $this->General_model->gen_number($data['date'], $jp['ref_nojur']);
-                $i = 0;
                 $data['status'] = 'unpaid';
-                // NEW CODE
+                $jurnal = $this->make_journal($data);
+                $data['generalentry'] = $jurnal['generalentry'];
+                $data['sub_entry'] = $jurnal['sub_entry'];
                 // echo json_encode($data);
                 // die();
-                $data['sub_entry'][$i] = array(
-                    'accounthead' => $jp['ac_unpaid'],
-                    'type' => 0,
-                    'sub_keterangan' => 'Piut ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                    'amount' => $data['sub_total'],
-                );
-                $i++;
-                $data['sub_entry'][$i] = array(
-                    'accounthead' => $jp['ac_paid'],
-                    'type' => 1,
-                    'sub_keterangan' => 'Pdpt ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                    'amount' => $data['sub_total'],
-                );
-                $i++;
                 // if ($data['ppn_pph'] == '1') {
                 $result = $this->Invoice_model->invoice_entry($data);
             } else {
@@ -1207,6 +1165,63 @@ class Invoice extends CI_Controller
         } catch (Exception $e) {
             ExceptionHandler::handle($e);
         }
+    }
+
+    function make_journal($data)
+    {
+        $data['jp'] = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['jenis_invoice']))[$data['jenis_invoice']];
+
+        $jurnal['generalentry'] = array(
+            'date' => $data['date'],
+            'customer_id' => $data['customer_id'],
+            'generated_source' => 'invoice'
+        );
+        $jurnal['generalentry']['ref_number'] = $this->General_model->gen_number($data['date'], $data['jp']['ref_nojur']);
+        $i = 0;
+        if ($data['ppn_pph'] == 1) {
+            // $data['generalentry_ppn'] = array(
+            //     'date' => $data['date2'],
+            //     'customer_id' => $data['customer_id'],
+            //     'generated_source' => 'invoice_ppn'
+            // );
+            // $data['generalentry_ppn']['ref_number'] = $this->General_model->gen_number($data['date2'], 'JU');
+
+            $jurnal['sub_entry'][$i] = array(
+                'accounthead' => $data['jp']['ac_ppn_piut'],
+                'type' => 0,
+                'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
+                'amount' => $data['ppn_pph_count'],
+            );
+            $i++;
+            $jurnal['sub_entry'][$i] = array(
+                'accounthead' => $data['jp']['ac_ppn'],
+                'type' => 1,
+                'sub_keterangan' => 'PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
+                'amount' => $data['ppn_pph_count'],
+            );
+            $i++;
+        }
+
+        // $i = 0;
+        // $data['status'] = 'unpaid';
+        // NEW CODE
+        $jurnal['sub_entry'][$i] = array(
+            'accounthead' => $data['jp']['ac_unpaid'],
+            'type' => 0,
+            'sub_keterangan' => 'Piut ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
+            'amount' => $data['sub_total'],
+        );
+        $i++;
+        $jurnal['sub_entry'][$i] = array(
+            'accounthead' => $data['jp']['ac_paid'],
+            'type' => 1,
+            'sub_keterangan' => 'Pdpt ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
+            'amount' => $data['sub_total'],
+        );
+        $i++;
+        // echo json_encode($jurnal);
+        // die();
+        return $jurnal;
     }
     function edit_process_invoice()
     {
@@ -1252,8 +1267,7 @@ class Invoice extends CI_Controller
                 $jp = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['jenis_invoice']))[$data['jenis_invoice']];
                 $data['old_data'] = $this->Invoice_model->getAllInvoice(array('id' => $data['id'], 'by_id' => true))[$data['id']];
                 $data['generalentry_old'] = $this->General_model->getAllGeneralentry(array('id' => $data['old_data']['general_id'], 'by_id' => true))[$data['old_data']['general_id']];
-                if (!empty($data['old_data']['general_id_ppn']))
-                    $data['generalentry_ppn_old'] = $this->General_model->getAllGeneralentry(array('id' => $data['old_data']['general_id_ppn'], 'by_id' => true))[$data['old_data']['general_id_ppn']];
+
 
                 $data['status'] = 'unpaid';
                 $data['data_pelunasan'] = $this->General_model->getAllPelunasanInvoice(array('parent_id' => $data['id']));
@@ -1264,70 +1278,17 @@ class Invoice extends CI_Controller
                 if ($total_pelunasan >= $data['total_final'])
                     $data['status'] = 'paid';
 
-                if ($data['ppn_pph'] == 1) {
-                    $data['generalentry_ppn'] = array(
-                        'date' => $data['date2'],
-                        'naration' => 'PPN INV(' . str_pad($data['old_data']['id'], 5, '0', STR_PAD_LEFT) . ') ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                        'customer_id' => $data['customer_id'],
-                        'generated_source' => 'invoice_ppn'
-                    );
-                    if (!empty($data['old_data']['general_id_ppn'])) {
-                        if (substr($data['generalentry_ppn_old']['date'], 0, -3) != substr($data['date'], 0, -3))
-                            $data['generalentry_ppn']['ref_number'] = $this->General_model->gen_number($data['date2'], 'JU');
-                    } else {
-                        $data['generalentry_ppn']['ref_number'] = $this->General_model->gen_number($data['date2'], 'JU');
-                    }
-
-                    $data['sub_entry_ppn'][0] = array(
-                        'accounthead' => $jp['ac_ppn_piut'],
-                        'type' => 0,
-                        'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                        'amount' => $data['ppn_pph_count'],
-                    );
-                    $data['sub_entry_ppn'][1] = array(
-                        'accounthead' => $jp['ac_ppn'],
-                        'type' => 1,
-                        'sub_keterangan' => 'PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                        'amount' => $data['ppn_pph_count'],
-                    );
-                    $data['delete_ppn'] = false;
-                } else {
-                    $data['delete_ppn'] = true;
-                }
-
-                $data['generalentry'] = array(
-                    'date' => $data['date'],
-                    'naration' => 'INV(' . str_pad($data['old_data']['id'], 5, '0', STR_PAD_LEFT)  . ') ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                    'customer_id' => $data['customer_id'],
-                    'generated_source' => 'invoice'
-                );
-
 
                 // if ($data['generalentry_old']['date'])
+                $jurnal = $this->make_journal($data);
+                $data['generalentry'] = $jurnal['generalentry'];
+                $data['sub_entry'] = $jurnal['sub_entry'];
                 if (substr($data['generalentry_old']['date'], 0, -3) != substr($data['date'], 0, -3))
                     $data['generalentry']['ref_number'] = $this->General_model->gen_number($data['date'], $jp['ref_nojur']);
-                $i = 0;
-                // NEW CODE
-                // echo json_encode($data);
-                // die();
-                $data['sub_entry'][$i] = array(
-                    'accounthead' => $jp['ac_unpaid'],
-                    'type' => 0,
-                    'sub_keterangan' => 'Piut ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                    'amount' => $data['sub_total'],
-                );
-                $i++;
-                $data['sub_entry'][$i] = array(
-                    'accounthead' => $jp['ac_paid'],
-                    'type' => 1,
-                    'sub_keterangan' => 'Pdpt ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                    'amount' => $data['sub_total'],
-                );
-                $i++;
                 // if ($data['ppn_pph'] == '1') {
-                $result = $this->Invoice_model->invoice_edit($data);
                 // echo json_encode($data);
                 // die();
+                $result = $this->Invoice_model->invoice_edit($data);
             } else {
                 throw new UserException('Please check data!');
             }
@@ -1363,12 +1324,13 @@ class Invoice extends CI_Controller
     public function jenis_invoice()
     {
         try {
-            // $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', 'jenis_pembayaran', 'view');
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('invoice', 'jenis_invoice', 'view');
             $data['accounts'] = $this->General_model->getAllBaganAkun(array('by_DataStructure' => true));
             $data['title'] = 'List Jenis Invoice';
             $data['main_view'] = 'refensi/jenis_invoice';
-            // $data['vcrud'] = $crud;
-            $data['vcrud'] = array('parent_id' => 32, 'id_menulist' => 89);
+            $data['vcrud'] = $crud;
+            // die();
+            // $data['vcrud'] = array('parent_id' => 32, 'id_menulist' => 89);
             $this->load->view('main/index2.php', $data);
         } catch (Exception $e) {
             ExceptionHandler::handle($e);

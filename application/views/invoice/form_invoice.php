@@ -26,7 +26,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-6" hidden>
                                         <div class="form-group">
                                             <?php echo form_label('No Invoice'); ?>
                                             <?php
@@ -35,7 +35,7 @@
                                             ?>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <div class="form-group">
                                             <?php echo form_label('Tanggal Invoice'); ?>
                                             <?php
@@ -44,7 +44,7 @@
                                             ?>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-3" hidden>
                                         <div class="form-group">
                                             <?php echo form_label('Tanggal Kegiatan'); ?>
                                             <?php
@@ -53,7 +53,7 @@
                                             ?>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Jenis Invoice</label>
                                             <select name="jenis_invoice" id="jenis_invoice" class="form-control">
@@ -65,7 +65,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
 
                                         <div class="form-group">
                                             <?php echo form_label('Metode Pembayaran'); ?>
@@ -294,7 +294,7 @@
 
     $('#menu_id_6').addClass('menu-item-active menu-item-open menu-item-here"')
     $('#submenu_id_36').addClass('menu-item-active')
-    no_invoice = $('#no_invoice');
+    // no_invoice = $('#no_invoice');
     description = $('#description');
     date_jurnal = $('#date');
     date2 = $('#date2');
@@ -413,7 +413,6 @@
         }
     ?>
         id_transaction.val('<?= $data_return['id'] ?>');
-        no_invoice.val('<?= $data_return['no_invoice'] ?>');
         id_custmer.val('<?= $data_return['customer_id'] ?>');
         date_jurnal.val('<?= $data_return['date'] ?>');
         date2.val('<?= $data_return['date2'] ?>');
@@ -469,11 +468,11 @@
             if (result.isConfirmed == false) {
                 return;
             }
-            swal.fire({
-                title: 'Loading...',
-                allowOutsideClick: false
-            });
-            swal.showLoading();
+            // swal.fire({
+            //     title: 'Loading...',
+            //     allowOutsideClick: false
+            // });
+            // swal.showLoading();
             $.ajax({
                 url: url,
                 'type': 'POST',
@@ -490,7 +489,7 @@
                     var d = json['data']
 
                     swal.fire(swalSuccessConfigure);
-                    window.location = '<?= base_url() ?>invoice/show/' + d;
+                    // window.location = '<?= base_url() ?>invoice/show/' + d;
                 },
                 error: function(e) {}
             });
