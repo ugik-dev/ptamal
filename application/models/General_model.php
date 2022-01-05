@@ -365,8 +365,17 @@ class General_model extends CI_Model
     public function getAllJenisInvoice($filter = [])
     {
 
-        $this->db->select('ref.*,head_ppn.name as name_ppn ,head_ppn_piut.name as name_ppn_piut,head_paid.name as name_paid, head_unpaid.name as name_unpaid ,head_piutang.name as name_piutang');
+        $this->db->select('ref.*,
+        head_htg.name as name_hutang, head_htg.head_number as number_hutang,
+        head_expense.name as name_expense, head_expense.head_number as number_expense,
+        head_ppn.name as name_ppn, head_ppn.head_number as number_ppn,
+        head_ppn_piut.name as name_ppn_piut, head_ppn_piut.head_number as number_ppn_piut,
+        head_paid.name as name_paid, head_paid.head_number as number_paid,
+        head_unpaid.name as name_unpaid ,head_unpaid.head_number as number_unpaid,
+        head_piutang.name as name_piutang, head_piutang.head_number as number_piutang');
         $this->db->from('ref_jenis_invoice as ref');
+        $this->db->join('dt_head as head_expense', 'head_expense.id = ref.ac_expense', 'LEFT');
+        $this->db->join('dt_head as head_htg', 'head_htg.id = ref.ac_hutang', 'LEFT');
         $this->db->join('dt_head as head_paid', 'head_paid.id = ref.ac_paid', 'LEFT');
         $this->db->join('dt_head as head_unpaid', 'head_unpaid.id = ref.ac_unpaid', 'LEFT');
         $this->db->join('dt_head as head_piutang', 'head_piutang.id = ref.ac_piutang', 'LEFT');

@@ -514,7 +514,7 @@
                  var button = `   ${vcrud['hk_create'] == 1 ? copyButton : ''}  ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}`;
                  //  var button = `    ${ editButton + deleteButton} `;
 
-                 renderData.push([d['id'], d['jenis_invoice'], d['name_paid'], d['name_unpaid'], d['name_ppn'] + '<br>' + d['name_ppn_piut'], d['ref_noinvoice'] + ', ' + d['ref_nojur'] + ', ' + d['ref_nojur_pel'] + ', ' + d['ref_nojur_pembayaran'] + ', ' + d['ref_nojur_pel_pembayaran'], button]);
+                 renderData.push([d['id'], d['jenis_invoice'], '[' + d['number_paid'] + '] ' + d['name_paid'], '[' + d['number_expense'] + '] ' + d['name_expense'], '[' + d['number_ppn'] + '] ' + d['name_ppn'] + '<br>' + '[' + d['number_ppn_piut'] + '] ' + d['name_ppn_piut'], d['ref_noinvoice'] + ', ' + d['ref_nojur'] + ', ' + d['ref_nojur_pel'] + ', ' + d['ref_nojur_pembayaran'] + ', ' + d['ref_nojur_pel_pembayaran'], button]);
              });
              FDataTable.clear().rows.add(renderData).draw('full-hold');
          }
