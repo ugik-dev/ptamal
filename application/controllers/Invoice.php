@@ -1143,16 +1143,20 @@ class Invoice extends CI_Controller
                 $data['amount'][$i] = preg_replace("/[^0-9]/", "", $data['amount'][$i]);
             }
 
-            $data['no_invoice'] = $this->Invoice_model->getLastNoInvoice() + 1;
-
+            $jp = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['jenis_invoice']))[$data['jenis_invoice']];
+            $data['no_invoice'] = $this->General_model->gen_no_invoice($data['date'], $jp['ref_noinvoice']);
+            // echo $data['no_invoice'];
+            // die();
             $result = null;
             if ($status) {
                 $this->load->model('Transaction_model');
                 $this->load->model('Crud_model');
 
                 $data['status'] = 'unpaid';
-                $jurnal = $this->make_journal($data);
+                $jurnal = $this->make_journal($data, $jp);
                 $data['generalentry'] = $jurnal['generalentry'];
+                $data['generalentry']['ref_number'] = $this->General_model->gen_number($data['date'], $jp['ref_nojur']);
+
                 $data['sub_entry'] = $jurnal['sub_entry'];
                 // echo json_encode($data);
                 // die();
@@ -1167,40 +1171,20 @@ class Invoice extends CI_Controller
         }
     }
 
-    function make_journal($data)
+    function make_journal($data, $jp = null)
     {
-        $data['jp'] = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['jenis_invoice']))[$data['jenis_invoice']];
+        if ($jp == null)
+            $data['jp'] = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['jenis_invoice']))[$data['jenis_invoice']];
+        else
+            $data['jp'] = $jp;
 
         $jurnal['generalentry'] = array(
             'date' => $data['date'],
             'customer_id' => $data['customer_id'],
             'generated_source' => 'invoice'
         );
-        $jurnal['generalentry']['ref_number'] = $this->General_model->gen_number($data['date'], $data['jp']['ref_nojur']);
         $i = 0;
-        if ($data['ppn_pph'] == 1) {
-            // $data['generalentry_ppn'] = array(
-            //     'date' => $data['date2'],
-            //     'customer_id' => $data['customer_id'],
-            //     'generated_source' => 'invoice_ppn'
-            // );
-            // $data['generalentry_ppn']['ref_number'] = $this->General_model->gen_number($data['date2'], 'JU');
 
-            $jurnal['sub_entry'][$i] = array(
-                'accounthead' => $data['jp']['ac_ppn_piut'],
-                'type' => 0,
-                'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                'amount' => $data['ppn_pph_count'],
-            );
-            $i++;
-            $jurnal['sub_entry'][$i] = array(
-                'accounthead' => $data['jp']['ac_ppn'],
-                'type' => 1,
-                'sub_keterangan' => 'PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                'amount' => $data['ppn_pph_count'],
-            );
-            $i++;
-        }
 
         // $i = 0;
         // $data['status'] = 'unpaid';
@@ -1209,7 +1193,7 @@ class Invoice extends CI_Controller
             'accounthead' => $data['jp']['ac_unpaid'],
             'type' => 0,
             'sub_keterangan' => 'Piut ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-            'amount' => $data['sub_total'],
+            'amount' => $data['total_final'],
         );
         $i++;
         $jurnal['sub_entry'][$i] = array(
@@ -1219,6 +1203,23 @@ class Invoice extends CI_Controller
             'amount' => $data['sub_total'],
         );
         $i++;
+        if ($data['ppn_pph'] == 1) {
+
+            // $jurnal['sub_entry'][$i] = array(
+            //     'accounthead' => $data['jp']['ac_ppn_piut'],
+            //     'type' => 0,
+            //     'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
+            //     'amount' => $data['ppn_pph_count'],
+            // );
+            // $i++;
+            $jurnal['sub_entry'][$i] = array(
+                'accounthead' => $data['jp']['ac_ppn'],
+                'type' => 1,
+                'sub_keterangan' => 'PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
+                'amount' => $data['ppn_pph_count'],
+            );
+            $i++;
+        }
         // echo json_encode($jurnal);
         // die();
         return $jurnal;
@@ -1264,6 +1265,8 @@ class Invoice extends CI_Controller
             if ($status) {
                 $this->load->model('Transaction_model');
                 $this->load->model('Crud_model');
+                // $jp = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['jenis_invoice']))[$data['jenis_invoice']];
+
                 $jp = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['jenis_invoice']))[$data['jenis_invoice']];
                 $data['old_data'] = $this->Invoice_model->getAllInvoice(array('id' => $data['id'], 'by_id' => true))[$data['id']];
                 $data['generalentry_old'] = $this->General_model->getAllGeneralentry(array('id' => $data['old_data']['general_id'], 'by_id' => true))[$data['old_data']['general_id']];
@@ -1278,16 +1281,32 @@ class Invoice extends CI_Controller
                 if ($total_pelunasan >= $data['total_final'])
                     $data['status'] = 'paid';
 
+                if (substr($data['old_data']['date'], 0, -3) != substr($data['date'], 0, -3)) {
+                    $exp_noinv = explode('/', $data['old_data']['no_invoice']);
+                    $exp_noinv[3] = romawi_bulan(explode('-', $data['date'])[1]);
+                    $data['old_data']['no_invoice'] = implode('/', $exp_noinv);
+                }
+                if (substr($data['old_data']['date'], 2, 2) != substr($data['date'], 2, 2)) {
+                    $data['old_data']['no_invoice'] = $this->General_model->gen_no_invoice($data['date'], $jp['ref_noinvoice']);
+                }
+                if ($data['old_data']['jenis_invoice'] != $data['jenis_invoice']) {
+                    $exp_noinv = explode('-', $data['old_data']['no_invoice']);
+                    $exp_noinv[1] =  $jp['ref_noinvoice'];
+                    // $s[4] =
+                    $data['old_data']['no_invoice'] = implode('-', $exp_noinv);
+                }
+                // $data['generalentry']['ref_number'] = $this->General_model->gen_number($data['date'], $jp['ref_nojur']);
+
+                // echo json_encode($data['old_data']['no_invoice']);
+                // die();
 
                 // if ($data['generalentry_old']['date'])
-                $jurnal = $this->make_journal($data);
+                $jurnal = $this->make_journal($data, $jp);
                 $data['generalentry'] = $jurnal['generalentry'];
                 $data['sub_entry'] = $jurnal['sub_entry'];
                 if (substr($data['generalentry_old']['date'], 0, -3) != substr($data['date'], 0, -3))
                     $data['generalentry']['ref_number'] = $this->General_model->gen_number($data['date'], $jp['ref_nojur']);
                 // if ($data['ppn_pph'] == '1') {
-                // echo json_encode($data);
-                // die();
                 $result = $this->Invoice_model->invoice_edit($data);
             } else {
                 throw new UserException('Please check data!');
@@ -1651,5 +1670,47 @@ class Invoice extends CI_Controller
         $data['terbilang'] = $this->terbilang((int)$data['transaction']['total_final']) . ' Rupiah';
         $data['nominal'] = number_format((int)$data['transaction']['total_final'], 0, ',', '.');
         $this->load->view('invoice/print_template.php', $data);
+    }
+
+    function getRomawi($bln)
+    {
+        switch ($bln) {
+            case 1:
+                return "I";
+                break;
+            case 2:
+                return "II";
+                break;
+            case 3:
+                return "III";
+                break;
+            case 4:
+                return "IV";
+                break;
+            case 5:
+                return "V";
+                break;
+            case 6:
+                return "VI";
+                break;
+            case 7:
+                return "VII";
+                break;
+            case 8:
+                return "VIII";
+                break;
+            case 9:
+                return "IX";
+                break;
+            case 10:
+                return "X";
+                break;
+            case 11:
+                return "XI";
+                break;
+            case 12:
+                return "XII";
+                break;
+        }
     }
 }

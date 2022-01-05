@@ -408,7 +408,7 @@ class Invoice_model extends CI_Model
             'date' => $data['date'],
             'description' => $data['description'],
             'customer_id' => $data['customer_id'],
-            // 'no_invoice' => $data['no_invoice'],
+            'no_invoice' => $data['old_data']['no_invoice'],
             'payment_metode' => $data['payment_metode'],
             'ppn_pph' => $data['ppn_pph'],
             // 'inv_key' => $generateRandomString,

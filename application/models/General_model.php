@@ -282,15 +282,8 @@ class General_model extends CI_Model
     public function gen_number($date, $type)
     {
         $this->db->from('dt_generalentry');
-        // var_dump($date);
-        // die();
-        // $this->db->from('limit', 1);
         $this->db->limit(1);
         $this->db->order_by("ref_number", 'DESC');
-
-        // if (!empty($filter['account_head'])) $this->db->where('dt_head.id', $filter['account_head']);
-        // if (!empty($filter['id'])) $this->db->where('dt_head.id', $filter['id']);
-        // SUBSTRING_INDEX(SUBSTRING_INDEX(dt_head.name, '.', -2), ']', 1)
         $this->db->where(
             "SUBSTRING_INDEX(SUBSTRING_INDEX(ref_number, '/', 2),'/',-1) = '" . $type . "'"
         );
@@ -316,12 +309,41 @@ class General_model extends CI_Model
             $res_num = '001';
         }
         $number = $res_num . '/' . $type . '/' . $this->getRomawi((int)explode('-', $date)[1]) . '/' . substr(explode('-', $date)[0], -2);
-        // var_dump($number);
-        // die();
-        // $number .= $res_num;
         return $number;
-        // }
-        // MONTH(happened_at) = 1 and YEAR(happened_at) = 2009
+    }
+
+
+    public function gen_no_invoice($date, $type = 'S1')
+    {
+        $this->db->from('mp_invoice_v2');
+        $this->db->limit(1);
+        $this->db->order_by("no_invoice", 'DESC');
+        // $this->db->where(
+        //     "SUBSTRING_INDEX(SUBSTRING_INDEX(ref_number, '/', 2),'/',-1) = '" . $type . "'"
+        // );
+        // $this->db->where('MONTH(DATE)', explode('-', $date)[1]);
+        $this->db->where('YEAR(DATE)', explode('-', $date)[0]);
+        $query = $this->db->get();
+        $res =  $query->result_array();
+        if (!empty($res)) {
+            $res = $res[0];
+
+            if (!empty(explode('/', $res['no_invoice'])[0])) {
+                $res_num =  (int)explode('/', $res['no_invoice'])[0] + 1;
+                $numlength = strlen((string)$res_num);
+                if ($numlength == 1) {
+                    $res_num = '00' . $res_num;
+                } else if ($numlength == 2) {
+                    $res_num = '0' . $res_num;
+                }
+            } else {
+                $res_num = '001';
+            }
+        } else {
+            $res_num = '001';
+        }
+        $number = $res_num . '/INV/PTAMAL/' . $this->getRomawi((int)explode('-', $date)[1]) . '/' . substr(explode('-', $date)[0], -2) . '-' . $type;
+        return $number;
     }
 
     public function get_trail_balance($head_id, $filter = [])

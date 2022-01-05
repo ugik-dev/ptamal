@@ -33,7 +33,7 @@
                                      <th>Akun Pendapatan</th>
                                      <th>Akun Piutang</th>
                                      <th>Akun PPN</th>
-                                     <th>No Jurnal</th>
+                                     <th>Ref Penomoran</th>
                                      <th>Aksi</th>
                                  </tr>
                              </thead>
@@ -78,6 +78,10 @@
                                  <div class="form-group col-sm-6">
                                      <label>Sub Tujuan</label>
                                      <input class="form-control" type="text" name="to_divisi" id="to_divisi" placeholder="e.g. u.p Ka Akuntansi Utang/Pajak" />
+                                 </div>
+                                 <div class="form-group col-sm-6">
+                                     <label>Nomor Invoice</label>
+                                     <input class="form-control" type="text" name="ref_noinvoice" id="ref_noinvoice" />
                                  </div>
                                  <div class="form-group col-sm-6">
                                      <label>Nomor Jurnal saat Terbit Invoice</label>
@@ -375,6 +379,7 @@
              'to_jabatan': $('#accounts_modal').find('#to_jabatan'),
              'paragraph_1': $('#accounts_modal').find('#paragraph_1'),
              'text_kwitansi': $('#accounts_modal').find('#text_kwitansi'),
+             'ref_noinvoice': $('#accounts_modal').find('#ref_noinvoice'),
              'ref_nojur': $('#accounts_modal').find('#ref_nojur'),
              'ref_nojur_pel': $('#accounts_modal').find('#ref_nojur_pel'),
              'ref_nojur_pembayaran': $('#accounts_modal').find('#ref_nojur_pembayaran'),
@@ -509,8 +514,7 @@
                  var button = `   ${vcrud['hk_create'] == 1 ? copyButton : ''}  ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}`;
                  //  var button = `    ${ editButton + deleteButton} `;
 
-
-                 renderData.push([d['id'], d['jenis_invoice'], d['name_paid'], d['name_unpaid'], d['name_ppn'], d['name_ppn_piut'], button]);
+                 renderData.push([d['id'], d['jenis_invoice'], d['name_paid'], d['name_unpaid'], d['name_ppn'] + '<br>' + d['name_ppn_piut'], d['ref_noinvoice'] + ', ' + d['ref_nojur'] + ', ' + d['ref_nojur_pel'] + ', ' + d['ref_nojur_pembayaran'] + ', ' + d['ref_nojur_pel_pembayaran'], button]);
              });
              FDataTable.clear().rows.add(renderData).draw('full-hold');
          }
@@ -528,7 +532,9 @@
              PaymentModal.paragraph_1.val(currentData['paragraph_1']);
              PaymentModal.text_kwitansi.val(currentData['text_kwitansi']);
 
+             PaymentModal.ref_noinvoice.val(currentData['ref_noinvoice']);
              PaymentModal.ref_nojur.val(currentData['ref_nojur']);
+
              PaymentModal.ref_nojur_pel.val(currentData['ref_nojur_pel']);
              PaymentModal.ref_nojur_pembayaran.val(currentData['ref_nojur_pembayaran']);
              PaymentModal.ref_nojur_pel_pembayaran.val(currentData['ref_nojur_pel_pembayaran']);
@@ -556,6 +562,7 @@
              var currentData = dataPayments[$(this).data('id')];
              PaymentModal.id.val('');
              PaymentModal.id.val(currentData['id']);
+             PaymentModal.ref_noinvoice.val(currentData['ref_noinvoice']);
              PaymentModal.to_divisi.val(currentData['to_divisi']);
              PaymentModal.to_jabatan.val(currentData['to_jabatan']);
 
