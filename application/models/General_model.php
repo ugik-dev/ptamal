@@ -182,6 +182,19 @@ class General_model extends CI_Model
     }
 
 
+    function getChildrenLebih($filter = [])
+    {
+        $this->db->select('*');
+        $this->db->from('dt_pel_inv_lebih mpp');
+        if (!empty($filter['id_pelunasan'])) $this->db->where('mpp.id_pelunasan', $filter['id_pelunasan']);
+        $res = $this->db->get();
+        if (!empty($filter['by_id'])) {
+            return DataStructure::keyValue($res->result_array(), 'id');
+        }
+        $res = $res->result_array();
+        return $res;
+    }
+
     function getChildrenPelunasanPembayaran($filter = [])
     {
         $this->db->select('*');
@@ -194,7 +207,18 @@ class General_model extends CI_Model
         $res = $res->result_array();
         return $res;
     }
-
+    function getChildrenPelunasanPembayaranLebih($filter = [])
+    {
+        $this->db->select('*');
+        $this->db->from('dt_pel_pem_lebih mpp');
+        if (!empty($filter['id_pelunasan'])) $this->db->where('mpp.id_pelunasan', $filter['id_pelunasan']);
+        $res = $this->db->get();
+        if (!empty($filter['by_id'])) {
+            return DataStructure::keyValue($res->result_array(), 'id');
+        }
+        $res = $res->result_array();
+        return $res;
+    }
 
     public function getAllRefAccount($filter = [])
     {

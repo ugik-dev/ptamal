@@ -439,7 +439,7 @@ class Pembayaran extends CI_Controller
             } else {
                 throw new UserException('Please check data!');
             }
-            echo json_encode(array('error' => false, 'data' => $result));
+            echo json_encode(array('error' => false, 'data' => $result['order_id']));
         } catch (Exception $e) {
             ExceptionHandler::handle($e);
         }
@@ -589,6 +589,7 @@ class Pembayaran extends CI_Controller
             // die();
             $i = 0;
             $total = 0;
+            $ac_bank = false;
             if (!empty($data['nominal'])) {
                 if ($data['nominal'] > 0) {
                     $data['sub_entry'][$i] = array(
@@ -597,10 +598,12 @@ class Pembayaran extends CI_Controller
                         'amount' => $data['nominal'],
                         'sub_keterangan' => "Piut " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
                     );
+                    $ac_bank = true;
                     $i++;
                     $total = $total + $data['nominal'];
                 }
             }
+
             if (!empty($data['ac_potongan'])) $potongan = count($data['ac_potongan']);
             else $potongan = 0;
 
@@ -624,7 +627,45 @@ class Pembayaran extends CI_Controller
                     );
                 }
             }
+            // act lebih
+            if (!empty($data['ac_lebih'])) $lebih = count($data['ac_lebih']);
+            else $lebih = 0;
+            $total_lebih = 0;
+            $k = 0;
+            for ($j = 0; $j < $lebih; $j++) {
+                if (!empty($data['ac_lebih'][$j]) && !empty($data['ac_nominal_lebih'][$j])) {
+                    $data['ac_nominal_lebih'][$j] = substr(preg_replace("/[^0-9]/", "", $data['ac_nominal_lebih'][$j]), 0, -2) . '.' . substr(preg_replace("/[^0-9]/", "", $data['ac_nominal_lebih'][$j]), -2);
+                    $data['sub_entry'][$i] = array(
+                        'accounthead' => $data['ac_lebih'][$j],
+                        'type' => 0,
+                        'amount' => $data['ac_nominal_lebih'][$j],
+                        'sub_keterangan' => $data['ac_desk_lebih'][$j],
+                    );
+                    $i++;
+                    $total_lebih = $total_lebih + $data['ac_nominal_lebih'][$j];
+                    $data['child_lebih'][$k] = array(
+                        'ac_lebih' => $data['ac_lebih'][$j],
+                        'ac_nominal_lebih' => $data['ac_nominal_lebih'][$j],
+                        'ac_desk_lebih' => $data['ac_desk_lebih'][$j],
+                        'no_bukti_lebih' => $data['no_bukti_lebih'][$j],
+                    );
+                }
+            }
 
+            if ($total_lebih > 0)
+                if ($ac_bank) {
+                    $data['sub_entry'][0]['amount'] = $data['sub_entry'][0]['amount']  + $total_lebih;
+                } else {
+                    $data['sub_entry'][$i] = array(
+                        'accounthead' => $ref['ref_account'],
+                        'type' => 1,
+                        'amount' => $total_lebih,
+                        'sub_keterangan' => "Lebih Bayar " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
+                    );
+                    $i++;
+                }
+
+            // end lebih
             $data['sub_entry'][$i] = array(
                 'accounthead' => $jp['ac_hutang'],
                 'type' => 0,
@@ -699,6 +740,7 @@ class Pembayaran extends CI_Controller
             // die();
             $i = 0;
             $total = 0;
+            $ac_bank = false;
             if (!empty($data['nominal'])) {
                 if ($data['nominal'] > 0) {
                     $data['sub_entry'][$i] = array(
@@ -708,6 +750,7 @@ class Pembayaran extends CI_Controller
                         'sub_keterangan' => "Piut " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
                     );
                     $i++;
+                    $ac_bank = true;
                     $total = $total + $data['nominal'];
                 }
             }
@@ -734,6 +777,46 @@ class Pembayaran extends CI_Controller
                     );
                 }
             }
+
+            // act lebih
+            if (!empty($data['ac_lebih'])) $lebih = count($data['ac_lebih']);
+            else $lebih = 0;
+            $total_lebih = 0;
+            $k = 0;
+            for ($j = 0; $j < $lebih; $j++) {
+                if (!empty($data['ac_lebih'][$j]) && !empty($data['ac_nominal_lebih'][$j])) {
+                    $data['ac_nominal_lebih'][$j] = substr(preg_replace("/[^0-9]/", "", $data['ac_nominal_lebih'][$j]), 0, -2) . '.' . substr(preg_replace("/[^0-9]/", "", $data['ac_nominal_lebih'][$j]), -2);
+                    $data['sub_entry'][$i] = array(
+                        'accounthead' => $data['ac_lebih'][$j],
+                        'type' => 0,
+                        'amount' => $data['ac_nominal_lebih'][$j],
+                        'sub_keterangan' => $data['ac_desk_lebih'][$j],
+                    );
+                    $i++;
+                    $total_lebih = $total_lebih + $data['ac_nominal_lebih'][$j];
+                    $data['child_lebih'][$k] = array(
+                        'ac_lebih' => $data['ac_lebih'][$j],
+                        'ac_nominal_lebih' => $data['ac_nominal_lebih'][$j],
+                        'ac_desk_lebih' => $data['ac_desk_lebih'][$j],
+                        'no_bukti_lebih' => $data['no_bukti_lebih'][$j],
+                    );
+                }
+            }
+
+            if ($total_lebih > 0)
+                if ($ac_bank) {
+                    $data['sub_entry'][0]['amount'] = $data['sub_entry'][0]['amount']  + $total_lebih;
+                } else {
+                    $data['sub_entry'][$i] = array(
+                        'accounthead' => $ref['ref_account'],
+                        'type' => 1,
+                        'amount' => $total_lebih,
+                        'sub_keterangan' => "Lebih Bayar " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
+                    );
+                    $i++;
+                }
+
+            // end lebih
 
             $data['sub_entry'][$i] = array(
                 'accounthead' => $jp['ac_hutang'],

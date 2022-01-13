@@ -99,6 +99,10 @@ class General extends CI_Controller
                 foreach ($data as $key => $dt) {
                     $data[$key]['data_potongan'] = $this->General_model->getChildrenPelunasan(array('id_pelunasan' => $dt['id']));
                 }
+            if (!empty($filter['get_lebih']))
+                foreach ($data as $key => $dt) {
+                    $data[$key]['data_lebih'] = $this->General_model->getChildrenLebih(array('id_pelunasan' => $dt['id']));
+                }
             echo json_encode(array('error' => false, 'data' => $data));
         } catch (Exception $e) {
             ExceptionHandler::handle($e);
@@ -114,6 +118,10 @@ class General extends CI_Controller
             if (!empty($filter['get_potongan']))
                 foreach ($data as $key => $dt) {
                     $data[$key]['data_potongan'] = $this->General_model->getChildrenPelunasanPembayaran(array('id_pelunasan' => $dt['id']));
+                }
+            if (!empty($filter['get_lebih']))
+                foreach ($data as $key => $dt) {
+                    $data[$key]['data_lebih'] = $this->General_model->getChildrenPelunasanPembayaranLebih(array('id_pelunasan' => $dt['id']));
                 }
             echo json_encode(array('error' => false, 'data' => $data));
         } catch (Exception $e) {

@@ -348,10 +348,20 @@
                         </div>
                     </div>
                     <div class="col-lg-12" id="">
-                        <a class="btn btn-light my-1 mr-sm-2" id="btn_add_potongan"><strong>Tambahkan Potongan</strong></a>
                     </div>
-                    <div class="col-lg-12" id="freame_potongan">
-
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="col-lg-12">
+                                <a class="btn btn-light my-1 mr-sm-2" id="btn_add_potongan"><strong>Tambahkan Potongan</strong></a>
+                            </div>
+                            <div class="col-lg-12" id="freame_potongan"> </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="col-lg-12">
+                                <a class="btn btn-light my-1 mr-sm-2" id="btn_add_lebih"><strong>Tambahkan Lebih</strong></a>
+                            </div>
+                            <div class="col-lg-12" id="freame_lebih"> </div>
+                        </div>
                     </div>
                     <!-- </div> -->
                 </div>
@@ -373,8 +383,65 @@
         var btn_print_dokumen = $('#btn_print_dokumen');
         var freame_potongan = $('#freame_potongan');
         var btn_add_potongan = $('#btn_add_potongan');
+        var freame_lebih = $('#freame_lebih');
+        var btn_add_lebih = $('#btn_add_lebih');
 
         var row_num = 1;
+        var row_num_lebih = 1;
+
+        function add_row_lebih_bayar(dat = false) {
+
+
+            var layout_lebih = `
+                            <hr>
+                            <h2>Lebih Bayar ke ${row_num_lebih}</h2>
+                            <div class="row" id="row_lebih_${row_num_lebih}">
+                            <div class="form-group col-lg-12">
+                             <label> Akun Potongan </label>
+                             <select name="ac_lebih[]" id="ac_lebih_${row_num_lebih}" ${dat ? 'value="'+dat['ac_lebih']+'"' : ''} class="form-control select2">
+                                 <?php
+                                    foreach ($accounts as $lv1) {
+                                        echo '<optgroup label="[' . $lv1['head_number'] . '] ' . $lv1['name'] . '">';
+                                        foreach ($lv1['children'] as $lv2) {
+                                            echo '<optgroup label="&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . (!empty($lv2['head_number']) ? $lv2['head_number'] : '00') . '] ' . (!empty($lv2['name']) ? $lv2['name'] : '') . '">';
+                                            foreach ($lv2['children'] as $lv3) {
+                                                echo '<option value="' . $lv3['id_head'] . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp [' . $lv1['head_number'] . '.' . (!empty($lv2['head_number']) ? $lv2['head_number'] : '00')  . '.' . $lv3['head_number'] . '] ' . $lv3['name'] . '';
+                                                echo '</option>';
+                                            }
+                                            echo '</optgroup>';
+                                        }
+                                        echo '</optgroup>';
+                                    }
+                                    ?>
+                             </select>
+                         </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                <label>Nominal Lebih</label>
+                                <input type="text" class="form-control mask" name="ac_nominal_lebih[]" id="ac_nominal_lebih_${row_num}" ${dat ? 'value="'+dat['ac_nominal_lebih']+'"' : ''}  />
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                            <label>Keterangn Lebih</label>
+                            <input type="text" class="form-control" name="ac_desk_lebih[]" id="ac_desk_lebih${row_num}"  ${dat ? 'value="'+dat['ac_desk_lebih']+'"' : ''} />
+                            </div>
+                        </div>
+                     </div>
+                </div>
+                    `;
+            freame_lebih.append(layout_lebih);
+            $('#ac_lebih_' + row_num_lebih).select2()
+            $('.mask').mask('000.000.000.000.000,00', {
+                reverse: true
+            });
+            if (dat) {
+                $('#ac_lebih_' + row_num_lebih).val(dat['ac_lebih']);
+                $('#ac_lebih_' + row_num_lebih).trigger('change');
+            }
+            row_num_lebih++;
+        }
+
 
         function add_row(dat = false) {
 
@@ -383,7 +450,7 @@
                             <hr>
                             <h2>Potongan ke ${row_num}</h2>
                             <div class="row" id="row_pelunasan_${row_num}">
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-12">
                              <label> Akun Potongan </label>
                              <select name="ac_potongan[]" id="ac_potongan_${row_num}" ${dat ? 'value="'+dat['ac_potongan']+'"' : ''} class="form-control select2">
                                  <?php
@@ -409,15 +476,15 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
+                           <div class="form-group">
+                           <label>Nomor Potongan</label>
+                           <input type="text" class="form-control" name="no_bukti[]" id="no_bukti_${row_num}" ${dat ? 'value="'+dat['no_bukti']+'"' : ''}  />
+                       </div>
+                       </div>
+                        <div class="col-lg-12">
                             <div class="form-group">
                             <label>Keterangn Potongan</label>
                             <input type="text" class="form-control" name="ac_desk[]" id="ac_desk_${row_num}"  ${dat ? 'value="'+dat['ac_desk']+'"' : ''} />
-                        </div>
-                        </div>
-                         <div class="col-lg-6">
-                            <div class="form-group">
-                            <label>Nomor Potongan</label>
-                            <input type="text" class="form-control" name="no_bukti[]" id="no_bukti_${row_num}" ${dat ? 'value="'+dat['no_bukti']+'"' : ''}  />
                         </div>
                         </div>
                      </div>
@@ -436,8 +503,12 @@
             row_num++;
         }
         btn_add_potongan.on('click', () => {
-            console.log('adds')
+            // console.log('adds')
             add_row()
+        })
+        btn_add_lebih.on('click', () => {
+            // console.log('adds')
+            add_row_lebih_bayar()
         })
         var dataPayments = [];
         var PelunasanModal = {
@@ -488,6 +559,7 @@
 
         function form_reset() {
             freame_potongan.html('');
+            freame_lebih.html('');
             PelunasanModal.id.val('');
             PelunasanModal.nominal.val('');
             PelunasanModal.date_pembayaran.val('<?= date('Y-m-d') ?>');
@@ -506,7 +578,8 @@
                 data: {
                     'parent_id': '<?= $dataContent['id'] ?>',
                     'by_id': true,
-                    'get_potongan': true
+                    'get_potongan': true,
+                    'get_lebih': true
                 },
                 success: function(data) {
                     swal.close();
@@ -602,6 +675,10 @@
             currentData['data_potongan'].forEach((child) => {
                 console.log(child)
                 add_row(child);
+            })
+            currentData['data_lebih'].forEach((child) => {
+                // console.log(child)
+                add_row_lebih_bayar(child);
             })
         })
 

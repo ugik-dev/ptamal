@@ -475,7 +475,11 @@ class PembayaranModel extends CI_Model
                 $sub['id_pelunasan'] = $order_id;
                 $this->db->insert('dt_pel_pem_potongan', $sub);
             }
-
+        if (!empty($data['child_lebih']))
+            foreach ($data['child_lebih'] as $sub_b) {
+                $sub_b['id_pelunasan'] = $order_id;
+                $this->db->insert('dt_pel_pem_lebih', $sub_b);
+            }
         $data['generalentry']['ref_url'] = 'invoice/show/' . $data['parent_id'];
         $this->db->insert('dt_generalentry', $data['generalentry']);
 
@@ -528,10 +532,19 @@ class PembayaranModel extends CI_Model
         $this->db->where('id_pelunasan', $data['id']);
         $this->db->delete('dt_pel_pem_potongan');
 
+        $this->db->where('id_pelunasan', $data['id']);
+        $this->db->delete('dt_pel_pem_lebih');
+
+
         if (!empty($data['child_pembayaran']))
             foreach ($data['child_pembayaran'] as $sub) {
                 $sub['id_pelunasan'] = $data['id'];
                 $this->db->insert('dt_pel_pem_potongan', $sub);
+            }
+        if (!empty($data['child_lebih']))
+            foreach ($data['child_lebih'] as $sub_b) {
+                $sub_b['id_pelunasan'] = $data['id'];
+                $this->db->insert('dt_pel_pem_lebih', $sub_b);
             }
         // $order_id = $this->db->insert_id();
 

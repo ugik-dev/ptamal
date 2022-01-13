@@ -621,6 +621,11 @@ class Invoice_model extends CI_Model
                 $sub['id_pelunasan'] = $order_id;
                 $this->db->insert('dt_pel_inv_potongan', $sub);
             }
+        if (!empty($data['child_lebih']))
+            foreach ($data['child_lebih'] as $sub_b) {
+                $sub_b['id_pelunasan'] = $order_id;
+                $this->db->insert('dt_pel_inv_lebih', $sub_b);
+            }
 
         $data['generalentry']['ref_url'] = 'invoice/show/' . $data['parent_id'];
         $this->db->insert('dt_generalentry', $data['generalentry']);
@@ -680,7 +685,14 @@ class Invoice_model extends CI_Model
                 $this->db->insert('dt_pel_inv_potongan', $sub);
             }
         // $order_id = $this->db->insert_id();
+        $this->db->where('id_pelunasan', $data['id']);
+        $this->db->delete('dt_pel_inv_lebih');
 
+        if (!empty($data['child_lebih']))
+            foreach ($data['child_lebih'] as $sub_b) {
+                $sub_b['id_pelunasan'] = $data['id'];
+                $this->db->insert('dt_pel_inv_lebih', $sub_b);
+            }
 
         //   UPDATE GENERALENTRY
         $this->db->where('id', $data['generalentry']['id']);

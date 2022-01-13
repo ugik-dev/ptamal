@@ -145,7 +145,7 @@
                                             </th>
                                         </tr>
 
-                                        <tr>
+                                        <tr hidden>
                                             <th colspan="3"></th>
                                             <th colspan="2">PPh 23 : </th>
                                             <th>
@@ -264,17 +264,17 @@
                                                 </div>
                                             </th>
                                             <th colspan="2"></th>
-                                            <th colspan="2">Total Final: </th>
+                                            <th colspan="2"><a hidden>Total Final: </a></th>
                                             <th>
                                             </th>
                                             <th>
                                                 <?php
-                                                $data = array('name' => 'total_final', 'value' => '0', 'readonly' => 'readonly', 'class' => 'accounts_total_amount', 'reqiured' => '');
+                                                $data = array('name' => 'total_final', 'value' => '0', 'type' => 'hidden', 'readonly' => 'readonly', 'class' => 'accounts_total_amount', 'reqiured' => '');
                                                 echo form_input($data);
                                                 ?>
                                             </th>
                                         </tr>
-                                        <tr>
+                                        <tr hidden>
                                             <th> </th>
                                             <th colspan="2"></th>
                                             <th colspan="2">Uang yang bayarkan : </th>
