@@ -214,7 +214,7 @@ class Invoice extends CI_Controller
             for ($i = 0; $i < $item; $i++) {
                 // if (!empty($data['amount'][$i]) && !empty($data['qyt'][$i]))
                 // 	$status = TRUE;
-                $dataContent['amount'][$i] = preg_replace("/[^0-9]/", "", $dataContent['item'][$i]->amount);
+                $dataContent['amount'][$i] = $dataContent['item'][$i]->amount;
                 $dataContent['date_item'][$i] =  $dataContent['item'][$i]->date_item;
                 $dataContent['keterangan_item'][$i] =  $dataContent['item'][$i]->keterangan_item;
                 $dataContent['satuan'][$i] =  $dataContent['item'][$i]->satuan;
