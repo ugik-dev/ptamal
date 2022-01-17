@@ -105,6 +105,8 @@ class DataStructure
     return $arr;
   }
 
+
+
   public static function associativeToArray($arr)
   {
     $ret = array();
@@ -196,17 +198,56 @@ class DataStructure
     return $ret;
   }
 
+  public static function renderJurnal($arr, $columns, $childKeys, $parentFields, $childNames, $assoc = TRUE)
+  {
+    if (count($columns) == 0) {
+      return DataStructure::slice2D($arr, $parentFields[0]);
+    }
+    $childName = $childNames[0];
+    $ret = DataStructure::groupBy2($arr, array_shift($columns), array_shift($childKeys), array_shift($parentFields), array_shift($childNames));
+    $ret = !$assoc ? DataStructure::associativeToArray($ret) : $ret;
+    foreach ($ret as $k => $r) {
+      $ret[$k][$childName] = DataStructure::groupByRecursive2(DataStructure::flatten($r[$childName], count($columns) == 0 || !$assoc), $columns, $childKeys, $parentFields, $childNames, $assoc);
+    }
+    foreach ($ret as $k2 => $r2) {
+      // foreach()
+      $sort_col = array();
+
+      $child = DataStructure::associativeToArray($r2['children']);
+      $child = DataStructure::array_sort_by_column($child, 'type');
+      $ret[$k2]['children'] = $child;
+      // foreach ($r2['children'] as $key => $row) {
+      //   // $sort_col[$key] = $row[$col];
+      // }
+    }
+    // echo json_encode($ret);
+    // die();
+    return $ret;
+  }
+  public static  function array_sort_by_column(&$arr, $col, $dir = SORT_ASC)
+  {
+    // var_dump($arr);
+    // die();
+    $sort_col = array();
+    foreach ($arr as $key => $row) {
+      $sort_col[$key] = $row[$col];
+    }
+
+    array_multisort($sort_col, $dir, $arr);
+    return $arr;
+  }
+
 
   public static function TreeAccounts($arr, $assoc = TRUE)
   {
     $res = array();
     foreach ($arr as $k) {
       if (substr($k['head_number'], 1, 6) == '00000') {
-        $res[substr($k['head_number'], 0, 1)] = array('head_number' => substr($k['head_number'], 0, 1), 'name' => $k['name']);
+        $res[substr($k['head_number'], 0, 1)] = array('head_number' => substr($k['head_number'], 0, 1), 'nature' => $k['nature'], 'name' => $k['name']);
         $res[substr($k['head_number'], 0, 1)]['children'] = array();
       } else
       if (substr($k['head_number'], 3, 3) == '000') {
-        $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)] =  array('head_number' => substr($k['head_number'], 1, 2), 'name' => $k['name'], 'children' => array());
+        $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)] =  array('head_number' => substr($k['head_number'], 1, 2), 'name' => $k['name'], 'type' => $k['type'], 'nature' => $k['nature'], 'children' => array());
       } else {
         $res[substr($k['head_number'], 0, 1)]['children'][substr($k['head_number'], 1, 2)]['children'][substr($k['head_number'], 3, 3)] =  array('head_number' =>  substr($k['head_number'], 3, 3), 'name' => $k['name'], 'id_head' => $k['id']);
       }

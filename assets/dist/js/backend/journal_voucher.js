@@ -18,8 +18,8 @@ function count_debits(edit = false) {
 
     $('input[name="total_debit_amount"]').val(formatRupiah(total_debit));
     //USED TO CHECK THE VALIDITY OF THIS TRANSACTION
+    count_credits();
     if (edit) {
-      count_credits();
     } else {
       check_validity();
     }

@@ -5,14 +5,15 @@
              <div class="pull pull-right">
 
                  <!-- Button trigger modal-->
-                 <button type="button" class="btn btn-primary" id="add_new_data_btn" data-toggle="modal" data-target="#exampleModalLong">
+                 <button type="button" class="btn btn-primary mr-1" id="add_new_data_btn" data-toggle="modal" data-target="#exampleModalLong">
                      <i class="fa fa-plus-square" aria-hidden="true"></i> Buat Akun
                      <!-- Launch demo modal -->
                  </button>
 
                  <!-- Modal-->
 
-                 <button onclick="printDiv('print-section')" class="btn btn-default btn-outline-primary   pull-right "><i class="fa fa-print  pull-left"></i> Cetak</button>
+                 <button onclick="printDiv('print-section')" class="btn btn-default btn-outline-primary  mr-1 pull-right "><i class="fa fa-print  pull-left"></i> Cetak</button>
+                 <a href="<?= base_url() ?>excel/bagan_akun" class="btn btn-default btn-outline-primary  mr-1 pull-right "><i class="fa fa-download  pull-left"></i> Excel</a>
              </div>
          </div>
      </div>

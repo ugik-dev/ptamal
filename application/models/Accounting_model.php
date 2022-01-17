@@ -56,7 +56,8 @@ class Accounting_model extends CI_Model
         if (!empty($filter['by_id'])) {
             return DataStructure::keyValue($res->result_array(), 'parent_id');
         }
-        $ret = DataStructure::groupByRecursive2(
+        $ret = DataStructure::renderJurnal(
+            // $ret = DataStructure::groupByRecursive2(
             $res->result_array(),
             ['parent_id'],
             ['sub_id'],

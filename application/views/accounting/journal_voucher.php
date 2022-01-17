@@ -1,3 +1,20 @@
+<style>
+    .info-jurnal {
+        text-align: left;
+    }
+
+    .info-jurnal .head-info-1 {
+        /* text-align: left; */
+        width: 100px;
+        vertical-align: top;
+    }
+
+    .info-jurnal td {
+        /* text-align: left; */
+        /* width: 100px; */
+        vertical-align: top;
+    }
+</style>
 <div class="card card-custom position-relative overflow-hidden">
     <!--begin::Shape-->
     <div class="container">
@@ -93,7 +110,7 @@
                             <thead class="ledger_head" style="width : 30%">
                                 <th style="width: 108px;">TANGGAL</th>
                                 <th style="width: 408px;" colspan='2'>AKUN</th>
-                                <th class="">KETERANGAN</th>
+                                <!-- <th class="">KETERANGAN</th> -->
                                 <th class="">DEBIT</th>
                                 <th class="">KREDIT</th>
                             </thead>
@@ -112,54 +129,65 @@
                                     }
 
                                     echo '<tr class="narration" >
-                                        <td class="border-bottom-journal" colspan="6" style=" text-align: center;">
+                                        <td class="border-bottom-journal" colspan="5" style=" text-align: center;">
                                         <div class="row">
-                                            <div class="col-md-6" style="text-align: center; margin: auto">
-                                             <h7> No Jurnal : ' . $parent['ref_number'] . '</h7> <br>
-                                             <h7> Deskripsi : ' . $parent['naration'] . '</h7> 
-                                             <h7> Deskripsi : ' . $parent['customer_name'] . '</h7> 
+                                            <div class="col-md-9" style="text-align: left; margin: auto">
+                                            <table class="info-jurnal">
+                                            <tr> <td class="head-info-1">No Jurnal</td> <td> : </td> <td> ' . $parent['ref_number'] . ' </td> </tr>
+                                              <tr>  <td class="head-info-1">Deskripsi </td> <td > : </td> <td> ' . $parent['naration'] . ' </td> </tr>
+                                              ' . (!empty($parent['customer_name']) ? '    <tr><td class="head-info-1">Mitra </td> <td > : </td> <td> ' . $parent['customer_name'] . ' </td> </tr>' : '') . '
+                                            </table>
                                              </div>
-                                            <div class="col-md-6"> ' .  $btn_lock . ' </div>
+                                            <div class="col-md-3"> ' .  $btn_lock . ' </div>
                                         </div>
                                        </td>
                                         </tr>';
                                     // $parent['naration'] . ' '
-                                    foreach ($parent['children'] as $single_trans) {
+                                    // $child = DataStructure::associativeToArray($parent['children']);
 
+                                    // $child = DataStructure::array_sort_by_column($child, 'type');
+                                    // uasort($child, function ($a, $b) {
+                                    // $res = strcmp($a['type'], $b['type']);
+                                    // });
+                                    // {
+                                    // usort($$parent['children'])
+
+                                    // }
+
+                                    foreach ($parent['children'] as $single_trans) {
+                                        // foreach ($child as $single_trans) {
+
+                                        // <td>
+                                        // <p>'  . $single_trans['sub_keterangan'] . '</p>
+                                        //     </td>
+                                        echo '<tr>
+                                        <td style=" text-align: center; width: 100px">' . $parent['date'] . '</td>
+                                        <td style=" text-align: center; width: 100px">
+                                        [' . $single_trans['head_number'] . ']</td><td style=" text-align: left;">' . $single_trans['head_name'] . '
+                                        </td>';
                                         if ($single_trans['type'] == 0) {
-                                            echo '<tr>
-                                            <td>' . $parent['date'] . '</td>
-                                            <td style=" text-align: left;">
-                                            [' . $single_trans['head_number'] . ']</td><td style=" text-align: left;">' . $single_trans['head_name'] . '
-                                            </td>
-                                            <td>
-                                            <p>'  . $single_trans['sub_keterangan'] . '</p>
-                                                </td>
+                                            echo '
                                             <td>
                                                 <p>' . number_format($single_trans['amount'], 2, ',', '.') . '</p>
                                             </td>
                                             <td>
                                             </td>          
-                                            </tr>';
+                                            ';
                                         } else if ($single_trans['type'] == 1) {
-                                            echo '<tr>
-                                            <td>' . $parent['date'] . '</td>
-                                            <td style=" text-align: left;">
-                                             [' . $single_trans['head_number'] . ']</td><td style=" text-align: left;">' . $single_trans['head_name'] . '
-                                            </td>
-                                            <td>
-                                            <p>' . $parent['naration'] . ' ' . $single_trans['sub_keterangan'] . '</p>
-                                                </td>
-                                            <td>
+                                            echo ' <td>
                                             </td>
                                             <td>
                                             <p >' . number_format($single_trans['amount'], 2, ',', '.')  . '</p>
                                             </td>          
-                                            </tr>';
+                                            ';
                                         }
+                                        echo '</tr>';
                                     }
+                                    // var_dump($child);
+                                    // die();
+
                                     echo '<tr class="" >
-                                    <td class="" colspan="6" style=" text-align: center;"> <hr style="border : 2px solid #b8d3ff ">
+                                    <td class="" colspan="5" style=" text-align: center;"> <hr style="border : 2px solid #b8d3ff ">
                                     </td></tr>';
                                 }
                                 ?>

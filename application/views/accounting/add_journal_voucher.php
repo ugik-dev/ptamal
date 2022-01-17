@@ -140,7 +140,7 @@
 		</div>
 	</div>
 </div>
-<script src="<?php echo base_url(); ?>assets/dist/js/backend/journal_voucher.js?v=0.2"></script>
+<script src="<?php echo base_url(); ?>assets/dist/js/backend/journal_voucher.js?v=0.3"></script>
 <script src="<?php echo base_url(); ?>assets/plugins/input-mask/jquery.mask.min.js"></script>
 <script>
 	$('#menu_id_23').addClass('menu-item-active menu-item-open menu-item-here"');
@@ -217,7 +217,7 @@
 											echo form_input($data);
 											?></td>
 										<td><?php
-											$data = array('class' => 'form-control input-lg mask',  'name' => 'creditamount[]', 'value' => '', 'reqiured' => '', 'onkeyup' => 'count_credits()');
+											$data = array('class' => 'form-control input-lg mask',  'name' => 'creditamount[]', 'value' => '', 'reqiured' => '', 'onkeyup' => 'count_debits()');
 											echo form_input($data);
 											?></td>
 									</tr>
