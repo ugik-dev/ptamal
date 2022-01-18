@@ -2,7 +2,7 @@
 /*
 
 */
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 class Layout extends CI_Controller
 {
 	// Layout
@@ -34,8 +34,7 @@ class Layout extends CI_Controller
 		// DEFINES LOAD CRUDS_MODEL FORM MODELS FOLDERS
 		$this->load->model('Crud_model');
 		$company_thumbnail = $this->Crud_model->do_upload_picture("company_thumbnail", "./uploads/systemimgs/");
-		if ($company_thumbnail != "default.jpg")
-		{
+		if ($company_thumbnail != "default.jpg") {
 
 			// ASSIGN THE VALUES OF TEXTBOX TO ASSOCIATIVE ARRAY
 			$data = array(
@@ -50,17 +49,14 @@ class Layout extends CI_Controller
 
 			// CALL THE METHOD FROM Crud_model CLASS FIRST ARG CONTAINES TABLENAME AND OTHER CONTAINS DATA
 			$result = $this->Crud_model->edit_record_id($args, $data);
-			if ($result == 1)
-			{
+			if ($result == 1) {
 				$array_msg = array(
 					'msg' => '<i style="color:#fff" class="fa fa-pencil-square-o" aria-hidden="true"></i> banner Updated',
 					'alert' => 'info'
 				);
 				$this->session->set_flashdata('status', $array_msg);
 			}
-		}
-		else
-		{
+		} else {
 			$array_msg = array(
 				'msg' => '<i style="color:#c00" class="fa fa-exclamation-triangle" aria-hidden="true"></i> Empty banner cannot be Updated',
 				'alert' => 'danger'
@@ -106,16 +102,13 @@ class Layout extends CI_Controller
 
 		// CALL THE METHOD FROM Crud_model CLASS FIRST ARG CONTAINES TABLENAME AND OTHER CONTAINS DATA
 		$result = $this->Crud_model->edit_record_id($args, $data);
-		if ($result == 1)
-		{
+		if ($result == 1) {
 			$array_msg = array(
 				'msg' => '<i style="color:#fff" class="fa fa-pencil-square-o" aria-hidden="true"></i> Company Record Editted',
 				'alert' => 'info'
 			);
 			$this->session->set_flashdata('status', $array_msg);
-		}
-		else
-		{
+		} else {
 			$array_msg = array(
 				'msg' => '<i style="color:#c00" class="fa fa-exclamation-triangle" aria-hidden="true"></i> Company Record cannot be Editted',
 				'alert' => 'danger'
@@ -126,7 +119,7 @@ class Layout extends CI_Controller
 		redirect('layout');
 	}
 
-		//DEFAULT SETTINGS OF COLOR 
+	//DEFAULT SETTINGS OF COLOR 
 	function default_settings()
 	{
 		$primary_color = '#d3af08';
@@ -149,16 +142,13 @@ class Layout extends CI_Controller
 
 		// CALL THE METHOD FROM Crud_model CLASS FIRST ARG CONTAINES TABLENAME AND OTHER CONTAINS DATA
 		$result = $this->Crud_model->edit_record_id($args, $data);
-		if ($result == 1)
-		{
+		if ($result == 1) {
 			$array_msg = array(
 				'msg' => '<i style="color:#fff" class="fa fa-pencil-square-o" aria-hidden="true"></i> Reset successfully',
 				'alert' => 'info'
 			);
 			$this->session->set_flashdata('status', $array_msg);
-		}
-		else
-		{
+		} else {
 			$array_msg = array(
 				'msg' => '<i style="color:#c00" class="fa fa-exclamation-triangle" aria-hidden="true"></i> Reset cannot be editted',
 				'alert' => 'danger'
@@ -166,6 +156,5 @@ class Layout extends CI_Controller
 			$this->session->set_flashdata('status', $array_msg);
 		}
 		redirect('layout');
-
 	}
 }

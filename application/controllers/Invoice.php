@@ -1728,24 +1728,14 @@ class Invoice extends CI_Controller
 
     public function print($id)
     {
-        // $data = $this->input->get();
         $data['transaction'] = $this->Invoice_model->getAllInvoiceDetail(array('id' => $id))[$id];
         $data['template'] = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['transaction']['jenis_invoice']))[$data['transaction']['jenis_invoice']];
         $data['payment'] = $this->General_model->getAllRefAccount(array('by_id' => true, 'ref_id' => $data['transaction']['payment_metode']))[$data['transaction']['payment_metode']];
 
-        // $pos = strpos($data['template']['paragraph_1'], '{', 2);
         if (!empty($data['template']['paragraph_1']))
             $data['p1'] = $this->find_char($data['template']['paragraph_1'], $data['transaction']);
         else
             $data['p1'] = 'Bersamaan dengan ini kami sampaikan tagihan ' . $data['transaction']['description'] . ' sebagai berikut :';
-        // if (!empty($pos)) {
-        // 	$pos2 = strpos($data['template']['paragraph_1'], '}');
-        // 	$tx1 = substr($data['template']['paragraph_1'], $pos + 1, $pos2 - $pos - 1);
-        // 	$data['aa'] = substr($data['template']['paragraph_1'], $pos + 1, $pos2 - $pos - 1);
-        // }
-
-        // echo json_encode($data);
-        // die();
         if (empty($data['transaction']['date'])) $data['transaction']['date'] = date('Y-m-d');
         $data['transaction']['date'] = $this->tanggal_indonesia($data['transaction']['date']);
 
@@ -1753,6 +1743,27 @@ class Invoice extends CI_Controller
         $data['nominal'] = number_format((int)$data['transaction']['total_final'], 0, ',', '.');
         $this->load->view('invoice/print_template.php', $data);
     }
+
+    public function print_invoice($id)
+    {
+        $data['transaction'] = $this->Invoice_model->getAllInvoiceDetail(array('id' => $id))[$id];
+        $data['template'] = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['transaction']['jenis_invoice']))[$data['transaction']['jenis_invoice']];
+        $data['payment'] = $this->General_model->getAllRefAccount(array('by_id' => true, 'ref_id' => $data['transaction']['payment_metode']))[$data['transaction']['payment_metode']];
+
+        if (!empty($data['template']['paragraph_1']))
+            $data['p1'] = $this->find_char($data['template']['paragraph_1'], $data['transaction']);
+        else
+            $data['p1'] = 'Bersamaan dengan ini kami sampaikan tagihan ' . $data['transaction']['description'] . ' sebagai berikut :';
+        if (empty($data['transaction']['date'])) $data['transaction']['date'] = date('Y-m-d');
+        $data['transaction']['date'] = $this->tanggal_indonesia($data['transaction']['date']);
+
+        $data['terbilang'] = $this->terbilang((int)$data['transaction']['total_final']) . ' Rupiah';
+        $data['nominal'] = number_format((int)$data['transaction']['total_final'], 0, ',', '.');
+        // echo json_encode($data);
+        // die();
+        $this->load->view('invoice/print_invoice.php', $data);
+    }
+
 
     function getRomawi($bln)
     {

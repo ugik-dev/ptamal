@@ -13,6 +13,17 @@ class General extends CI_Controller
         $this->db->db_debug = TRUE;
     }
 
+    public function getAllPayee()
+    {
+        try {
+            $filter = $this->input->get();
+            // $filter['nature'] = 'Assets';
+            $data = $this->General_model->getAllPayee($filter);
+            echo json_encode(array('error' => false, 'data' => $data));
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
 
     public function getAllProduct()
     {

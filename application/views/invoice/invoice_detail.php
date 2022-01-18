@@ -25,6 +25,7 @@
                     <div class="dropdown-menu">
                         <a type="button" id="btn_print_kwitansi" class="dropdown-item"> <i class="fa fa-print mr-2" aria-hidden="true"></i> Print Kwitansi</a>
                         <a type="button" id="btn_print_dokumen" class="dropdown-item"> <i class="fa fa-print mr-2" aria-hidden="true"></i> Print Dokumen</a>
+                        <a type="button" id="btn_print_invoice" class="dropdown-item"> <i class="fa fa-print mr-2" aria-hidden="true"></i> Print Invoice</a>
                         <a type="button" href="<?= base_url('invoice/download/') . $dataContent['id'] ?>" class="btn">Invoice PDF</a>
                     </div>
                 </div>
@@ -381,6 +382,8 @@
         var add_pelunasan = $('#add_pelunasan');
         var btn_print_kwitansi = $('#btn_print_kwitansi');
         var btn_print_dokumen = $('#btn_print_dokumen');
+        var btn_print_invoice = $('#btn_print_invoice');
+
         var freame_potongan = $('#freame_potongan');
         var btn_add_potongan = $('#btn_add_potongan');
         var freame_lebih = $('#freame_lebih');
@@ -701,6 +704,11 @@
 
         btn_print_dokumen.on('click', () => {
             url = "<?= base_url('invoice/print/' . $dataContent['id']) ?>";
+            window.open(url, "_blank");
+        });
+
+        btn_print_invoice.on('click', () => {
+            url = "<?= base_url('invoice/print_invoice/' . $dataContent['id']) ?>";
             window.open(url, "_blank");
         });
 
