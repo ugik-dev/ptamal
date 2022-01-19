@@ -267,7 +267,7 @@
              'columnDefs': [],
              deferRender: true,
              "order": [
-                 [0, "desc"]
+                 [0, "asc"]
              ]
          });
 

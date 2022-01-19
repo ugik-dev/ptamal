@@ -17,31 +17,6 @@ class Invoice extends CI_Controller
     }
 
 
-    public function editJenisInvoice()
-    {
-        try {
-            $this->load->model(array('SecurityModel', 'InvoiceModel'));
-            $data = $this->input->post();
-            $this->Invoice_model->editJenisInvoice($data);
-            $data = $this->General_model->getAllJenisInvoice(array('id' =>  $data['id'], 'by_id' => true))[$data['id']];
-            echo json_encode(array("error" => false, "data" => $data));
-        } catch (Exception $e) {
-            ExceptionHandler::handle($e);
-        }
-    }
-
-    public function addJenisInvoice()
-    {
-        try {
-            $this->load->model(array('SecurityModel', 'InvoiceModel'));
-            $data = $this->input->post();
-            $id = $this->Invoice_model->addJenisInvoice($data);
-            $data = $this->General_model->getAllJenisInvoice(array('id' =>  $id, 'by_id' => true))[$id];
-            echo json_encode(array("error" => false, "data" => $data));
-        } catch (Exception $e) {
-            ExceptionHandler::handle($e);
-        }
-    }
 
 
 
@@ -1759,7 +1734,7 @@ class Invoice extends CI_Controller
 
         $data['terbilang'] = $this->terbilang((int)$data['transaction']['total_final']) . ' Rupiah';
         $data['nominal'] = number_format((int)$data['transaction']['total_final'], 0, ',', '.');
-        // echo json_encode($data);
+        // echo json_encode(Company_Profile());
         // die();
         $this->load->view('invoice/print_invoice.php', $data);
     }

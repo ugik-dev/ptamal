@@ -8,7 +8,7 @@ class Administrator extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('SecurityModel', 'Administrator_model', 'General_model', 'Accounting_model'));
+        $this->load->model(array('SecurityModel', 'Administrator_model', 'General_model', 'Accounting_model', 'Invoice_model'));
         // $this->load->helper(array('DataStructure'));
         $this->db->db_debug = TRUE;
     }
@@ -34,6 +34,7 @@ class Administrator extends CI_Controller
             ExceptionHandler::handle($e);
         }
     }
+
 
 
     public function users()
@@ -63,6 +64,51 @@ class Administrator extends CI_Controller
             ExceptionHandler::handle($e);
         }
     }
+
+
+    public function jenis_invoice()
+    {
+        try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('administrator', 'jenis_invoice', 'view');
+            $data['accounts'] = $this->General_model->getAllBaganAkun(array('by_DataStructure' => true));
+            $data['title'] = 'List Jenis Invoice';
+            $data['main_view'] = 'refensi/jenis_invoice';
+            $data['vcrud'] = $crud;
+            // die();
+            // $data['vcrud'] = array('parent_id' => 32, 'id_menulist' => 89);
+            $this->load->view('main/index2.php', $data);
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+    public function editJenisInvoice()
+    {
+        try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('administrator', 'jenis_invoice', 'update');
+            $data = $this->input->post();
+            $this->Invoice_model->editJenisInvoice($data);
+            $data = $this->General_model->getAllJenisInvoice(array('id' =>  $data['id'], 'by_id' => true))[$data['id']];
+            echo json_encode(array("error" => false, "data" => $data));
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+    public function addJenisInvoice()
+    {
+        try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('administrator', 'jenis_invoice', 'create');
+            $data = $this->input->post();
+            $id = $this->Invoice_model->addJenisInvoice($data);
+            $data = $this->General_model->getAllJenisInvoice(array('id' =>  $id, 'by_id' => true))[$id];
+            echo json_encode(array("error" => false, "data" => $data));
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+
 
 
     public function addUser()

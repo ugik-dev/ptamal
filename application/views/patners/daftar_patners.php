@@ -31,10 +31,10 @@
                                  <tr>
                                      <th>Nama Patners</th>
                                      <th>Nama Perusahaan</th>
-                                     <th>Lokasi</th>
+                                     <th>Alamat</th>
                                      <th>Kontak</th>
-                                     <th>Jenis</th>
-                                     <th>Status</th>
+                                     <th>Deskripsi</th>
+                                     <th>Aksi</th>
                                  </tr>
                              </thead>
                              <tbody>
@@ -47,39 +47,49 @@
      </div>
  </div>
  <div class="modal fade" id="patners_modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
-     <div class="modal-dialog" role="document">
+     <div class="modal-dialog modal-lg" role="document">
          <div class="modal-content">
              <form opd="form" id="patners_form" onsubmit="return false;" type="multipart" autocomplete="off">
                  <div class="modal-header">
-                     <h5 class="modal-cus_contact_1" id="exampleModalLabel">Modal Title</h5>
+                     <h5 class="modal-cus_contact_1" id="exampleModalLabel">Form Patner</h5>
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                          <i aria-hidden="true" class="ki ki-close"></i>
                      </button>
                  </div>
                  <div class="modal-body">
-                     <div class="form-group">
-                         <?php
-                            echo form_label('Nama Patner:');
-                            $data = array('class' => 'form-control ', 'type' => 'text', 'name' => 'customer_name', 'id' => 'customer_name', 'placeholder' => 'e.g Sulaiman', 'reqiured' => '');
-                            echo form_input($data);
-                            $data = array('type' => 'text', 'name' => 'id', 'id' => 'id', 'placeholder' => '');
-                            echo form_input($data);
-                            ?>
-                     </div>
-                     <div class="form-group">
-                         <?php
-                            echo form_label('Nama Perusahaan :');
-                            $data = array('class' => 'form-control ', 'type' => 'text', 'name' => 'cus_company', 'id' => 'cus_company',  'placeholder' => 'e.g PT Example', 'reqiured' => '');
-                            echo form_input($data);
-                            ?>
-                     </div>
+                     <div class="row">
+                         <div class="col-md-4">
 
-                     <div class="form-group">
-                         <?php
-                            echo form_label('Telp  :');
-                            $data = array('class' => 'form-control ', 'type' => 'text', 'name' => 'cus_contact_1', 'id' => 'cus_contact_1', 'placeholder' => 'e.g (0717) 12342', 'reqiured' => '');
-                            echo form_input($data);
-                            ?>
+                             <div class="form-group">
+                                 <?php
+                                    echo form_label('Nama Patner:');
+                                    $data = array('class' => 'form-control ', 'type' => 'text', 'name' => 'customer_name', 'id' => 'customer_name', 'placeholder' => 'e.g Sulaiman', 'reqiured' => '');
+                                    echo form_input($data);
+                                    $data = array('type' => 'hidden', 'name' => 'id', 'id' => 'id', 'placeholder' => '');
+                                    echo form_input($data);
+                                    ?>
+                             </div>
+                         </div>
+
+                         <div class="col-md-4">
+                             <div class="form-group">
+                                 <?php
+                                    echo form_label('Nama Perusahaan :');
+                                    $data = array('class' => 'form-control ', 'type' => 'text', 'name' => 'cus_company', 'id' => 'cus_company',  'placeholder' => 'e.g PT Example', 'reqiured' => '');
+                                    echo form_input($data);
+                                    ?>
+                             </div>
+                         </div>
+
+                         <div class="col-md-4">
+                             <div class="form-group">
+                                 <?php
+                                    echo form_label('Telp  :');
+                                    $data = array('class' => 'form-control ', 'type' => 'text', 'name' => 'cus_contact_1', 'id' => 'cus_contact_1', 'placeholder' => 'e.g (0717) 12342', 'reqiured' => '');
+                                    echo form_input($data);
+                                    ?>
+                             </div>
+                         </div>
                      </div>
                      <div class="form-group">
                          <?php
@@ -88,21 +98,38 @@
                             echo form_input($data);
                             ?>
                      </div>
-                     <div class="form-group">
-                         <?php
-                            echo form_label('Kota :');
-                            $data = array('class' => 'form-control ', 'type' => 'text', 'name' => 'cus_town', 'id' => 'cus_town',  'placeholder' => 'e.g Pangkalpinang - Bangka', 'reqiured' => '');
-                            echo form_input($data);
-                            ?>
-                     </div>
+                     <div class="row">
+                         <div class="col-md-4">
 
-                     <div class="form-group">
-                         <?php
-                            echo form_label('Regional :');
-                            $data = array('class' => 'form-control ', 'type' => 'text', 'id' => 'cus_region', 'name' => 'cus_region', 'placeholder' => 'e.g Indonesia', 'reqiured' => '');
-                            echo form_input($data);
-                            ?>
+                             <div class="form-group">
+                                 <?php
+                                    echo form_label('Kota :');
+                                    $data = array('class' => 'form-control ', 'type' => 'text', 'name' => 'cus_town', 'id' => 'cus_town',  'placeholder' => 'e.g Pangkalpinang - Bangka', 'reqiured' => '');
+                                    echo form_input($data);
+                                    ?>
+                             </div>
+                         </div>
 
+                         <div class="col-md-4">
+                             <div class="form-group">
+                                 <?php
+                                    echo form_label('Regional :');
+                                    $data = array('class' => 'form-control ', 'type' => 'text', 'id' => 'cus_region', 'name' => 'cus_region', 'placeholder' => 'e.g Indonesia', 'reqiured' => '');
+                                    echo form_input($data);
+                                    ?>
+
+                             </div>
+                         </div>
+                         <div class="col-md-4">
+                             <div class="form-group">
+                                 <label>Status :</label>
+                                 <select class="form-control" id="cus_status">
+                                     <option value="0">Aktif</option>
+                                     <option value="1">Non Aktif</option>
+                                 </select>
+
+                             </div>
+                         </div>
                      </div>
                      <div class="form-group">
                          <?php
@@ -112,14 +139,7 @@
                             ?>
 
                      </div>
-                     <div class="form-group">
-                         <label>Status :</label>
-                         <select class="form-control" id="cus_status">
-                             <option value="0">Aktif</option>
-                             <option value="1">Non Aktif</option>
-                         </select>
 
-                     </div>
 
                  </div>
                  <div class="modal-footer">
@@ -132,8 +152,8 @@
      </div>
  </div>
  <script>
-     $('#menu_id_18').addClass('menu-item-active menu-item-open menu-item-here"')
-     $('#submenu_id_31').addClass('menu-item-active')
+     $('#menu_id_29').addClass('menu-item-active menu-item-open menu-item-here"')
+     $('#submenu_id_76').addClass('menu-item-active')
      $(document).ready(function() {
          var dataPatnerss = [];
          var vcrud = <?= json_encode($vcrud) ?>;

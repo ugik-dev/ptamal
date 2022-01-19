@@ -624,7 +624,7 @@
          PaymentModal.form.submit(function(event) {
              event.preventDefault();
              var isAdd = PaymentModal.addBtn.is(':visible');
-             var url = "<?= site_url('invoice/') ?>";
+             var url = "<?= site_url('administrator/') ?>";
              url += isAdd ? "addJenisInvoice" : "editJenisInvoice";
              var button = isAdd ? PaymentModal.addBtn : PaymentModal.saveEditBtn;
 
