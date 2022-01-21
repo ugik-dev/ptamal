@@ -299,6 +299,8 @@
     date_jurnal = $('#date');
     date2 = $('#date2');
     percent_fee = $('#percent_fee');
+    jenis_invoice = $('#jenis_invoice');
+    payment_metode = $('#payment_metode');
 
     invoice_form = $('#invoice_form');
     acc_1 = $('#acc_1');
@@ -421,6 +423,10 @@
         acc_1.val('<?= $data_return['acc_1'] ?>');
         acc_2.val('<?= $data_return['acc_2'] ?>');
         acc_3.val('<?= $data_return['acc_3'] ?>');
+        jenis_invoice.val('<?= $data_return['jenis_invoice'] ?>');
+        payment_metode.val('<?= $data_return['payment_metode'] ?>');
+
+
         <?php
 
         for ($i = 0; $i < $count_rows; $i++) { ?>

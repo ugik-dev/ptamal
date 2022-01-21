@@ -162,9 +162,26 @@
                     <tr>
                         <td colspan="4" style=" padding : 10px">
                             <table border="1px solid black" class="table-item" width="100%">
+                                <?php
+                                $keterangan_item = false;
+                                $date_item = false;
+                                $satuan = false;
+                                $qyt = false;
+                                $span = 2;
+                                foreach ($transaction['items'] as $cek) {
+                                    if (!empty($cek['keterangan_item'])) {
+                                        $keterangan_item = true;
+                                        $span++;
+                                    }
+                                    if (!empty($cek['date_item'])) {
+                                        $date_item = true;
+                                        $span++;
+                                    }
+                                } ?>
+
                                 <tr>
-                                    <th>KETERANGAN</th>
-                                    <th>TANGGAL</th>
+                                    <?= $keterangan_item ? '<th>KETERANGAN</th>' : '' ?>
+                                    <?= $date_item ? '<th>TANGGAL</th>' : '' ?>
                                     <th>QYT</th>
                                     <th>HARGA (Rp)</th>
                                     <th>SUB TOTAL (Rp)</th>
@@ -179,8 +196,8 @@
                                     $total = $total + ($item['amount'] * $item['qyt']);
                                 ?>
                                     <tr>
-                                        <td style="padding: 4px"><?= $item['keterangan_item'] ?></td>
-                                        <td style="padding: 4px"><?= $item['date_item'] ?></td>
+                                        <?= $keterangan_item ? '<td style="padding: 4px">' . $item['keterangan_item'] . '</td>' : '' ?>
+                                        <?= $date_item ? '<td style="padding: 4px">' . $item['date_item'] . '</td>' : '' ?>
                                         <td style="padding: 4px ; text-align: center"><?= $item['qyt'] ?></td>
                                         <!-- <td><?= $item['amount'] ?></td> -->
                                         <td style="padding: 4px; text-align: right;"><?= number_format($item['amount'], 2, '.', ',') ?></td>
@@ -190,12 +207,12 @@
                                     // var_dump()
                                 } ?>
                                 <tr>
-                                    <td style="padding: 4px; text-align: right;" colspan="4"> <b>JUMLAH</b></td>
+                                    <td style="padding: 4px; text-align: right;" colspan="<?= $span ?>"> <b>JUMLAH</b></td>
                                     <td style="padding: 4px; text-align: right;"><b><?= number_format($total, 2, '.', ',') ?></b></td>
                                 </tr>
                                 <?php if ($transaction['percent_fee'] > 0) { ?>
                                     <tr>
-                                        <td style="padding: 4px; text-align: right;" colspan="4"> <b>FEE <?= $transaction['percent_fee'] ?>%</b></td>
+                                        <td style="padding: 4px; text-align: right;" colspan="<?= $span ?>"> <b>FEE <?= $transaction['percent_fee'] ?>%</b></td>
                                         <td style="padding: 4px; text-align: right;"><b><?= number_format($transaction['percent_fee'] / 100 * $total, 2, '.', ',') ?></b></td>
                                     </tr>
                                     <!-- <tr>
@@ -205,11 +222,11 @@
                                 <?php  } ?>
                                 <?php if ($transaction['ppn_pph'] == 1) { ?>
                                     <tr>
-                                        <td style="padding: 4px; text-align: right;" colspan="4"> <b>PPN 10%</b></td>
+                                        <td style="padding: 4px; text-align: right;" colspan="<?= $span ?>"> <b>PPN 10%</b></td>
                                         <td style="padding: 4px; text-align: right;"><b><?= number_format(0.1 * $transaction['sub_total'], 2, '.', ',') ?></b></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding: 4px; text-align: right;" colspan="4"> <b>TOTAL</b></td>
+                                        <td style="padding: 4px; text-align: right;" colspan="<?= $span ?>"> <b>TOTAL</b></td>
                                         <td style="padding: 4px; text-align: right;"><b><?= number_format($transaction['total_final'], 2, '.', ',') ?></b></td>
                                     </tr>
                                 <?php  } ?>
@@ -219,10 +236,10 @@
                     <tr cellpadding="4">
                         <td colspan=4 cellpadding=" 4" style="text-align: justify;">
                             <p>Terbilang : <b><?= $terbilang ?></b></p>
-                            <?php if (!empty($payment['bankname'])) {
+                            <?php if (!empty($payment['bank_name'])) {
                             ?>
-                                <p>Pembayaran kami harapkan dapat di transfer ke rekening kami nomor : <?= $payment['accountno'] ?><br>Atas nama :
-                                    <ins><?= $payment['title'] ?></ins> pada <?= $payment['bankname'] ?> <?= $payment['branch'] ?>.
+                                <p>Pembayaran kami harapkan dapat di transfer ke rekening kami nomor : <?= $payment['bank_number'] ?><br>Atas nama :
+                                    <ins><?= $payment['title_bank'] ?></ins> pada <?= $payment['bank_name'] ?> <?= $payment['branch'] ?>.
                                 </p>
                             <?php } else { ?>
                                 <p>Pembayaran dapat bayarkan secara cash tunai.</p>
@@ -241,7 +258,7 @@
 
                                     </td>
 
-                                    <td width="35%">
+                                    <td width="50%">
 
                                         <table cellpadding="2" width="100%">
                                             <tr>

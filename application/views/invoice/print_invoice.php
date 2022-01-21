@@ -527,7 +527,7 @@
                         <td class="item-bank"> <?= $payment['bank_name'] ?></td>
                     </tr>
                     <tr>
-                        <th class="info">Kantor Kacabang </th>
+                        <th class="info">Kantor Cabang </th>
                         <th class="dash">: </th>
                         <td class="item-bank"> <?= $payment['branch'] ?></td>
                     </tr>
