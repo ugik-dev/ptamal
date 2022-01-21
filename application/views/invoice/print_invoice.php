@@ -583,7 +583,7 @@
     <script src="<?php echo base_url(); ?>assets/plugins/jQuery/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            // window.print();
+            window.print();
             var beforePrint = function() {};
             var afterPrint = function() {
                 window.close();
