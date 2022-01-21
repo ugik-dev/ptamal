@@ -40,7 +40,7 @@
             </div>
             <div class="col-lg-3">
                 <div class="form-group margin ">
-                    <?php echo form_label('Atau Masukan No Invoice:'); ?>
+                    <?php echo form_label('Atau Masukan No:'); ?>
                     <?php
                     $data = array('class' => 'form-control input-lg', 'type' => 'text', 'name' => 'pembayaran_no', 'value' => $filter['no_pembayaran'],);
                     echo form_input($data);
@@ -245,8 +245,8 @@ for ($i = 0; $i < count($pembayarans_Record); $i++) {
 }
 ?>
 <script>
-    $('#menu_id_6').addClass('menu-item-active menu-item-open menu-item-here"')
-    $('#submenu_id_13').addClass('menu-item-active')
+    $('#menu_id_32').addClass('menu-item-active menu-item-open menu-item-here"');
+    $('#submenu_id_87').addClass('menu-item-active');
 </script>
 <?php
 // print "<pre>";

@@ -42,10 +42,12 @@ class PembayaranModel extends CI_Model
 
     public function getAllPembayaranWithItem($filter = [])
     {
-        $this->db->select('mpp.* , customer_name,cus_address,gen.ref_number,sub.id as item_id, sub.parent_id as parent_item, amount, qyt, date_item, keterangan_item, satuan');
+        $this->db->select('mpp.* , customer_name,cus_address,gen.ref_number,sub.id as item_id,ac_1.agentname acc_1_name, ac_1.title_user as acc_1_title,sub.parent_id as parent_item, amount, qyt, date_item, keterangan_item, satuan');
         $this->db->from('mp_pembayaran mpp');
         $this->db->join('dt_generalentry gen', 'gen.id = mpp.general_id', 'LEFT');
         $this->db->join('mp_payee pay', 'mpp.customer_id = pay.id', 'LEFT');
+        $this->db->join('mp_users ac_1', 'ac_1.id = mpp.acc_1', 'LEFT');
+
         $this->db->join('mp_sub_pembayaran sub', 'mpp.id = sub.parent_id', 'LEFT');
         if (!empty($filter['id'])) $this->db->where('mpp.id', $filter['id']);
         // if (!empty($filter['id_parent1'])) $this->db->where('gen.id', $filter['id']);
@@ -57,7 +59,7 @@ class PembayaranModel extends CI_Model
             ['item_id'],
             [
                 [
-                    'id', 'ref_number', 'customer_name', 'cus_address', 'id', 'input_date', 'agen_id', 'acc_0', 'acc_1', 'acc_2', 'acc_3', 'date',
+                    'id', 'ref_number', 'customer_name', 'cus_address', 'id', 'input_date', 'agen_id', 'acc_0', 'acc_1', 'acc_2', 'acc_3', 'date', 'acc_1_name', 'acc_1_title',
                     'description', 'customer_id', 'payment_metode', 'ppn_pph', 'no_pembayaran', 'inv_key', 'percent_jasa', 'percent_pph',
                     'am_jasa', 'am_pph', 'manual_math', 'par_label', 'par_am', 'sub_total', 'sub_total_2', 'jenis_pembayaran',
                     'lebih_bayar_ket', 'lebih_bayar_am', 'kurang_bayar_ket', 'kurang_bayar_am', 'pembulatan', 'payed', 'am_back', 'status_pembayaran', 'general_id'
@@ -290,7 +292,7 @@ class PembayaranModel extends CI_Model
             // 'lebih_bayar_ac' => $data['lebih_bayar_ac'],
             // 'kurang_bayar_ac' => $data['kurang_bayar_ac'],
             // 'inv_key' => $generateRandomString,
-            // 'acc_1' => $data['acc_1'],
+            'acc_1' => $data['acc_1'],
             // 'acc_2' => $data['acc_2'],
             // 'acc_3' => $data['acc_3'],
             'acc_0' => $this->session->userdata('user_id')['name'],
@@ -332,6 +334,7 @@ class PembayaranModel extends CI_Model
 
         $this->db->set("acc_0", $this->session->userdata('user_id')['name']);
         $this->db->set("date_acc_0", date('Y-m-d'));
+        $this->db->set("acc_1", $data['acc_1']);
         $this->db->set("id_transaction", $gen_id);
         $this->db->insert('mp_approv');
 
@@ -374,7 +377,7 @@ class PembayaranModel extends CI_Model
             // 'lebih_bayar_ac' => $data['lebih_bayar_ac'],
             // 'kurang_bayar_ac' => $data['kurang_bayar_ac'],
             // 'inv_key' => $generateRandomString,
-            // 'acc_1' => $data['acc_1'],
+            'acc_1' => $data['acc_1'],
             // 'acc_2' => $data['acc_2'],
             // 'acc_3' => $data['acc_3'],
             'acc_0' => $this->session->userdata('user_id')['name'],
@@ -437,6 +440,7 @@ class PembayaranModel extends CI_Model
         }
 
         $this->db->set("acc_0", $this->session->userdata('user_id')['name']);
+        $this->db->set("acc_1", $data['acc_1']);
         $this->db->set("date_acc_0", date('Y-m-d'));
         $this->db->where("id_transaction", $data['old_data']['general_id']);
         $this->db->update('mp_approv');

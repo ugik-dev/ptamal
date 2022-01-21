@@ -45,8 +45,10 @@ class Pembayaran extends CI_Controller
         $data['data_return'] = $data_return;
         $this->load->model('Statement_model');
         // $data['accounts_records'] = $this->Statement_model->chart_list();
-        // $data['patner_record'] = $this->Statement_model->patners_cars_list();
+        $data['patner_record'] = $this->Statement_model->patners_cars_list();
         $data['jenis_pembayaran'] = $this->General_model->getAllJenisInvoice();
+        $data['approval_users'] = $this->General_model->getAprovalUsers();
+
         $data['satuan'] = $this->General_model->getAllUnit();
         $data['ref_account'] = $this->General_model->getAllRefAccount(array('ref_type' => 'payment_method'));
         $data['form_url'] = 'create_pembayaran';
@@ -125,6 +127,7 @@ class Pembayaran extends CI_Controller
         try {
             $crud = $this->SecurityModel->Aksessbility_VCRUD('pembayaran', '', 'update');
             $data['vcrud'] = $crud;
+            $data['approval_users'] = $this->General_model->getAprovalUsers();
 
             $this->load->model(array('SecurityModel', 'PembayaranModel'));
 
@@ -885,7 +888,7 @@ class Pembayaran extends CI_Controller
     {
         // $data = $this->input->get();
         // $data['company'] = Company_Profile();
-        $data['transaction'] = $this->PembayaranModel->getAllPembayaranDetail(array('id' => $id))[$id];
+        $data['transaction'] = $this->PembayaranModel->getAllPembayaranWithItem(array('id' =>  $id))[0];
         $data['template'] = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['transaction']['jenis_pembayaran']))[$data['transaction']['jenis_pembayaran']];
 
         if (!empty($data['template']['text_kwitansi']))
@@ -899,8 +902,8 @@ class Pembayaran extends CI_Controller
         // echo json_encode($data);
         // die();
 
-        $data['terbilang'] = $this->terbilang((int)$data['transaction']['total_final']) . ' Rupiah';
-        $data['nominal'] = number_format((int)$data['transaction']['total_final'], 0, ',', '.');
+        $data['terbilang'] = $this->terbilang((int)$data['transaction']['sub_total_2']) . ' Rupiah';
+        $data['nominal'] = number_format((int)$data['transaction']['sub_total_2'], 0, ',', '.');
         $this->load->view('pembayaran/print_kwitansi.php', $data);
     }
 
@@ -931,7 +934,8 @@ class Pembayaran extends CI_Controller
 
     public function print($id)
     {
-        $data['transaction'] = $this->PembayaranModel->getAllPembayaranDetail(array('id' => $id))[$id];
+        // $data['transaction'] = $this->PembayaranModel->getAllPembayaranDetail(array('id' => $id))[$id];
+        $data['transaction'] = $this->PembayaranModel->getAllPembayaranWithItem(array('id' =>  $id))[0];
         $data['template'] = $this->General_model->getAllJenisInvoice(array('by_id' => true, 'id' => $data['transaction']['jenis_pembayaran']))[$data['transaction']['jenis_pembayaran']];
         $data['payment'] = $this->General_model->getAllRefAccount(array('by_id' => true, 'ref_id' => $data['transaction']['payment_metode']))[$data['transaction']['payment_metode']];
 
@@ -942,8 +946,10 @@ class Pembayaran extends CI_Controller
         if (empty($data['transaction']['date'])) $data['transaction']['date'] = date('Y-m-d');
         $data['transaction']['date'] = tanggal_indonesia($data['transaction']['date']);
 
-        $data['terbilang'] = $this->terbilang((int)$data['transaction']['total_final']) . ' Rupiah';
-        $data['nominal'] = number_format((int)$data['transaction']['total_final'], 0, ',', '.');
+        $data['terbilang'] = $this->terbilang((int)$data['transaction']['sub_total_2']) . ' Rupiah';
+        $data['nominal'] = number_format((int)$data['transaction']['sub_total_2'], 0, ',', '.');
+        // echo json_encode($data);
+        // die();
         $this->load->view('pembayaran/print_template.php', $data);
     }
 }

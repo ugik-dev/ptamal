@@ -95,7 +95,7 @@
                                             <td id="row_loading_status"></td>
                                         </tr>
                                         <tr>
-                                            <th colspan="3"></th>
+                                            <th colspan="2"></th>
                                             <th colspan="2">Sub Total I: </th>
                                             <th>
                                             </th>
@@ -108,7 +108,7 @@
                                         </tr>
 
                                         <tr hidden>
-                                            <th colspan="3"></th>
+                                            <th colspan="2"></th>
                                             <th colspan="2">Pembulatan Sub Total I: </th>
                                             <th>
                                             </th>
@@ -120,7 +120,7 @@
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th colspan="3"></th>
+                                            <th colspan="2"></th>
                                             <th colspan="2">Fee : </th>
                                             <th>
                                                 <div class="input-group mb-3">
@@ -136,7 +136,7 @@
                                             </th>
                                         </tr>
                                         <tr>
-                                            <th colspan="3"></th>
+                                            <th colspan="2"></th>
                                             <th colspan="2">Total Tagihan : </th>
                                             <th>
                                             </th>
@@ -146,7 +146,7 @@
                                         </tr>
 
                                         <tr hidden>
-                                            <th colspan="3"></th>
+                                            <th colspan="2"></th>
                                             <th colspan="2">PPh 23 : </th>
                                             <th>
                                                 <div class="input-group mb-3">
@@ -162,7 +162,7 @@
                                             </th>
                                         </tr>
                                         <tr hidden>
-                                            <th colspan="3">
+                                            <th colspan="2">
                                                 <div id="lebih_ac_layout" style="display: none;">
                                                     <select name="lebih_bayar_ac" id='lebih_bayar_ac' class="form-control select2">
                                                         <option value=""> --- </option>
@@ -192,7 +192,7 @@
                                                     </select>
                                                 </div>
                                             </th>
-                                            <th colspan="3">
+                                            <th colspan="2">
                                                 <input type="text" class="form-control" id="lebih_bayar_ket" value="<?= (!empty($data_return['lebih_bayar_ket']) ? $data_return['lebih_bayar_ket']  : '') ?>" name="lebih_bayar_ket" placeholder="Keterangan Lebih Bayar">
                                             </th>
                                             <th>
@@ -202,7 +202,7 @@
                                         </tr>
 
                                         <tr hidden>
-                                            <th colspan="3">
+                                            <th colspan="2">
                                                 <div id="kurang_ac_layout" style="display: none;">
                                                     <select name="kurang_bayar_ac" id='kurang_bayar_ac' class="form-control select2">
                                                         <option value=""> --- </option>
@@ -232,7 +232,7 @@
                                                     </select>
                                                 </div>
                                             </th>
-                                            <th colspan="3">
+                                            <th colspan="2">
                                                 <input type="text" class="form-control" id="kurang_bayar_ket" value="<?= (!empty($data_return['kurang_bayar_ket']) ? $data_return['kurang_bayar_ket']  : '')  ?>" name="kurang_bayar_ket" placeholder="Keterangan Kurang Bayar">
                                             </th>
                                             <th>
@@ -300,6 +300,37 @@
                                     </tfoot>
                                 </table>
                             </div>
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <div class="form-group"><label>Disetujui</label><select name="acc_1" id="acc_1" class="form-control select2 input-lg">
+                                                <option value="0">----- </option>
+                                                <?php foreach ($approval_users as $us)
+                                                    echo '<option value="' . $us['id'] . '">' . $us['agentname'] . '</option>';
+                                                ?>
+                                                <!-- <option value="7">SADINA </option> -->
+                                            </select></div>
+                                    </div>
+                                    <div class="col-lg-3" hidden>
+                                        <div class="form-group" id='label_kendaraan'><label>Diverifikasi</label><select name="acc_2" id="acc_2" class="form-control select2 input-lg">
+                                                <option value="0">----- </option>
+                                                <option value="4">IKA MILAWATI </option>
+                                                <option value="5">ERIN MEILANI </option>
+                                            </select></div>
+                                    </div>
+                                    <div class="col-lg-3" hidden>
+                                        <div class="form-group" id='label_kendaraan'><label>Dibuat</label><select name="acc_3" id="acc_3" class="form-control select2 input-lg">
+                                                <option value="0">----- </option>
+                                                <option value="4">IKA MILAWATI </option>
+                                                <option value="5">ERIN MEILANI </option>
+                                            </select></div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="form-group" id='label_kendaraan'><label>Diinput </label><input type="text" disabled id="dibukukan" class="form-control input-lg"></div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-lg-12 ">
                                 <div class="form-group">
                                     <?php
@@ -330,6 +361,7 @@
     description = $('#description');
     jenis_pembayaran = $('#jenis_pembayaran');
     date_jurnal = $('#date');
+    acc_1 = $('#acc_1');
     kurang_bayar_ac = $('#kurang_bayar_ac');
     lebih_bayar_ac = $('#lebih_bayar_ac');
 
@@ -381,8 +413,12 @@
                                         </td>
                                     </tr>`;
     transaction_table_body.append(new_row_html)
+
     addline.on('click', () => {
         transaction_table_body.append(new_row_html);
+        $('.mask').mask('000.000.000.000.000,00', {
+            reverse: true
+        });
     });
 
     function count_total(edit = false) {
@@ -578,7 +614,7 @@
                     var d = json['data']
 
                     swal.fire(swalSuccessConfigure);
-                    window.location = '<?= base_url() ?>pembayaran/show/' + d;
+                    // window.location = '<?= base_url() ?>pembayaran/show/' + d;
                 },
                 error: function(e) {}
             });
@@ -631,20 +667,20 @@
 
 
     jenis_pembayaran.on('change', function() {
-        if (jenis_pembayaran.val() == '1') {
-            console.log('jenis 1')
-            $('#head_col_2').html('No Polisi')
-            $('#head_col_3').html('Tanggal')
-            $('.date_item').unmask();
-            $('.nopol').prop('type', 'text');
-        } else if (jenis_pembayaran.val() == '2') {
-            $('#head_col_2').html('PO Qyt')
-            $('#head_col_3').html('PO Harga')
-            $('.date_item').mask('000.000.000.000.000,00', {
-                reverse: true
-            });
-            $('.nopol').prop('type', 'number');
-        }
+        // if (jenis_pembayaran.val() == '1') {
+        //     console.log('jenis 1')
+        //     $('#head_col_2').html('No Polisi')
+        //     $('#head_col_3').html('Tanggal')
+        //     $('.date_item').unmask();
+        //     $('.nopol').prop('type', 'text');
+        // } else if (jenis_pembayaran.val() == '2') {
+        //     $('#head_col_2').html('PO Qyt')
+        //     $('#head_col_3').html('PO Harga')
+        //     $('.date_item').mask('000.000.000.000.000,00', {
+        //         reverse: true
+        //     });
+        //     $('.nopol').prop('type', 'number');
+        // }
         count_total();
     })
 
@@ -694,7 +730,9 @@
         payment_method.val('<?= $data_return['payment_metode'] ?>');
         jenis_pembayaran.val('<?= $data_return['jenis_pembayaran'] ?>');
         payed.val('<?= $data_return['payed'] ?>');
+        acc_1.val('<?= $data_return['acc_1'] ?>');
         jenis_pembayaran.trigger('change');
+        acc_1.trigger('change');
         <?php
         $count_rows = count($data_return['amount']);
         for ($i = 0; $i < $count_rows - 1; $i++) { ?>

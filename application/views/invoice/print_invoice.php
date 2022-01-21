@@ -193,6 +193,12 @@
         font-weight: bold;
     }
 
+    .footer-text {
+        /* float: left; */
+        font-size: 90%;
+        /* font-weight: bold; */
+    }
+
     /* table meta & balance */
 
     table.meta,
@@ -303,7 +309,7 @@
     }
 
     table.bank-sheet .info {
-        width: 100px;
+        width: 80px;
     }
 
     table.bank-sheet .item-bank {
@@ -488,7 +494,7 @@
             </tr>
             <?php if ($transaction['ppn_pph'] == 1) { ?>
                 <tr>
-                    <th><span>TAX</span></th>
+                    <th><span>PPN 10%</span></th>
                     <td><span>Rp </span><span><?= number_format(10 / 100 * $transaction['sub_total'], 2, ',', '.') ?></span></td>
                 </tr>
             <?php } ?>
@@ -510,8 +516,11 @@
         <div>
             <?php if (!empty($payment['bank_name'])) {
             ?>
-                <h2>MAKE ALL CHECKS PAYBLE TO</h2>
+                <h2 class="footer-text">MAKE ALL CHECKS PAYBLE TO</h2>
                 <table class="bank-sheet">
+                    <!-- <tr>
+                        <td colspan="3">BANK </td>
+                    </tr> -->
                     <tr>
                         <th class="info">BANK </th>
                         <th class="dash">: </th>
@@ -534,16 +543,19 @@
                     </tr>
                 </table>
             <?php    } ?>
-
-            <h2>NPWP DETAILS</h2>
+            <br>
+            <h2 class="footer-text">NPWP DETAILS</h2>
             <table class="bank-sheet">
+                <!-- <tr>
+                    <th colspan="3" class="">NPWP DETAILS </th>
+                </tr> -->
                 <tr>
-                    <th class="info">NAME </th>
+                    <th class="info">Name </th>
                     <th class="dash">: </th>
                     <td class="item-bank"> <?= $company['npwp_name'] ?></td>
                 </tr>
                 <tr>
-                    <th class="info">NPWP </th>
+                    <th class="info">Number </th>
                     <th class="dash">: </th>
                     <td class="item-bank"> <?= $company['npwp_number'] ?></td>
                 </tr>
@@ -571,7 +583,7 @@
     <script src="<?php echo base_url(); ?>assets/plugins/jQuery/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            window.print();
+            // window.print();
             var beforePrint = function() {};
             var afterPrint = function() {
                 window.close();

@@ -46,13 +46,13 @@
             <div class="row pb-4">
                 <div class="col-md-3 border-right-md pr-md-10 py-md-10">
                     <!--begin::Pembayaran To-->
-                    <div class="text-dark-50 font-size-lg font-weight-bold mb-3">INVOICE TO.</div>
+                    <div class="text-dark-50 font-size-lg font-weight-bold mb-3">PEMBAYARAN TO.</div>
                     <div class="font-size-lg font-weight-bold mb-10"><?= $dataContent['customer_name'] ?>
                         <br /><?= $dataContent['cus_address'] ?>
                     </div>
                     <!--end::Pembayaran To-->
                     <!--begin::Pembayaran No-->
-                    <div class="text-dark-50 font-size-lg font-weight-bold mb-3">INVOICE NO.</div>
+                    <div class="text-dark-50 font-size-lg font-weight-bold mb-3">PEMBAYARAN NO.</div>
                     <div class="font-size-lg font-weight-bold mb-10"><?= $dataContent['no_pembayaran'] ?></div>
                     <!--end::Pembayaran No-->
                     <!--begin::Pembayaran Date-->
@@ -346,8 +346,8 @@
     </div>
 </div>
 <script>
-    $('#menu_id_6').addClass('menu-item-active menu-item-open menu-item-here"');
-    $('#submenu_id_13').addClass('menu-item-active');
+    $('#menu_id_32').addClass('menu-item-active menu-item-open menu-item-here"');
+    $('#submenu_id_87').addClass('menu-item-active');
     $(document).ready(function() {
         var add_pelunasan = $('#add_pelunasan');
         var btn_print_kwitansi = $('#btn_print_kwitansi');
