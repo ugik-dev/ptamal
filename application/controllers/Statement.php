@@ -122,8 +122,7 @@ class Statement extends CI_Controller
             $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
             $data['journals'] = $this->Statment_model_new->trail_balance($data['journals'], $filter);
             $data['income'] = $this->Statment_model_new->income($filter);
-            echo json_encode($data['income']);
-            die();
+
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';
             $data['main_view'] = 'statement/income';
