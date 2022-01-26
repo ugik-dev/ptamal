@@ -26,7 +26,8 @@
                         <a type="button" id="btn_print_kwitansi" class="dropdown-item"> <i class="fa fa-print mr-2" aria-hidden="true"></i> Print Kwitansi</a>
                         <a type="button" id="btn_print_dokumen" class="dropdown-item"> <i class="fa fa-print mr-2" aria-hidden="true"></i> Print Dokumen</a>
                         <a type="button" id="btn_print_invoice" class="dropdown-item"> <i class="fa fa-print mr-2" aria-hidden="true"></i> Print Invoice</a>
-                        <a type="button" href="<?= base_url('invoice/download/') . $dataContent['id'] ?>" class="btn">Invoice PDF</a>
+                        <!-- <a type="button" href="<?= base_url('invoice/download/') . $dataContent['id'] ?>" class="btn">Invoice PDF</a> -->
+                        <a type="button" href="<?= base_url('invoice/download_word/') . $dataContent['id'] ?>" class="dropdown-item"> <i class="fa fa-download mr-2" aria-hidden="true"></i>Word Docx</a>
                     </div>
                 </div>
                 <div class="btn-group">

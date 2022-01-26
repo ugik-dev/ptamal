@@ -70,6 +70,7 @@
                              <option value="dashboard_piutang">Dashboard Piutang</option>
                              <option value="dashboard_kas">Dashboard Kas</option>
                              <option value="dashboard_bank_1">Dashboard Bank</option>
+                             <option value="akum_laba_rugi">Akumulasi Laba Rugi</option>
                          </select>
 
                      </div>

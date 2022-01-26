@@ -60,7 +60,6 @@ class Statement extends CI_Controller
             if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
             $filter['by_DataStructure'] = true;
             $data['accounts'] = $this->General_model->getAllBaganAkun(array('by_DataStructure' => true));
-
             $data['journals'] = array();
             $data['journals'] = $this->General_model->getAllBaganAkun($filter);
 
@@ -89,11 +88,13 @@ class Statement extends CI_Controller
             // if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
             if (empty($filter['date_start'])) $filter['date_start'] = '2021-01-01';
             if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
-            // echo json_encode($data['journals']);
-            // die();
+            $filter['akum_laba_rugi'] = $this->General_model->getAllRefAccount(array('by_type' => true, 'ref_type' => 'akum_laba_rugi'));
             $data['journals'] = array();
+            $filter['nature'] = array('Assets', 'Liability', 'Equity');
             $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
             $data['journals'] = $this->Statment_model_new->trail_balance($data['journals'], $filter);
+            // echo json_encode($data['journals']['3']);
+            // die();
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';
             $data['main_view'] = 'statement/trail_balance';
@@ -116,11 +117,13 @@ class Statement extends CI_Controller
             if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
             if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
             $filter['nature'] = array('Expense', 'Revenue');
+
             $data['journals'] = array();
             $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
             $data['journals'] = $this->Statment_model_new->trail_balance($data['journals'], $filter);
-            // echo json_encode($data['journals']);
-            // die();
+            $data['income'] = $this->Statment_model_new->income($filter);
+            echo json_encode($data['income']);
+            die();
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';
             $data['main_view'] = 'statement/income';
