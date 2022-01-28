@@ -248,7 +248,7 @@ class General_model extends CI_Model
 
         $this->db->select('ref.*, ROUND(sum(IF(saldo.type = 0,  saldo.amount,-saldo.amount)),2) as amount');
         $this->db->from('ref_account as ref');
-        $this->db->join('mp_sub_entry as saldo', 'saldo.accounthead = ref.ref_account');
+        $this->db->join('mp_sub_entry as saldo', 'saldo.accounthead = ref.ref_account', 'LEFT');
         $this->db->order_by('order_number');
         $this->db->group_by('ref_id');
         $this->db->where('ref_type', 'payment_method');
