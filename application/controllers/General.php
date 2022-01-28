@@ -40,7 +40,7 @@ class General extends CI_Controller
     {
         try {
             $filter = $this->input->get();
-            $data = $this->Production_model->getAllPaymentMethod($filter);
+            $data = $this->General_model->getAllPaymentMethod($filter);
             echo json_encode(array('error' => false, 'data' => $data));
         } catch (Exception $e) {
             ExceptionHandler::handle($e);
