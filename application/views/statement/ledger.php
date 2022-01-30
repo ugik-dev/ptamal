@@ -1,3 +1,16 @@
+<style>
+    .tb-bukubesar .fr-date {
+        width: 120px;
+    }
+
+    .tb-bukubesar .fr-narasi {
+        text-align: left;
+    }
+
+    .tb-bukubesar .fr-currency {
+        text-align: right;
+    }
+</style>
 <div class="card card-custom position-relative overflow-hidden">
     <!--begin::Shape-->
     <div class="container no-print">
@@ -120,7 +133,7 @@
 
                                 echo '<hr />                                       
 
-                                                    <table id="1" class="table table-striped table-hover">
+                                                    <table id="1" class="table table-striped table-hover tb-bukubesar">
                                                     <div class=" ledger_row_head" style=" text-transform:uppercase;">
                                                             <b>' . $lv1['head_number'] . '.' . $lv2['head_number'] . '.' . $lv3['head_number']  . ' - ' . $lv3['name'] . '</b>
                                                     </div>
@@ -134,11 +147,11 @@
                                                         <th class="">SALDO</th>
                                                     </thead>
                                                     <tbody><tr>
-                                                    <td></td><td></td><td>Saldo Sebelum</td><td>
+                                                    <td></td><td></td><td class="fr-narasi">Saldo Sebelum</td><td>
                                                     </td>
                                                     <td>
                                                     </td>
-                                                    <td>' . ($total_ledger < 0 ? '( <a class="currency">' . number_format(-$total_ledger, 2, ',', '.') . '</a>)' : '<a class="currency">' . number_format($total_ledger, 2, ',', '.') . '</a>') . '</td>            
+                                                    <td class="fr-currency">' . ($total_ledger < 0 ? '(' . number_format(-$total_ledger, 2, ',', '.') . ')' : '' . number_format($total_ledger, 2, ',', '.') . '') . '</td>            
                                                     </tr>
                                                     ';
 
@@ -155,17 +168,13 @@
                                     }
                                     // var_dump($lv4);
                                     echo '<tr>
-                                        <td>' . $lv4['date'] . '</td><td> <a href="' . base_url('accounting/show_journal/') . $lv4['parent_id'] . '">' . $lv4['ref_number'] . '</td><td><a >' . $lv4['sub_keterangan'] . '</a></td><td>
-                                            <a  class="currency">' .
-                                        (!empty($debitamount) ? number_format($debitamount, 2, ',', '.') : '') .
-                                        '</a>
-                                        </td>
-                                        <td>
-                                            <a   class="currency">' .
-                                        (!empty($creditamount) ? number_format($creditamount, 2, ',', '.') : '')
-                                        . '</a>
-                                        </td>
-                                        <td  >' . ($total_ledger < 0 ? '( <a class="currency">' . number_format(-$total_ledger, 2, ',', '.') . '</a>)' : '<a class="currency">' . number_format($total_ledger, 2, ',', '.') . '</a>') . '</td>            
+                                        <td class="fr-date">' . $lv4['date'] . '</td>
+                                        <td><a href="' . base_url('accounting/show_journal/') . $lv4['parent_id'] . '">' . $lv4['ref_number'] . '</td>
+                                        <td class="fr-narasi">
+                                            <a>' . ($lv4['sub_keterangan'] ? $lv4['sub_keterangan'] : $lv4['naration']) . '</a></td>
+                                        <td class="fr-currency">' . (!empty($debitamount) ? number_format($debitamount, 2, ',', '.') : '') . '</td>
+                                        <td class="fr-currency">' . (!empty($creditamount) ? number_format($creditamount, 2, ',', '.') : '') . '</td>
+                                        <td  class="fr-currency">' . ($total_ledger < 0 ? '( >' . number_format(-$total_ledger, 2, ',', '.') . ')' : '' . number_format($total_ledger, 2, ',', '.') . '') . '</td>            
                                     </tr>';
                                 }
                                 echo '</tbody></table>';

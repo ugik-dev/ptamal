@@ -76,7 +76,7 @@
         <!-- <div class="row"> -->
         <!-- <div class="col-lg-3"></div> -->
         <div class="col-lg-12">
-            <h2 style="text-align:center">NERACA SALDO </h2>
+            <h2 style="text-align:center">LABA RUGI </h2>
             <h3 style="text-align:center">
                 <?php echo $this->db->get_where('mp_langingpage', array('id' => 1))->result_array()[0]['companyname'];
                 ?>
