@@ -566,6 +566,9 @@
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
                     <td class="item-bank"> <?= $transaction['acc_1_name'] ?></td>
                 </tr>
             </table>
