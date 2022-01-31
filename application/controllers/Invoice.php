@@ -810,7 +810,7 @@ class Invoice extends CI_Controller
             'accounthead' => $data['jp']['ac_unpaid'],
             'type' => 0,
             'sub_keterangan' => 'Piut ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-            'amount' => $data['total_final'],
+            'amount' => $data['sub_total'],
         );
         $i++;
 

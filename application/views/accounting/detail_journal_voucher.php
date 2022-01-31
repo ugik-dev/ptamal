@@ -58,7 +58,7 @@
                                         $i = 0;
                                         $doc = false;
                                         if (!empty($journals['children']))
-                                            foreach (array_reverse($journals['children']) as  $sub) {
+                                            foreach ($journals['children'] as $key => $sub) {
 
                                                 if ($sub['accounthead'] == '13') {
                                                     $doc = true;
@@ -133,8 +133,10 @@
                           <div class="col-md-12 ">
                               <div class="form-group">
                                   <?php
-                                    if (!empty($journals['parent']->url)) {
-                                        echo '<div class="col-md-12 "> url :  <a href="' . base_url() . $journals['parent']->url . '"> ' . base_url() . $journals['parent']->url . '</a> </div> ';
+                                    if (!empty($journals['ref_url'])) {
+                                        echo '<a href="' . base_url() .  $journals['ref_url']  . '" class="btn btn-primary margin btn-lg pull-right ml-2" style="float: right"> <i class="fa fa-eye" aria-hidden="true"></i> Lihat ' . ucfirst(explode('/', $journals['ref_url'])[0]) . '</a> ';
+                                    } else {
+                                        echo '<a href="' . base_url() . 'accounting/edit_jurnal/' . $journals['parent_id'] . '" class="btn btn-info margin btn-lg ml-2 pull-right" style="float: right"> <i class="fa fa-list-alt" aria-hidden="true"></i> Edit</a> ';
                                     }
 
                                     if ($doc) {
@@ -145,8 +147,6 @@
                                   <a onclick="printSingleJurnal2()" class="btn btn-secondary  margin btn-lg pull-right" style="float: right"> <i class="fa fa-print" aria-hidden="true"></i>
                                       Print</a>
 
-                                  <a href="<?= base_url() . 'accounting/edit_jurnal/' . $journals['parent_id'] ?>" class="btn btn-info  margin btn-lg pull-right" style="float: right"> <i class="fa fa-list-alt" aria-hidden="true"></i>
-                                      Edit</a>
 
 
                               </div>
