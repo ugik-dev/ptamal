@@ -124,8 +124,8 @@ class Invoice extends CI_Controller
             $crud = $this->SecurityModel->Aksessbility_VCRUD('invoice', '', 'update');
 
             $dataContent = $this->InvoiceModel->getAllInvoice(array('id' =>  $id))[0];
-            if ($dataContent['agen_id'] != $this->session->userdata('user_id')['id'])
-                throw new UserException('Sorry, Yang dapat mengahapus dan edit hanya agen yang bersangkutan', UNAUTHORIZED_CODE);
+            // if ($dataContent['agen_id'] != $this->session->userdata('user_id')['id'])
+            //     throw new UserException('Sorry, Yang dapat mengahapus dan edit hanya agen yang bersangkutan', UNAUTHORIZED_CODE);
             if ($id != NULL) {
                 $item = count($dataContent['item']);
 
@@ -813,6 +813,7 @@ class Invoice extends CI_Controller
             'amount' => $data['total_final'],
         );
         $i++;
+
         $jurnal['sub_entry'][$i] = array(
             'accounthead' => $data['jp']['ac_paid'],
             'type' => 1,
@@ -820,15 +821,15 @@ class Invoice extends CI_Controller
             'amount' => $data['sub_total'],
         );
         $i++;
-        if ($data['ppn_pph'] == 1) {
 
-            // $jurnal['sub_entry'][$i] = array(
-            //     'accounthead' => $data['jp']['ac_ppn_piut'],
-            //     'type' => 0,
-            //     'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-            //     'amount' => $data['ppn_pph_count'],
-            // );
-            // $i++;
+        if ($data['ppn_pph'] == 1) {
+            $jurnal['sub_entry'][$i] = array(
+                'accounthead' => $data['jp']['ac_ppn_piut'],
+                'type' => 0,
+                'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
+                'amount' => $data['ppn_pph_count'],
+            );
+            $i++;
             $jurnal['sub_entry'][$i] = array(
                 'accounthead' => $data['jp']['ac_ppn'],
                 'type' => 1,

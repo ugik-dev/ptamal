@@ -81,7 +81,7 @@
             <td>
                 <table border=0 cellpadding="0" width="100%">
                     <tr>
-                        <td colspan="3"><img style="margin : 10px" src="<?= base_url('assets/img/') . (Company_Profile()['logo'])  ?>" width="300px" /></td>
+                        <td colspan="3"><img style="margin : 10px" src="<?= base_url('assets/img/') . (Company_Profile()['logo'])  ?>" width="200px" /></td>
                     </tr>
                     <tr>
                         <td colspan="4" style="vertical-align: top;" width="200px">
@@ -108,7 +108,7 @@
                                             <tr>
                                                 <td> Perihal </td>
                                                 <td width="10px" class="prl-1 "> : </td>
-                                                <td> Permohonan Bayar</td>
+                                                <td> Permohonan Pembayaran</td>
                                             </tr>
                                         </table>
 

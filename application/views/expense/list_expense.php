@@ -7,6 +7,16 @@
                  </a>
                  <button onclick="printDiv('print-section')" class="btn btn-default btn-outline-primary   pull-right "><i class="fa fa-print  pull-left"></i> Cetak</button>
              </div>
+             <div class="dropdown">
+                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                     Dropdown
+                 </button>
+                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                     <li><button class="dropdown-item" type="button">Action</button></li>
+                     <li><button class="dropdown-item" type="button">Another action</button></li>
+                     <li><button class="dropdown-item" type="button">Something else here</button></li>
+                 </ul>
+             </div>
          </div>
      </div>
  </div>
@@ -26,8 +36,8 @@
                                      <th>Nama Expense</th>
                                      <th>Metode</th>
                                      <th>Jumlah</th>
-                                     <th>No Ref</th>
-                                     <th>Penerima</th>
+                                     <th>Rincian</th>
+                                     <!-- <th>Penerima</th> -->
                                      <th class="no-print">Action</th>
                                  </tr>
                              </thead>
@@ -77,12 +87,10 @@
              timer: 500
          };
 
-
-
          var FDataTable = $('#FDataTable').DataTable({
              "columnDefs": [{
                  className: "no-print",
-                 "targets": [6]
+                 "targets": [5]
              }],
              deferRender: true,
              "order": [
@@ -134,13 +142,35 @@
                  <a type="button" class="edit btn btn-primary  btn-icon" href='<?= base_url() ?>expense/edit/${d['id']}' title="Edit"><i class='la la-pencil-alt'></i></a>
                  `;
                  var deleteButton = `
-                 <button  type="button" class="delete btn btn-warning btn-icon" data-id='${d['id']}' title="Delete"><i class='la la-trash'></i></button>
+                 <button  type="" class="delete btn btn-warning btn-icon" data-id='${d['id']}' title="Delete"><i class='la la-trash'></i></button>
                  `;
 
                  var button = ` ${vcrud['view'] == 1 ? viewButton : ''}   ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}`;
+                 button = `
+                 <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+    Dropdown
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+    <li><button class="dropdown-item" type="button">Action</button></li>
+    <li><button class="dropdown-item" type="button">Another action</button></li>
+    <li><button class="dropdown-item" type="button">Something else here</button></li>
+  </ul>
+</div>
+                     <div class="btn-group" opd="group">
+          <button id="action" type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class='fa fa-bars'></i></button>
+          <div class="dropdown-menu" aria-labelledby="action">
+          ${vcrud['view'] == 1 ? viewButton : ''}   ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}
+          </div>
+        </div>
 
+        
+    `;
 
-                 renderData.push([d['date'], d['head_name'], d['payment_name'], formatRupiah2(d['total_paid']), d['ref_no'], d['customer_name'], button]);
+                 var rincian = `${ d['description']}<br>
+                  No Ref : ${ d['ref_no']}<br>
+                  Penerima : ${d['customer_name']}`;
+                 renderData.push([d['date'], d['head_name'], d['payment_name'], formatRupiah2(d['total_paid']), rincian, button]);
              });
 
              FDataTable.clear().rows.add(renderData).draw('full-hold');
@@ -163,7 +193,8 @@
              return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
          }
 
-         FDataTable.on('click', '.delete', function() {
+         $('.delete').on('click', function(event) {
+             console.log('del');
              var currentData = $(this).data('id');
              Swal.fire(swalDeleteConfigure).then((result) => {
                  if (result.isConfirmed == false) {

@@ -127,11 +127,12 @@
     }
 
     header address {
-        float: left;
+        float: right;
         font-size: 90%;
         font-style: normal;
         line-height: 1.25;
         margin: 0 1em 1em 0;
+        padding-left: 10px;
     }
 
     header address p {
@@ -141,13 +142,13 @@
     header span,
     header img {
         display: block;
-        float: right;
+        float: left;
     }
 
     header span {
         margin: 0 0 1em 1em;
         max-height: 25%;
-        max-width: 60%;
+        max-width: 100%;
         position: relative;
     }
 
@@ -156,16 +157,6 @@
         max-width: 70%;
     }
 
-    header input {
-        cursor: pointer;
-        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-        height: 100%;
-        left: 0;
-        opacity: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-    }
 
     /* article */
 
@@ -418,13 +409,13 @@
 <body>
     <header>
         <h1>Invoice</h1>
-        <span><img alt="" src="<?= base_url('assets/img/') . $company['slider1'] ?>"></span>
         <address>
             <p>To : </p>
             <p><?= $transaction['customer_name'] ?></p>
             <p><?= $transaction['cus_address'] ?></p>
             <p><?= $transaction['cus_town'] ?></p>
         </address>
+        <span><img alt="" src="<?= base_url('assets/img/') . $company['slider1'] ?>"></span>
     </header>
     <article>
         <table class="meta">
