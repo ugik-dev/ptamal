@@ -101,7 +101,7 @@ class Pembayaran extends CI_Controller
         $filter['no_pembayaran'] = html_escape($this->input->get('pembayaran_no'));
 
         if ($filter['first_date'] == NULL && $filter['second_date'] == NULL) {
-            $filter['first_date'] = date('Y-m-01');
+            $filter['first_date'] = date('Y-01-01');
             $filter['second_date'] = date('Y-m-31');
 
             // FETCH SALES RECORD FROM pembayarans TABLE

@@ -98,7 +98,7 @@ class Invoice extends CI_Controller
         $filter['no_invoice'] = html_escape($this->input->get('invoice_no'));
 
         if ($filter['first_date'] == NULL && $filter['second_date'] == NULL) {
-            $filter['first_date'] = date('Y-m-01');
+            $filter['first_date'] = date('Y-01-01');
             $filter['second_date'] = date('Y-m-31');
 
             // FETCH SALES RECORD FROM invoices TABLE
@@ -981,6 +981,7 @@ class Invoice extends CI_Controller
             $data = $this->input->post();
             // echo json_encode($data);
             $data['nominal'] = substr(preg_replace("/[^0-9]/", "", $data['nominal']), 0, -2) . '.' . substr(preg_replace("/[^0-9]/", "", $data['nominal']), -2);
+            $data['nominal_ppn'] = substr(preg_replace("/[^0-9]/", "", $data['nominal_ppn']), 0, -2) . '.' . substr(preg_replace("/[^0-9]/", "", $data['nominal_ppn']), -2);
 
             if (empty($data['date_pembayaran'])) {
                 $data['date_pembayaran'] = date('Y-m-d');
@@ -998,100 +999,8 @@ class Invoice extends CI_Controller
             // $uang_muka_pph = number_format(($data['sub_total'] * 0.02), 2, '.', '');
             $ref = $this->General_model->getAllRefAccount(array('by_id' => true, 'ref_id' => $data['payment_metode']))[$data['payment_metode']];
             $data['gen_old'] = $this->Statement_model->getSingelJurnal(array('id' => $data['old_data']['general_id']))['parent'];
-            $data['generalentry'] = array(
-                'date' => $data['date_pembayaran'],
-                'ref_number' => $this->General_model->gen_number($data['date_pembayaran'], $jp['ref_nojur_pel']),
-                // 'naration' => $data['old_data']['description'],
-                'naration' => $data['old_data']['description'] . ' (' . $data['gen_old']->ref_number . ')',
-                'customer_id' => $data['old_data']['customer_id'],
-                'generated_source' => 'Pelunasan Invoice'
-            );
-            // echo json_encode($ref);
-            // die();
-            $i = 0;
-            $total = 0;
-            $ac_bank = false;
-            if (!empty($data['nominal'])) {
-                if ($data['nominal'] > 0) {
-                    $data['sub_entry'][$i] = array(
-                        'accounthead' => $ref['ref_account'],
-                        'type' => 0,
-                        'amount' => $data['nominal'],
-                        'sub_keterangan' => "Piut " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
-                    );
-                    $ac_bank = true;
-                    $i++;
-                    $total = $total + $data['nominal'];
-                }
-            }
-            if (!empty($data['ac_potongan'])) $potongan = count($data['ac_potongan']);
-            else $potongan = 0;
-            $k = 0;
-            for ($j = 0; $j < $potongan; $j++) {
-                if (!empty($data['ac_potongan'][$j]) && !empty($data['ac_nominal'][$j])) {
-                    $data['ac_nominal'][$j] = substr(preg_replace("/[^0-9]/", "", $data['ac_nominal'][$j]), 0, -2) . '.' . substr(preg_replace("/[^0-9]/", "", $data['ac_nominal'][$j]), -2);
-                    $data['sub_entry'][$i] = array(
-                        'accounthead' => $data['ac_potongan'][$j],
-                        'type' => 0,
-                        'amount' => $data['ac_nominal'][$j],
-                        'sub_keterangan' => $data['ac_desk'][$j],
-                    );
-                    $i++;
-                    $total = $total + $data['ac_nominal'][$j];
-                    $data['child_pembayaran'][$k] = array(
-                        'ac_potongan' => $data['ac_potongan'][$j],
-                        'ac_nominal' => $data['ac_nominal'][$j],
-                        'ac_desk' => $data['ac_desk'][$j],
-                        'no_bukti' => $data['no_bukti'][$j],
-                    );
-                }
-            }
-
-            if (!empty($data['ac_lebih'])) $lebih = count($data['ac_lebih']);
-            else $lebih = 0;
-            $total_lebih = 0;
-            $l = 0;
-            for ($j = 0; $j < $lebih; $j++) {
-                if (!empty($data['ac_lebih'][$j]) && !empty($data['ac_nominal_lebih'][$j])) {
-                    $data['ac_nominal_lebih'][$j] = substr(preg_replace("/[^0-9]/", "", $data['ac_nominal_lebih'][$j]), 0, -2) . '.' . substr(preg_replace("/[^0-9]/", "", $data['ac_nominal_lebih'][$j]), -2);
-                    $data['sub_entry'][$i] = array(
-                        'accounthead' => $data['ac_lebih'][$j],
-                        'type' => 1,
-                        'amount' => $data['ac_nominal_lebih'][$j],
-                        'sub_keterangan' => $data['ac_desk_lebih'][$j],
-                    );
-                    $total_lebih = $total_lebih + $data['ac_nominal_lebih'][$j];
-                    $i++;
-                    $data['child_lebih'][$l] = array(
-                        'ac_lebih' => $data['ac_lebih'][$j],
-                        'ac_nominal_lebih' => $data['ac_nominal_lebih'][$j],
-                        'ac_desk_lebih' => $data['ac_desk_lebih'][$j],
-                        // 'no_bukti' => $data['no_bukti'][$j],
-                    );
-                }
-            }
-
-            if ($total_lebih > 0)
-                if ($ac_bank) {
-                    $data['sub_entry'][0]['amount'] = $data['sub_entry'][0]['amount']  + $total_lebih;
-                } else {
-                    $data['sub_entry'][$i] = array(
-                        'accounthead' => $ref['ref_account'],
-                        'type' => 0,
-                        'amount' => $data['nominal'],
-                        'sub_keterangan' => "Lebih Bayar " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
-                    );
-                    $i++;
-                }
-
-            $data['sub_entry'][$i] = array(
-                'accounthead' => $jp['ac_unpaid'],
-                'type' => 1,
-                'amount' => $total,
-                'sub_keterangan' => 'Piut ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
-            );
-            $i++;
             // $data['total_bayar'] = $total_bayar;
+            $this->make_journal_pelunasan($data, $jp, $ref);
             if ($total_in_data_pelunasan >= $data['old_data']['total_final']) {
                 throw new UserException('Data ini sudah lunas!');
             }
@@ -1108,8 +1017,114 @@ class Invoice extends CI_Controller
         }
     }
 
-    function make_journal_pelunasan($data)
+    function make_journal_pelunasan($data, $jp, $ref)
     {
+        $journal['generalentry'] = array(
+            'date' => $data['date_pembayaran'],
+            'ref_number' => $this->General_model->gen_number($data['date_pembayaran'], $jp['ref_nojur_pel']),
+            // 'naration' => $data['old_data']['description'],
+            'naration' => $data['old_data']['description'] . ' (' . $data['gen_old']->ref_number . ')',
+            'customer_id' => $data['old_data']['customer_id'],
+            'generated_source' => 'Pelunasan Invoice'
+        );
+        $i = 0;
+        $total = 0;
+        $ac_bank = false;
+        if (!empty($data['nominal'])) {
+            if ($data['nominal'] > 0) {
+                $journal['sub_entry'][$i] = array(
+                    'accounthead' => $ref['ref_account'],
+                    'type' => 0,
+                    'amount' => $data['nominal'],
+                    'sub_keterangan' => "Piut " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
+                );
+                $ac_bank = true;
+                $i++;
+                $total = $total + $data['nominal'];
+            }
+        }
+        if (!empty($data['nominal_ppn'])) {
+            if ($data['nominal_ppn'] > 0) {
+                $ppn = $this->General_model->getAllRefAccount(array('by_type' => true, 'ref_type' => array('ppn_keluaran', 'ppn_keluaran_belum_faktur')));
+                $journal['sub_entry'][$i] = array(
+                    'accounthead' => $jp['ac_ppn'],
+                    'type' => 0,
+                    'amount' => $data['nominal_ppn'],
+                    'sub_keterangan' => "Penerimaan Bukti PPN " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
+                );
+                $i++;
+            }
+        }
+        if (!empty($data['ac_potongan'])) $potongan = count($data['ac_potongan']);
+        else $potongan = 0;
+        $k = 0;
+        for ($j = 0; $j < $potongan; $j++) {
+            if (!empty($data['ac_potongan'][$j]) && !empty($data['ac_nominal'][$j])) {
+                $data['ac_nominal'][$j] = substr(preg_replace("/[^0-9]/", "", $data['ac_nominal'][$j]), 0, -2) . '.' . substr(preg_replace("/[^0-9]/", "", $data['ac_nominal'][$j]), -2);
+                $journal['sub_entry'][$i] = array(
+                    'accounthead' => $data['ac_potongan'][$j],
+                    'type' => 0,
+                    'amount' => $data['ac_nominal'][$j],
+                    'sub_keterangan' => $data['ac_desk'][$j],
+                );
+                $i++;
+                $total = $total + $data['ac_nominal'][$j];
+                $journal['child_pembayaran'][$k] = array(
+                    'ac_potongan' => $data['ac_potongan'][$j],
+                    'ac_nominal' => $data['ac_nominal'][$j],
+                    'ac_desk' => $data['ac_desk'][$j],
+                    'no_bukti' => $data['no_bukti'][$j],
+                );
+            }
+        }
+
+        if (!empty($data['ac_lebih'])) $lebih = count($data['ac_lebih']);
+        else $lebih = 0;
+        $total_lebih = 0;
+        $l = 0;
+        for ($j = 0; $j < $lebih; $j++) {
+            if (!empty($data['ac_lebih'][$j]) && !empty($data['ac_nominal_lebih'][$j])) {
+                $data['ac_nominal_lebih'][$j] = substr(preg_replace("/[^0-9]/", "", $data['ac_nominal_lebih'][$j]), 0, -2) . '.' . substr(preg_replace("/[^0-9]/", "", $data['ac_nominal_lebih'][$j]), -2);
+                $journal['sub_entry'][$i] = array(
+                    'accounthead' => $data['ac_lebih'][$j],
+                    'type' => 1,
+                    'amount' => $data['ac_nominal_lebih'][$j],
+                    'sub_keterangan' => $data['ac_desk_lebih'][$j],
+                );
+                $total_lebih = $total_lebih + $data['ac_nominal_lebih'][$j];
+                $i++;
+                $journal['child_lebih'][$l] = array(
+                    'ac_lebih' => $data['ac_lebih'][$j],
+                    'ac_nominal_lebih' => $data['ac_nominal_lebih'][$j],
+                    'ac_desk_lebih' => $data['ac_desk_lebih'][$j],
+                    // 'no_bukti' => $data['no_bukti'][$j],
+                );
+            }
+        }
+
+        if ($total_lebih > 0)
+            if ($ac_bank) {
+                $journal['sub_entry'][0]['amount'] = $data['sub_entry'][0]['amount']  + $total_lebih;
+            } else {
+                $journal['sub_entry'][$i] = array(
+                    'accounthead' => $ref['ref_account'],
+                    'type' => 0,
+                    'amount' => $data['nominal'],
+                    'sub_keterangan' => "Lebih Bayar " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
+                );
+                $i++;
+            }
+        if ($total > 0) {
+            $journal['sub_entry'][$i] = array(
+                'accounthead' => $jp['ac_unpaid'],
+                'type' => 1,
+                'amount' => $total,
+                'sub_keterangan' => 'Piut ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
+            );
+            $i++;
+        }
+        echo json_encode($journal);
+        die();
     }
 
     function editPelunasan()

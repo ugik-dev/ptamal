@@ -275,9 +275,6 @@
             <!--end::Invoice footer-->
         </div>
     </div>
-    <!-- begin: Invoice action-->
-
-    <!-- end: Invoice action-->
 </div>
 <div class="card card-custom">
     <div class="card-body">
@@ -320,16 +317,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- <div class="row"> -->
                     <div class="form-group">
                         <input name="id" id="id" value="" type="hidden" />
-                        <input name="parent_id" id="parent_id" value="<?= $dataContent['id'] ?>" type="hidden" required />
+                        <input name="parent_id" id="parent_id" value="<?= $dataContent['id'] ?>" type="hidden" />
                         <label>Tanggal</label>
-                        <input type="date" class="form-control" name="date_pembayaran" id="date_pembayaran" required />
+                        <input type="date" class="form-control" name="date_pembayaran" id="date_pembayaran" />
                     </div>
                     <div class="row">
                         <div class="col-lg-6">
-
                             <label>Metode</label>
                             <div class="form-group">
                                 <select name="payment_metode" id="payment_metode" class="form-control input-lg">
@@ -342,14 +337,29 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-
                             <div class="form-group">
                                 <label>Nominal</label>
-                                <input type="text" class="form-control mask" name="nominal" id="nominal" required />
+                                <input type="text" class="form-control mask" name="nominal" id="nominal" />
                             </div>
                         </div>
                     </div>
+                    <hr>
                     <div class="col-lg-12" id="">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label>Nomor Bukti PPN</label>
+                                <div class="form-group">
+                                    <input type="text" class="form-control mask" name="no_bukti_ppn" id="no_bukti_ppn" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+
+                                <div class="form-group">
+                                    <label>Nominal PPN</label>
+                                    <input type="text" class="form-control mask" name="nominal_ppn" id="nominal_ppn" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-6">
@@ -625,9 +635,6 @@
                 <button  type="button" class="print btn btn-light btn-icon" data-id='${d['id']}'   title="Print"><i class='la la-print'></i></button>
                 `;
 
-                // <button type="button" class="btn btn-outline-secondary btn-icon"><i class="la la-file-text-o"></i></button>
-                // <button type="button" class="btn btn-outline-secondary btn-icon"><i class="la la-bold"></i></button>
-                // <button type="button" class="btn btn-outline-secondary btn-icon"><i class="la la-paperclip"></i></button>
 
                 var button = `   <div class="btn-group mr-2" role="group" aria-label="...">  ${ printButton+ editButton + deleteButton  }    </div> `;
                 renderData.push([d['date_pembayaran'], formatRupiah2(d['sum_child']), d['agentname'], link, button]);
@@ -724,11 +731,11 @@
                 if (result.isConfirmed == false) {
                     return;
                 }
-                swal.fire({
-                    title: 'Loading ...',
-                    allowOutsideClick: false
-                });
-                swal.showLoading();
+                // swal.fire({
+                //     title: 'Loading ...',
+                //     allowOutsideClick: false
+                // });
+                // swal.showLoading();
                 $.ajax({
                     url: url,
                     'type': 'POST',
@@ -743,7 +750,7 @@
                         }
                         swal.fire("Simpan Berhasil", "", "success");
 
-                        location.reload();
+                        // location.reload();
                         //  return;
                         // var d = json['data']
                         // dataPayments[d['id']] = d;

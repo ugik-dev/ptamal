@@ -56,7 +56,7 @@ class Statement extends CI_Controller
             $filter = $this->input->get();
             // $filter['by_DataStructure'] = true;
             if (empty($filter['search'])) $filter['search'] =  '';
-            if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
+            if (empty($filter['date_start'])) $filter['date_start'] = date('Y-01-' . '01');
             if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
             $filter['by_DataStructure'] = true;
             $data['accounts'] = $this->General_model->getAllBaganAkun(array('by_DataStructure' => true));
@@ -114,7 +114,7 @@ class Statement extends CI_Controller
             $filter = $this->input->get();
             // $filter['by_DataStructure'] = true;
             if (empty($filter['search'])) $filter['search'] =  '';
-            if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
+            if (empty($filter['date_start'])) $filter['date_start'] = date('Y-01-' . '01');
             if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
             $filter['nature'] = array('Expense', 'Revenue');
 
@@ -144,7 +144,7 @@ class Statement extends CI_Controller
             // $filter['search'] = '';
             // $filter['date_start'] = '';
             if (empty($filter['from']))
-                $filter['from'] = date('Y-m-' . '01');
+                $filter['from'] = date('Y-01-' . '01');
             if (empty($filter['to']))
                 $filter['to'] = date('Y-m-' . date('t', strtotime($filter['from'])));
             $data['journals'] = array();
