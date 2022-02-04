@@ -68,8 +68,8 @@ class Invoice extends CI_Controller
         $dataContent = $this->InvoiceModel->getAllInvoice(array('id' =>  $id))[0];
         $dataContent['data_pelunasan'] = $this->Invoice_model->getAllPelunasan(array('parent_id' => $id));
 
-        if ($dataContent['agen_id'] != $this->session->userdata('user_id')['id'])
-            throw new UserException('Sorry, Yang dapat mengahapus dan edit hanya agen yang bersangkutan', UNAUTHORIZED_CODE);
+        // if ($dataContent['agen_id'] != $this->session->userdata('user_id')['id'])
+        //     throw new UserException('Sorry, Yang dapat mengahapus dan edit hanya agen yang bersangkutan', UNAUTHORIZED_CODE);
 
         $this->InvoiceModel->delete($id, $dataContent);
         $array_msg = array(
