@@ -174,7 +174,7 @@
                                             <a>' . ($lv4['sub_keterangan'] ? $lv4['sub_keterangan'] : $lv4['naration']) . '</a></td>
                                         <td class="fr-currency">' . (!empty($debitamount) ? number_format($debitamount, 2, ',', '.') : '') . '</td>
                                         <td class="fr-currency">' . (!empty($creditamount) ? number_format($creditamount, 2, ',', '.') : '') . '</td>
-                                        <td  class="fr-currency">' . ($total_ledger < 0 ? '( >' . number_format(-$total_ledger, 2, ',', '.') . ')' : '' . number_format($total_ledger, 2, ',', '.') . '') . '</td>            
+                                        <td  class="fr-currency">' . ($total_ledger < 0 ? '(' . number_format(-$total_ledger, 2, ',', '.') . ')' : '' . number_format($total_ledger, 2, ',', '.') . '') . '</td>            
                                     </tr>';
                                 }
                                 echo '</tbody></table>';

@@ -484,7 +484,7 @@ class PembayaranModel extends CI_Model
                 $sub_b['id_pelunasan'] = $order_id;
                 $this->db->insert('dt_pel_pem_lebih', $sub_b);
             }
-        $data['generalentry']['ref_url'] = 'invoice/show/' . $data['parent_id'];
+        $data['generalentry']['ref_url'] = 'pembayaran/show/' . $data['parent_id'];
         $this->db->insert('dt_generalentry', $data['generalentry']);
 
         $gen_id = $this->db->insert_id();
@@ -508,7 +508,7 @@ class PembayaranModel extends CI_Model
         $this->db->set("id_transaction", $gen_id);
         $this->db->insert('mp_approv');
 
-        $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'invoice/show/' . $data['parent_id'], 'sub_id' => $order_id, 'desk' => 'Entry Pembayaran Invoice'));
+        $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'pembayaran/show/' . $data['parent_id'], 'sub_id' => $order_id, 'desk' => 'Entry Pembayaran Invoice'));
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -574,8 +574,7 @@ class PembayaranModel extends CI_Model
         $this->db->where("id", $data['parent_id']);
         $this->db->update('mp_pembayaran');
 
-
-        $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'invoice/show/' . $data['parent_id'], 'sub_id' => $data['parent_id'], 'desk' => 'Edit Invoice'));
+        $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'pembayaran/show/' . $data['parent_id'], 'sub_id' => $data['parent_id'], 'desk' => 'Edit Invoice'));
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
