@@ -73,6 +73,7 @@ class Invoice extends CI_Controller
 
         $this->InvoiceModel->delete($id, $dataContent);
         $array_msg = array(
+
             'msg' => '<i style="color:#fff" class="fa fa-check-circle-o" aria-hidden="true"></i> Delete Successfully',
             'alert' => 'info'
         );
@@ -823,22 +824,26 @@ class Invoice extends CI_Controller
         $i++;
 
         if ($data['ppn_pph'] == 1) {
+            // $jurnal['sub_entry'][$i] = array(
+            //     'accounthead' => $data['jp']['ac_ppn_piut'],
+            //     'type' => 0,
+            //     'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
+            //     'amount' => $data['ppn_pph_count'],
+            // );
+            // $i++;
+            $ppn = $this->General_model->getAllRefAccount(array('ref_type' => 'ppn_keluaran_belum_faktur'))[0];
+
             $jurnal['sub_entry'][$i] = array(
-                'accounthead' => $data['jp']['ac_ppn_piut'],
-                'type' => 0,
-                'sub_keterangan' => 'Piut WAPU PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
-                'amount' => $data['ppn_pph_count'],
-            );
-            $i++;
-            $jurnal['sub_entry'][$i] = array(
-                'accounthead' => $data['jp']['ac_ppn'],
+                'accounthead' => $ppn['ref_account'],
                 'type' => 1,
                 'sub_keterangan' => 'PPN ' . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['description'],
                 'amount' => $data['ppn_pph_count'],
             );
             $i++;
+            $jurnal['sub_entry'][0]['amount'] =   $jurnal['sub_entry'][0]['amount'] + $data['ppn_pph_count'];
         }
-        // echo json_encode($jurnal);
+        // echo 'sadas';
+        // echo json_encode($ppn);
         // die();
         return $jurnal;
     }
@@ -920,6 +925,7 @@ class Invoice extends CI_Controller
 
                 // if ($data['generalentry_old']['date'])
                 $jurnal = $this->make_journal($data, $jp);
+                // die();
                 $data['generalentry'] = $jurnal['generalentry'];
                 $data['sub_entry'] = $jurnal['sub_entry'];
                 if (substr($data['generalentry_old']['date'], 0, -3) != substr($data['date'], 0, -3))
@@ -999,12 +1005,17 @@ class Invoice extends CI_Controller
             // $uang_muka_pph = number_format(($data['sub_total'] * 0.02), 2, '.', '');
             $ref = $this->General_model->getAllRefAccount(array('by_id' => true, 'ref_id' => $data['payment_metode']))[$data['payment_metode']];
             $data['gen_old'] = $this->Statement_model->getSingelJurnal(array('id' => $data['old_data']['general_id']))['parent'];
+            // var_dump($ref);
+            // die();
             // $data['total_bayar'] = $total_bayar;
-            $this->make_journal_pelunasan($data, $jp, $ref);
+            $jurnal = $this->make_journal_pelunasan($data, $jp, $ref);
+            $data['child_pembayaran'] = $jurnal['child_pembayaran'];
+            $data['generalentry'] = $jurnal['generalentry'];
+            $data['sub_entry'] = $jurnal['sub_entry'];
             if ($total_in_data_pelunasan >= $data['old_data']['total_final']) {
                 throw new UserException('Data ini sudah lunas!');
             }
-            if ($total + $total_in_data_pelunasan >= $data['old_data']['total_final']) {
+            if ($jurnal['total'] + $total_in_data_pelunasan >= $data['old_data']['total_final']) {
                 $data['status'] = 'paid';
             } else {
                 $data['status'] = 'unpaid';
@@ -1043,18 +1054,19 @@ class Invoice extends CI_Controller
                 $total = $total + $data['nominal'];
             }
         }
-        if (!empty($data['nominal_ppn'])) {
-            if ($data['nominal_ppn'] > 0) {
-                $ppn = $this->General_model->getAllRefAccount(array('by_type' => true, 'ref_type' => array('ppn_keluaran', 'ppn_keluaran_belum_faktur')));
-                $journal['sub_entry'][$i] = array(
-                    'accounthead' => $jp['ac_ppn'],
-                    'type' => 0,
-                    'amount' => $data['nominal_ppn'],
-                    'sub_keterangan' => "Penerimaan Bukti PPN " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
-                );
-                $i++;
-            }
-        }
+        // die();
+        // if (!empty($data['nominal_ppn'])) {
+        //     if ($data['nominal_ppn'] > 0) {
+        //         $ppn = $this->General_model->getAllRefAccount(array('by_type' => true, 'ref_type' => array('ppn_keluaran', 'ppn_keluaran_belum_faktur')));
+        //         $journal['sub_entry'][$i] = array(
+        //             'accounthead' => $jp['ac_ppn'],
+        //             'type' => 0,
+        //             'amount' => $data['nominal_ppn'],
+        //             'sub_keterangan' => "Penerimaan Bukti PPN " . (!empty($jp['text_jurnal']) ? $jp['text_jurnal'] . ' ' : '') . $data['old_data']['description'],
+        //         );
+        //         $i++;
+        //     }
+        // }
         if (!empty($data['ac_potongan'])) $potongan = count($data['ac_potongan']);
         else $potongan = 0;
         $k = 0;
@@ -1075,12 +1087,14 @@ class Invoice extends CI_Controller
                     'ac_desk' => $data['ac_desk'][$j],
                     'no_bukti' => $data['no_bukti'][$j],
                 );
+                $k++;
             }
         }
 
         if (!empty($data['ac_lebih'])) $lebih = count($data['ac_lebih']);
         else $lebih = 0;
         $total_lebih = 0;
+        echo $lebih;
         $l = 0;
         for ($j = 0; $j < $lebih; $j++) {
             if (!empty($data['ac_lebih'][$j]) && !empty($data['ac_nominal_lebih'][$j])) {
@@ -1099,6 +1113,7 @@ class Invoice extends CI_Controller
                     'ac_desk_lebih' => $data['ac_desk_lebih'][$j],
                     // 'no_bukti' => $data['no_bukti'][$j],
                 );
+                $l++;
             }
         }
 
@@ -1123,8 +1138,11 @@ class Invoice extends CI_Controller
             );
             $i++;
         }
-        echo json_encode($journal);
-        die();
+        $journal['total'] = $total;
+        return $journal;
+        // echo 'sda';
+        // echo json_encode($journal);
+        // die();
     }
 
     function editPelunasan()
@@ -1208,6 +1226,7 @@ class Invoice extends CI_Controller
                         'ac_desk' => $data['ac_desk'][$j],
                         'no_bukti' => $data['no_bukti'][$j],
                     );
+                    $k++;
                 }
             }
 
@@ -1232,6 +1251,7 @@ class Invoice extends CI_Controller
                         'ac_desk_lebih' => $data['ac_desk_lebih'][$j],
                         // 'no_bukti' => $data['no_bukti'][$j],
                     );
+                    $l++;
                 }
             }
 

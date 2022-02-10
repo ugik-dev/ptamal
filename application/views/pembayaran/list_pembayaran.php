@@ -92,7 +92,8 @@ for ($i = 0; $i < count($pembayarans_Record); $i++) {
                         <button type="button" class="btn btn-primary dropdown-toggle mr-1 mr-sm-14 my-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
                         <div class="dropdown-menu">
                             <?php
-                            echo  $cur_user == $pembayarans_Record[$i]['agen_id'] ? (' <a class="btn" href="' . base_url() . 'pembayaran/edit/' . $pembayarans_Record[$i]['id'] . '"><i class="fas fa-pencil-alt pull-left"></i> Edit </a>
+                            // echo  $cur_user = $pembayarans_Record[$i]['agen_id'] ? (' <a class="btn" href="' . base_url() . 'pembayaran/edit/' . $pembayarans_Record[$i]['id'] . '"><i class="fas fa-pencil-alt pull-left"></i> Edit </a>
+                            echo  $pembayarans_Record[$i]['agen_id'] ? (' <a class="btn" href="' . base_url() . 'pembayaran/edit/' . $pembayarans_Record[$i]['id'] . '"><i class="fas fa-pencil-alt pull-left"></i> Edit </a>
                                 <a class="btn" href="' . base_url() . 'pembayaran/delete/' . $pembayarans_Record[$i]['id'] . '"><i class="fa fa-trash pull-left"></i> Delete </a>
                                 
                                 ') : '';

@@ -146,25 +146,24 @@
                  `;
 
                  var button = ` ${vcrud['view'] == 1 ? viewButton : ''}   ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}`;
+                 //                  <div class="dropdown">
+                 //   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                 //     Dropdown
+                 //   </button>
+                 //   <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                 //     <li><button class="dropdown-item" type="button">Action</button></li>
+                 //     <li><button class="dropdown-item" type="button">Another action</button></li>
+                 //     <li><button class="dropdown-item" type="button">Something else here</button></li>
+                 //   </ul>
+                 // </div>
+                 //                      <div class="btn-group" opd="group">
+                 //           <button id="action" type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class='fa fa-bars'></i></button>
+                 //           <div class="dropdown-menu" aria-labelledby="action">
+                 // </div>
+                 // </div>
                  button = `
-                 <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-    Dropdown
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-    <li><button class="dropdown-item" type="button">Action</button></li>
-    <li><button class="dropdown-item" type="button">Another action</button></li>
-    <li><button class="dropdown-item" type="button">Something else here</button></li>
-  </ul>
-</div>
-                     <div class="btn-group" opd="group">
-          <button id="action" type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class='fa fa-bars'></i></button>
-          <div class="dropdown-menu" aria-labelledby="action">
           ${vcrud['view'] == 1 ? viewButton : ''}   ${vcrud['hk_update'] == 1 ? editButton : ''}  ${vcrud['hk_delete'] == 1 ? deleteButton : ''}
-          </div>
-        </div>
-
-        
+       
     `;
 
                  var rincian = `${ d['description']}<br>
@@ -193,7 +192,7 @@
              return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
          }
 
-         $('.delete').on('click', function(event) {
+         FDataTable.on('click', '.delete', function(event) {
              console.log('del');
              var currentData = $(this).data('id');
              Swal.fire(swalDeleteConfigure).then((result) => {

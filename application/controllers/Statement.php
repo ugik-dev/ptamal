@@ -22,7 +22,7 @@ class Statement extends CI_Controller
     {
         try {
             $filter = $this->input->get();
-            $accounts = $this->Accounting_model->getAllJournalVoucher($filter);
+            $accounts = $this->Statment_model_new->getAllJournalVoucher($filter);
             echo json_encode(array('error' => false, 'data' => $accounts));
         } catch (Exception $e) {
             ExceptionHandler::handle($e);
@@ -35,7 +35,7 @@ class Statement extends CI_Controller
             $crud = $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'view');
 
             $data['journals'] = array();
-            $data['journals'] = $this->Accounting_model->getAllJournalVoucher(array('id' => $id))[$id];
+            $data['journals'] = $this->Statment_model_new->getAllJournalVoucher(array('id' => $id))[$id];
             // echo json_encode($data);
             // die();
             $data['title'] = 'Jurnal Umum';
@@ -65,7 +65,6 @@ class Statement extends CI_Controller
 
             // echo json_encode($data['journals']);
             // die();
-            // $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
             $data['journals'] = $this->Statment_model_new->the_ledger($data['journals'], $filter);
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';
@@ -91,13 +90,44 @@ class Statement extends CI_Controller
             $filter['akum_laba_rugi'] = $this->General_model->getAllRefAccount(array('by_type' => true, 'ref_type' => 'akum_laba_rugi'));
             $data['journals'] = array();
             $filter['nature'] = array('Assets', 'Liability', 'Equity');
-            $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
+            $data['journals'] = $this->General_model->getAllBaganAkun($filter);
             $data['journals'] = $this->Statment_model_new->trail_balance($data['journals'], $filter);
             // echo json_encode($data['journals']['3']);
             // die();
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';
             $data['main_view'] = 'statement/trail_balance';
+            $data['vcrud'] = $crud;
+            $data['filter'] = $filter;
+            $this->load->view('main/index2.php', $data);
+        } catch (Exception $e) {
+            ExceptionHandler::handle($e);
+        }
+    }
+
+
+    public function cash_flow()
+    {
+        try {
+            $crud = $this->SecurityModel->Aksessbility_VCRUD('statement', 'cash_flow', 'view');
+            $filter = $this->input->get();
+            // $filter['by_DataStructure'] = true;
+            if (empty($filter['search'])) $filter['search'] =  '';
+            // if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
+            if (empty($filter['date_start'])) $filter['date_start'] = '2021-01-01';
+            if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
+            $filter['akum_laba_rugi'] = $this->General_model->getAllRefAccount(array('by_type' => true, 'ref_type' => 'akum_laba_rugi'));
+            $data['journals'] = array();
+            $filter['nature'] = array('Expense', 'Revenue');
+            // $filter['nature'] = array('Assets', 'Liability', 'Equity');
+            $filter['level'] = 2;
+            $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
+            $data['journals'] = $this->Statment_model_new->cash_flow($data['journals'], $filter);
+            // echo json_encode($data['journals']);
+            // die();
+            $data['title'] = 'Jurnal Umum';
+            $data['table_name'] = 'Jurnal Umum';
+            $data['main_view'] = 'statement/cash_flow';
             $data['vcrud'] = $crud;
             $data['filter'] = $filter;
             $this->load->view('main/index2.php', $data);
@@ -148,7 +178,7 @@ class Statement extends CI_Controller
             if (empty($filter['to']))
                 $filter['to'] = date('Y-m-' . date('t', strtotime($filter['from'])));
             $data['journals'] = array();
-            $data['journals'] = $this->Accounting_model->getAllJournalVoucher($filter);
+            $data['journals'] = $this->Statment_model_new->getAllJournalVoucher($filter);
             // echo json_encode($filter);
             // die();
 
@@ -185,7 +215,7 @@ class Statement extends CI_Controller
     //         $crud = $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'update');
 
     //         $data['return_data'] = array();
-    //         $data['return_data'] = $this->Accounting_model->getAllJournalVoucher(array('id' => $id))[$id];
+    //         $data['return_data'] = $this->Statment_model_new->getAllJournalVoucher(array('id' => $id))[$id];
     //         $data['accounts'] = $this->Accounting_model->getAllBaganAkun(array('by_DataStructure' => true));
     //         $data['form_url'] = 'editJournalVoucher';
     //         $data['title'] = 'Edit Jurnal';

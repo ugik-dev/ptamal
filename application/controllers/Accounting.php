@@ -8,7 +8,7 @@ class Accounting extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('SecurityModel', 'Accounting_model', 'General_model'));
+        $this->load->model(array('SecurityModel', 'Accounting_model', 'General_model', 'Statment_model_new'));
         // $this->load->helper(array('DataStructure'));
         $this->db->db_debug = TRUE;
     }
@@ -86,7 +86,6 @@ class Accounting extends CI_Controller
             $this->SecurityModel->Aksessbility_VCRUD('accounting', 'accounts', 'delete', true);
             $data = $this->input->get();
             $this->Accounting_model->deleteAccounts($data);
-            // $data = $this->Accounting_model->getAllBaganAkun(array('id' => $accounts, 'by_id' => true))[$accounts];
 
 
             echo json_encode(array('error' => false, 'data' => $data));
@@ -101,7 +100,7 @@ class Accounting extends CI_Controller
     {
         try {
             $filter = $this->input->get();
-            $accounts = $this->Accounting_model->getAllJournalVoucher($filter);
+            $accounts = $this->Statment_model_new->getAllJournalVoucher($filter);
             echo json_encode(array('error' => false, 'data' => $accounts));
         } catch (Exception $e) {
             ExceptionHandler::handle($e);
@@ -114,7 +113,7 @@ class Accounting extends CI_Controller
             $crud = $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'view');
 
             $data['journals'] = array();
-            $data['journals'] = $this->Accounting_model->getAllJournalVoucher(array('id' => $id))[0];
+            $data['journals'] = $this->Statment_model_new->getAllJournalVoucher(array('id' => $id))[0];
             // echo json_encode($data);
             // die();
             $data['title'] = 'Jurnal Umum';
@@ -155,7 +154,7 @@ class Accounting extends CI_Controller
         try {
             $crud = $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'update');
             $data['return_data'] = array();
-            $data['return_data'] = $this->Accounting_model->getAllJournalVoucher(array('id' => $id))[0];
+            $data['return_data'] = $this->Statment_model_new->getAllJournalVoucher(array('id' => $id))[0];
             if ($data['return_data']['generated_source'] != 'Journal Voucher') {
                 if ($data['return_data']['generated_source'] == 'invoice') {
                     header("Refresh:0; url='" . base_url() . "production/search/?parent_1=" . $data['return_data']['parent_id']);
@@ -279,7 +278,7 @@ class Accounting extends CI_Controller
                 throw new UserException('Nilai debit dan kredit tidak imbang!');
             }
 
-            $old_data = $this->Accounting_model->getAllJournalVoucher(array('id' => $data['id']))[0];
+            $old_data = $this->Statment_model_new->getAllJournalVoucher(array('id' => $data['id']))[0];
             // var_dump($old_data);
             // echo 'arrasdasda ';
             if (substr($old_data['date'], 0, -3) != substr($data['date'], 0, -3))
@@ -298,7 +297,7 @@ class Accounting extends CI_Controller
             $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'delete', true);
             // $data = $this->input->get();
             $data['id'] = $id;
-            $old_data = $this->Accounting_model->getAllJournalVoucher(array('id' => $data['id']))[0];
+            $old_data = $this->Statment_model_new->getAllJournalVoucher(array('id' => $data['id']))[0];
             // var_dump($old_data);
             if ($old_data['generated_source'] != 'Journal Voucher')
                 throw new UserException('Maaf data tidak dapat dihapus, harap karna ada transaksi lain!');
@@ -344,7 +343,7 @@ class Accounting extends CI_Controller
                 throw new UserException('Nilai nominal harus diisi!');
             }
             $this->Accounting_model->editOpenning($data);
-            $data = $this->Accounting_model->getAllJournalVoucher(array('id' => $data['id'], 'by_id' => true))[$data['id']];
+            $data = $this->Statment_model_new->getAllJournalVoucher(array('id' => $data['id'], 'by_id' => true))[$data['id']];
             echo json_encode(array('error' => false, 'data' => $data));
         } catch (Exception $e) {
             ExceptionHandler::handle($e);
@@ -368,7 +367,7 @@ class Accounting extends CI_Controller
                 throw new UserException('Nilai nominal harus diisi!');
             }
             $insert_id = $this->Accounting_model->addOpenning($data);
-            $data = $this->Accounting_model->getAllJournalVoucher(array('id' => $insert_id, 'by_id' => true))[$insert_id];
+            $data = $this->Statment_model_new->getAllJournalVoucher(array('id' => $insert_id, 'by_id' => true))[$insert_id];
             echo json_encode(array('error' => false, 'data' => $data));
         } catch (Exception $e) {
             ExceptionHandler::handle($e);

@@ -19,6 +19,13 @@ class Accounting_model extends CI_Model
             } else
                 $this->db->where('dt_head.nature', $filter['nature']);
         }
+        if (!empty($filter['level'])) {
+            if ($filter['level'] == 2) {
+                // $this->db->where("SUBSTRING(dt_head.head_number, 4, 3) = '000'");
+                // $this->db->where_in('dt_head.nature', $filter['nature']);
+            }
+            // $this->db->where('dt_head.nature', $filter['nature']);
+        }
         $this->db->order_by('dt_head.head_number', 'ASC');
         $query = $this->db->get();
         if (!empty($filter['by_id'])) {

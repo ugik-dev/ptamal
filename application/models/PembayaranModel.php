@@ -201,68 +201,68 @@ class PembayaranModel extends CI_Model
         }
     }
 
-    public  function addInvoice($data, $trans)
-    {
-        $this->db->trans_begin();
-        // $data['generalentry']['ref_number'] = $this->gen_number($data['generalentry']);
-        // $this->db->insert('dt_generalentry', $data['generalentry']);
+    // public  function addInvoice($data, $trans)
+    // {
+    //     $this->db->trans_begin();
+    //     // $data['generalentry']['ref_number'] = $this->gen_number($data['generalentry']);
+    //     // $this->db->insert('dt_generalentry', $data['generalentry']);
 
-        // $order_id = $this->db->insert_id();
-        // $i = 0;
-        // foreach ($data['sub_entry'] as $sub) {
-        //     $data['sub_entry'][$i]['parent_id'] = $order_id;
-        //     $this->db->insert('mp_sub_entry', $data['sub_entry'][$i]);
-        //     $i++;
-        // }
+    //     // $order_id = $this->db->insert_id();
+    //     // $i = 0;
+    //     // foreach ($data['sub_entry'] as $sub) {
+    //     //     $data['sub_entry'][$i]['parent_id'] = $order_id;
+    //     //     $this->db->insert('mp_sub_entry', $data['sub_entry'][$i]);
+    //     //     $i++;
+    //     // }
 
-        $kembalian = $trans['amount_recieved'] - ($trans['total_gross_amt'] + $trans['total_tax_amt'] - $trans['discountfield']);
-        if ($kembalian < 0) {
-            $status = 'unpaid';
-        } else {
-            $status = 'paid';
-        }
-        $data_trans = array(
-            // 'id_parent1' => $order_id,
-            'source' => 'invoice',
-            'customer_id' => $trans['customer_id'],
-            'total_gross' => $trans['total_gross_amt'],
-            'total_tax' => $trans['total_tax_amt'],
-            'discount' => $trans['discountfield'],
-            'amount_received_1' => $trans['amount_recieved'],
-            'amount_back_1' => $kembalian,
-            'status' => $status,
-            'date_1' => $trans['date'],
-            'payment_id' => $trans['payment_id']
+    //     $kembalian = $trans['amount_recieved'] - ($trans['total_gross_amt'] + $trans['total_tax_amt'] - $trans['discountfield']);
+    //     if ($kembalian < 0) {
+    //         $status = 'unpaid';
+    //     } else {
+    //         $status = 'paid';
+    //     }
+    //     $data_trans = array(
+    //         // 'id_parent1' => $order_id,
+    //         'source' => 'invoice',
+    //         'customer_id' => $trans['customer_id'],
+    //         'total_gross' => $trans['total_gross_amt'],
+    //         'total_tax' => $trans['total_tax_amt'],
+    //         'discount' => $trans['discountfield'],
+    //         'amount_received_1' => $trans['amount_recieved'],
+    //         'amount_back_1' => $kembalian,
+    //         'status' => $status,
+    //         'date_1' => $trans['date'],
+    //         'payment_id' => $trans['payment_id']
 
-        );
+    //     );
 
-        $this->db->insert('dt_transaction', $data_trans);
-        $id_trans = $this->db->insert_id();
-        // $order_id = $this->db->insert_id();
-        $i = 0;
-        foreach ($trans['row_price'] as $sub) {
-            if (!empty($trans['row_price'][$i]) && !empty($trans['row_qyt'][$i]) && !empty($trans['item_id'][$i])) {
-                $data_trans = array(
-                    'id_parent' => $id_trans,
-                    'id_product' => $trans['item_id'][$i],
-                    'price' => $trans['row_price'][$i],
-                    'tax' => $trans['fix_tax'][$i],
-                    'qyt' => $trans['row_qyt'][$i]
-                );
-                $this->db->insert('dt_transaction_item', $data_trans);
-            }
-            $i++;
-        }
+    //     $this->db->insert('dt_transaction', $data_trans);
+    //     $id_trans = $this->db->insert_id();
+    //     // $order_id = $this->db->insert_id();
+    //     $i = 0;
+    //     foreach ($trans['row_price'] as $sub) {
+    //         if (!empty($trans['row_price'][$i]) && !empty($trans['row_qyt'][$i]) && !empty($trans['item_id'][$i])) {
+    //             $data_trans = array(
+    //                 'id_parent' => $id_trans,
+    //                 'id_product' => $trans['item_id'][$i],
+    //                 'price' => $trans['row_price'][$i],
+    //                 'tax' => $trans['fix_tax'][$i],
+    //                 'qyt' => $trans['row_qyt'][$i]
+    //             );
+    //             $this->db->insert('dt_transaction_item', $data_trans);
+    //         }
+    //         $i++;
+    //     }
 
-        if ($this->db->trans_status() === FALSE) {
-            $this->db->trans_rollback();
-            ExceptionHandler::handleDBError($this->db->error(), "Delete Bank", "Bank");
-        } else {
+    //     if ($this->db->trans_status() === FALSE) {
+    //         $this->db->trans_rollback();
+    //         ExceptionHandler::handleDBError($this->db->error(), "Delete Bank", "Bank");
+    //     } else {
 
-            $this->db->trans_commit();
-            return $id_trans;
-        }
-    }
+    //         $this->db->trans_commit();
+    //         return $id_trans;
+    //     }
+    // }
 
 
     function pembayaran_entry($data)
@@ -410,7 +410,6 @@ class PembayaranModel extends CI_Model
                         'mp_sub_pembayaran.id',
                         $data['id_item'][$i]
                     );
-                    // $this->db->where('mp_sub_invoice.parent_id', $data['id']);
                     $this->db->delete('mp_sub_pembayaran');
                 }
             } else if (!empty($data['amount'][$i] && !empty($data['qyt'][$i]))) {
@@ -508,7 +507,7 @@ class PembayaranModel extends CI_Model
         $this->db->set("id_transaction", $gen_id);
         $this->db->insert('mp_approv');
 
-        $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'pembayaran/show/' . $data['parent_id'], 'sub_id' => $order_id, 'desk' => 'Entry Pembayaran Invoice'));
+        $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'pembayaran/show/' . $data['parent_id'], 'sub_id' => $order_id, 'desk' => 'Entry Pembayaran'));
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -574,7 +573,7 @@ class PembayaranModel extends CI_Model
         $this->db->where("id", $data['parent_id']);
         $this->db->update('mp_pembayaran');
 
-        $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'pembayaran/show/' . $data['parent_id'], 'sub_id' => $data['parent_id'], 'desk' => 'Edit Invoice'));
+        $this->record_activity(array('jenis' => '0', 'color' => 'primary', 'url_activity' => 'pembayaran/show/' . $data['parent_id'], 'sub_id' => $data['parent_id'], 'desk' => 'Edit Pembayaran'));
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -651,7 +650,7 @@ class PembayaranModel extends CI_Model
                 $this->db->delete('dt_generalentry');
             }
         }
-        $this->record_activity(array('jenis' => 6, 'sub_id' => $id, 'desk' => 'Delete Invoice'));
+        $this->record_activity(array('jenis' => 6, 'sub_id' => $id, 'desk' => 'Delete Pembayaran'));
     }
 
 

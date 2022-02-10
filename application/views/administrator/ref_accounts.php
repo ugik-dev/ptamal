@@ -66,11 +66,13 @@
                          <select name="ref_type" id='ref_type' class="form-control input-lg">
                              <option value="payment_method">Metode Pembayaran</option>
                              <option value="tax_ppn">Pajak PPn</option>
-                             <option value="tax_pph">Pajak PPh</option>
+                             <!-- <option value="tax_pph">Pajak PPh</option> -->
                              <option value="dashboard_piutang">Dashboard Piutang</option>
                              <option value="dashboard_kas">Dashboard Kas</option>
                              <option value="dashboard_bank_1">Dashboard Bank</option>
                              <option value="akum_laba_rugi">Akumulasi Laba Rugi</option>
+                             <option value="ppn_keluaran">PPN Keluaran</option>
+                             <option value="ppn_keluaran_belum_faktur">PPN Keluaran Belum di Fakturkan</option>
                          </select>
 
                      </div>
