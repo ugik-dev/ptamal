@@ -182,13 +182,16 @@ class Statment_model_new extends CI_Model
         // die();
         $datas = [];
         // $datas['out_general']['children'] = [];
-        // $datas['out_pajak']['children'] = [];
-        // $datas['in_bank']['children'] = [];
-        // $datas['in_dll']['children'] = [];
-        // $datas['in_usaha']['children'] = [];
-        // $datas['out_usaha']['children'] = [];
+        $datas['out_general']['children'] = [];
+        $datas['out_pajak']['children'] = [];
+        $datas['out_usaha']['children'] = [];
+        $datas['in_bank']['children'] = [];
+        $datas['in_dll']['children'] = [];
+        $datas['in_usaha']['children'] = [];
+        $datas['piutang_bank']['children'] = [];
+        $datas['inves_pinjaman']['children'] = [];
 
-        // $datas['piutang_bank']['children'] = [];
+
 
         // Kegiatan operasi
         $datas['out_general']['value'] = 0;
@@ -229,8 +232,17 @@ class Statment_model_new extends CI_Model
                 };
             }
 
-            if ($type == 'out_general')
+            if ($type == 'out_general') {
                 $datas['out_general']['value'] = $datas['out_general']['value'] + $am_bank; //ok
+                // echo json_encode($d);
+                // die();
+                $datas['out_general']['children'][] = array(
+                    'id' => $d['parent_id'],
+                    'ref_number' => $d['ref_number'],
+                    'naration' => $d['naration'],
+                    'amount' => $am_bank
+                );
+            }
             if ($type == 'in_usaha')
                 $datas['in_usaha']['value'] = $datas['in_usaha']['value'] + $am_bank; // ok
             if ($type == 'out_usaha')
