@@ -137,6 +137,7 @@ class Invoice extends CI_Controller
                     $dataContent['id_item'][$i] =  $dataContent['item'][$i]->id;
                     $dataContent['amount'][$i] =  $dataContent['item'][$i]->amount;
                     $dataContent['date_item'][$i] =  $dataContent['item'][$i]->date_item;
+                    $dataContent['pre_order'][$i] =  $dataContent['item'][$i]->pre_order;
                     $dataContent['satuan'][$i] =  $dataContent['item'][$i]->satuan;
 
                     $dataContent['keterangan_item'][$i] =  $dataContent['item'][$i]->keterangan_item;
@@ -192,6 +193,7 @@ class Invoice extends CI_Controller
                 // 	$status = TRUE;
                 $dataContent['amount'][$i] = $dataContent['item'][$i]->amount;
                 $dataContent['date_item'][$i] =  $dataContent['item'][$i]->date_item;
+                $dataContent['pre_order'][$i] =  $dataContent['item'][$i]->pre_order;
                 $dataContent['keterangan_item'][$i] =  $dataContent['item'][$i]->keterangan_item;
                 $dataContent['satuan'][$i] =  $dataContent['item'][$i]->satuan;
 

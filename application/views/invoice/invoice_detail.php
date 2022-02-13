@@ -66,10 +66,24 @@
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
+                                <?php
+                                $r_date = false;
+                                $r_po = false;
+                                if (!empty($dataContent['items'])) {
+                                    foreach ($dataContent['items'] as $item) {
+                                        // var_dump($item);
+                                        // die();
+                                        if (!empty($item['date_item'])) $r_date = true;
+                                        if (!empty($item['pre_order'])) $r_po = true;
+                                    }
+                                } ?>
                                 <tr>
                                     <th class="pt-1 pb-9 pl-0 pl-md-5 font-weight-bolder text-muted font-size-lg text-uppercase">Keterangan</th>
-                                    <th class="pt-1 pb-9 text-right font-weight-bolder text-muted font-size-lg text-uppercase"></th>
-                                    <th class="pt-1 pb-9 text-right font-weight-bolder text-muted font-size-lg text-uppercase">Qyt</th>
+
+                                    <?= $r_date ? '<th class="pt-1 pb-9 text-center font-weight-bolder text-muted font-size-lg text-uppercase"></th>' : '' ?>
+                                    <?= $r_po ? '<th class="pt-1 pb-9 text-left font-weight-bolder text-muted font-size-lg text-uppercase">PO</th>' : '' ?>
+
+                                    <th class="pt-1 pb-9 text-center font-weight-bolder text-muted font-size-lg text-uppercase">Qyt</th>
                                     <th class="pt-1 pb-9 text-right pr-0 font-weight-bolder text-muted font-size-lg text-uppercase">Harga</th>
                                     <th class="pt-1 pb-9 text-right pr-0 font-weight-bolder text-muted font-size-lg text-uppercase">Jumlah</th>
                                 </tr>
@@ -78,6 +92,8 @@
                                 <?php
                                 $total = 0;
                                 $total_qyt = 0;
+
+
                                 if (!empty($dataContent['items'])) {
                                     foreach ($dataContent['items'] as $item) {
                                         $total = $total + ($item['amount'] * $item['qyt']);
@@ -90,8 +106,9 @@
                                                     <i class="fa fa-genderless text-primary font-size-h2"></i>
                                                 </span><?= $item['keterangan_item'] ?>
                                             </td>
-                                            <td class="border-top-0 text-right py-4"><?= $item['date_item'] ?></td>
-                                            <td class="border-top-0 text-right py-4"><?= $item['qyt'] . $item['satuan'] ?></td>
+                                            <?= $r_date ?  ' <td class="border-top-0 text-left py-4">' . $item['date_item'] . '</td> ' : '' ?>
+                                            <?= $r_po ?  ' <td class="border-top-0 text-left py-4">' . $item['pre_order'] . '</td> ' : '' ?>
+                                            <td class="border-top-0 text-center py-4"><?= $item['qyt'] . $item['satuan'] ?></td>
                                             <td class="border-top-0 pr-0 py-4 font-size-h6 font-weight-boldest text-right"><?= number_format(($item['amount']), 0, ',', '.') ?></td>
                                             <td class="border-top-0 pr-0 py-4 font-size-h6 font-weight-boldest text-right currency"><?= number_format(($item['amount'] * $item['qyt']), 0, ',', '.')  ?></td>
                                         </tr>
@@ -99,10 +116,12 @@
                                 } ?>
                                 <tr>
                                     <th class="pt-1 pb-9 pl-0 pl-md-5 font-weight-bolder  font-size-lg text-uppercase"></th>
-                                    <th class="pt-1 pb-9 text-right font-weight-bolder text-muted font-size-lg text-uppercase"></th>
-                                    <th class="pt-1 pb-9 text-right pr-0 font-weight-bolder  font-size-lg text-uppercase"><?= $total_qyt ?></th>
+                                    <?= $r_date ?  ' <th class="pt-1 pb-9 text-right font-weight-bolder text-muted font-size-lg text-uppercase"></th> ' : '' ?>
+                                    <?= $r_po ?  ' <th class="pt-1 pb-9 text-right font-weight-bolder text-muted font-size-lg text-uppercase"></th> ' : '' ?>
+                                    <!-- <th class="pt-1 pb-9 text-right font-weight-bolder text-muted font-size-lg text-uppercase"></th> -->
+                                    <th class="pt-1 pb-9 text-center pr-0 font-weight-bolder  font-size-lg text-uppercase"><?= $total_qyt ?></th>
                                     <th class="pt-1 pb-9 text-right pr-0 font-weight-bolder text-muted font-size-lg text-uppercase"></th>
-                                    <th class="pt-1 pb-9 text-right font-weight-bolder  font-size-lg text-uppercase"><?= number_format(($total), 0, ',', '.') ?></th>
+                                    <th class="pt-1 pb-9 pr-0 text-right font-weight-bolder  font-size-lg text-uppercase"><?= number_format(($total), 0, ',', '.') ?></th>
                                 </tr>
                             </tbody>
                         </table>

@@ -99,6 +99,7 @@
                                     <thead>
                                         <tr>
                                             <th style="width:  400px">Keterangan</th>
+                                            <th style="width:  200px">PO</th>
                                             <th style="width:  200px">Tanggal</th>
                                             <th style="width:  120px">Satuan</th>
                                             <th style="width: 80px">Qyt</th>
@@ -261,6 +262,9 @@
                                                 <input type="text" name="keterangan_item[]" value="" class="form-control input-lg" placeholder="eg. Logam 2 btg / BN 9999 QV" />
                                                 <input type="hidden" name="id_item[]" value="" />
                                             </td>
+                                             <td>
+                                                <input type="text" name="pre_order[]" value="" placeholder="eg. Pre-Order" class="form-control input-lg" />
+                                            </td>
                                             <td>
                                                 <input type="text" name="date_item[]" value="" placeholder="eg. 3 Mar sd 27 Feb" class="form-control input-lg" />
                                             </td>
@@ -312,6 +316,8 @@
     var transaction_table_body = $('#transaction_table_body');
     var keterangan_item = document.getElementsByName('keterangan_item[]');
     var date_item = document.getElementsByName('date_item[]');
+    var pre_order = document.getElementsByName('pre_order[]');
+
     var qyt = document.getElementsByName('qyt[]');
     var amount = document.getElementsByName('amount[]');
     var satuan = document.getElementsByName('satuan[]');
@@ -365,6 +371,7 @@
         // console.log(idx)
         keterangan_item = document.getElementsByName('keterangan_item[]');
         date_item = document.getElementsByName('date_item[]');
+        pre_order = document.getElementsByName('pre_order[]');
         qyt = document.getElementsByName('qyt[]');
         amount = document.getElementsByName('amount[]');
         satuan = document.getElementsByName('satuan[]');
@@ -377,6 +384,7 @@
                 console.log('this true = ' + index)
                 keterangan_item[index].value = '';
                 date_item[index].value = '';
+                pre_order[index].value = '';
                 qyt[index].value = 0;
                 amount[index].value = 0;
                 satuan[index].value = '';
@@ -433,6 +441,7 @@
             amount[<?= $i ?>].value = '<?= number_format($data_return['amount'][$i], 2, ',', '.') ?>';
             qyt[<?= $i ?>].value = '<?= $data_return['qyt'][$i] ?>';
             date_item[<?= $i ?>].value = '<?= $data_return['date_item'][$i] ?>';
+            pre_order[<?= $i ?>].value = '<?= $data_return['pre_order'][$i] ?>';
             keterangan_item[<?= $i ?>].value = '<?= $data_return['keterangan_item'][$i] ?>';
             satuan[<?= $i ?>].value = '<?= $data_return['satuan'][$i] ?>';
             id_item[<?= $i ?>].value = '<?= !empty($data_return['id_item'][$i]) ? $data_return['id_item'][$i] : '' ?>';

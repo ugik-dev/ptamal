@@ -49,7 +49,7 @@ class Invoice_model extends CI_Model
 
     public function getAllInvoiceDetail($filter = [])
     {
-        $this->db->select('mpp.* ,ac_1.agentname acc_1_name ,payee.cus_address, payee.cus_town, ac_1.title_user as acc_1_title ,ac_2.agentname as acc_2_name,ac_3.agentname acc_3_name ,payee.customer_name as customer_name, gen.ref_number, gen_ppn.ref_number as ref_number_ppn,sub.id as item_id, sub.parent_id as parent_item, amount, qyt, date_item, keterangan_item, satuan');
+        $this->db->select('mpp.* ,ac_1.agentname acc_1_name ,payee.cus_address, payee.cus_town, ac_1.title_user as acc_1_title ,ac_2.agentname as acc_2_name,ac_3.agentname acc_3_name ,payee.customer_name as customer_name, gen.ref_number, gen_ppn.ref_number as ref_number_ppn,sub.id as item_id,pre_order, sub.parent_id as parent_item, amount, qyt, date_item, keterangan_item, satuan');
         $this->db->from('mp_invoice_v2 mpp');
         $this->db->join('dt_generalentry gen', 'gen.id = mpp.general_id', 'LEFT');
         $this->db->join('dt_generalentry gen_ppn', 'gen_ppn.id = mpp.general_id_ppn', 'LEFT');
@@ -73,7 +73,7 @@ class Invoice_model extends CI_Model
                     'am_jasa', 'am_pph', 'manual_math', 'par_label', 'par_am', 'sub_total', 'total_final', 'jenis_invoice',
                     'lebih_bayar_ket', 'lebih_bayar_am', 'kurang_bayar_ket', 'kurang_bayar_am', 'pembulatan', 'payed', 'am_back', 'status', 'general_id', 'general_id_ppn'
                 ],
-                ["item_id", "amount", "qyt", "date_item", 'nopol', "keterangan_item", "satuan"]
+                ["item_id", "amount", "qyt", "date_item", 'nopol', "keterangan_item", "satuan", "pre_order"]
             ],
             ['items']
         );
@@ -332,6 +332,8 @@ class Invoice_model extends CI_Model
                     'qyt' => $data['qyt'][$i],
                     'satuan' => $data['satuan'][$i],
                     'date_item' => $data['date_item'][$i],
+                    'pre_order' => $data['pre_order'][$i],
+
                     'keterangan_item' => $data['keterangan_item'][$i],
                     'amount'      => substr($data['amount'][$i], 0, -2) . '.' . substr($data['amount'][$i], -2),
                 );
@@ -438,6 +440,7 @@ class Invoice_model extends CI_Model
                         'qyt' => $data['qyt'][$i],
                         'satuan' => $data['satuan'][$i],
                         'date_item' => $data['date_item'][$i],
+                        'pre_order' => $data['pre_order'][$i],
                         'keterangan_item' => $data['keterangan_item'][$i],
                         'amount'      => substr($data['amount'][$i], 0, -2) . '.' . substr($data['amount'][$i], -2),
                     );
@@ -454,6 +457,7 @@ class Invoice_model extends CI_Model
                         'qyt' => $data['qyt'][$i],
                         'satuan' => $data['satuan'][$i],
                         'date_item' => $data['date_item'][$i],
+                        'pre_order' => $data['pre_order'][$i],
                         'keterangan_item' => $data['keterangan_item'][$i],
                         'amount'      => substr($data['amount'][$i], 0, -2) . '.' . substr($data['amount'][$i], -2),
                     );

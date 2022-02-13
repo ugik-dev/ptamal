@@ -167,6 +167,7 @@
                                 $date_item = false;
                                 $satuan = false;
                                 $qyt = false;
+                                $r_po = false;
                                 $span = 2;
                                 foreach ($transaction['items'] as $cek) {
                                     if (!empty($cek['keterangan_item'])) {
@@ -177,11 +178,16 @@
                                         $date_item = true;
                                         $span++;
                                     }
+                                    if (!empty($cek['pre_order'])) {
+                                        $r_po = true;
+                                        $span++;
+                                    }
                                 } ?>
 
                                 <tr>
                                     <?= $keterangan_item ? '<th>KETERANGAN</th>' : '' ?>
                                     <?= $date_item ? '<th>TANGGAL</th>' : '' ?>
+                                    <?= $r_po ? '<th>PO</th>' : '' ?>
                                     <th>QYT</th>
                                     <th>HARGA (Rp)</th>
                                     <th>SUB TOTAL (Rp)</th>
@@ -198,6 +204,7 @@
                                     <tr>
                                         <?= $keterangan_item ? '<td style="padding: 4px">' . $item['keterangan_item'] . '</td>' : '' ?>
                                         <?= $date_item ? '<td style="padding: 4px">' . $item['date_item'] . '</td>' : '' ?>
+                                        <?= $r_po ? '<td style="padding: 4px">' . $item['pre_order'] . '</td>' : '' ?>
                                         <td style="padding: 4px ; text-align: center"><?= $item['qyt'] ?></td>
                                         <!-- <td><?= $item['amount'] ?></td> -->
                                         <td style="padding: 4px; text-align: right;"><?= number_format($item['amount'], 2, '.', ',') ?></td>

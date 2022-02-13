@@ -287,11 +287,69 @@ class DataStructure
       }
       array_push($jstree, $data);
     }
+
+
+
     // echo json_encode($jstree);
     // die();
     return $jstree;
   }
 
+  public static function detectCashFlow($arr)
+  {
+    $datas['out_general'] = 0;
+    $datas['out_pajak'] = 0;
+    $datas['out_usaha'] = 0;
+
+    $datas['in_bank'] = 0;
+    $datas['in_dll'] = 0;
+    $datas['in_usaha'] = 0;
+    $datas['piutang_bank'] = 0;
+    //kegiatan investasi
+    $datas['inves_pinjaman'] = 0;
+
+    $res = array();
+    foreach ($arr as $k) {
+      $res[$k['id']] = $k;
+      if (substr($k['h2'], 0, 3) == '101') {
+      } else if (substr($k['h2'], 0, 3) == '501') {
+        // echo json_encode($k);
+        // die();
+        // $res[$k['id']]['jenis'][] = 'out_general';
+
+        $datas['out_general'] = $datas['out_general'] + ($k['type'] == 0 ?  $k['amount'] : -$k['amount']); //ok
+      } else if (substr($k['h2'], 0, 3) == '502') { // done out usaha
+        $datas['out_usaha'] = $datas['out_usaha'] + ($k['type'] == 0 ?  $k['amount'] : -$k['amount']); //ok
+      } else if (substr($k['h2'], 0, 3) == '403') { // done pend lain 
+        $datas['in_dll'] = $datas['in_dll'] + ($k['type'] == 0 ?  $k['amount'] : -$k['amount']); //ok
+      } else if (substr($k['h2'], 0, 3) == '503') { // done output pajak
+        $datas['out_pajak'] = $datas['out_pajak'] + ($k['type'] == 0 ?  $k['amount'] : -$k['amount']); //ok
+      } else if (substr($k['h2'], 0, 3) == '402') { //done pend bank
+        $datas['in_bank'] = $datas['in_bank'] + ($k['type'] == 0 ?  $k['amount'] : -$k['amount']); //ok
+      } else if (substr($k['h2'], 0, 3) == '103' or substr($k['h2'], 0, 3) == '401') {  //done pend usaha lewat piutang dan langsung
+        $datas['in_usaha'] = $datas['in_usaha'] + ($k['type'] == 0 ?  $k['amount'] : -$k['amount']); //ok
+      } else if (substr($k['h2'], 0, 3) == '104') {
+        $datas['piutang_bank'] = $datas['piutang_bank'] + ($k['type'] == 0 ?  $k['amount'] : -$k['amount']); //ok
+      } else if (substr($k['h2'], 0, 3) == '203') {
+        $datas['inves_pinjaman'] = $datas['inves_pinjaman'] + ($k['type'] == 0 ?  $k['amount'] : -$k['amount']); //ok
+      };
+    }
+
+    $total['inves'] =
+      $datas['inves_pinjaman'];
+    $total['operasi'] =
+      $datas['out_general'] +
+      $datas['in_usaha'] +
+      $datas['out_usaha'] +
+      $datas['in_dll'] +
+      $datas['piutang_bank'] +
+      $datas['in_bank'] +
+      $datas['out_pajak'];
+
+    $datas['total'] = $total;
+
+    return array('data' => $res, 'jenis' => $datas);
+  }
   // arr: [{a: 'gg', b: 'wp'}, {a: 'gg', b: 'tt'}, {a: 'yy', b: 'oo'}]
   // column: a
   // output: ['gg': [{a: 'gg', b: 'wp'}, {a: 'gg', b: 'tt'}], 'yy': [{a: 'yy', b: 'oo'}]]

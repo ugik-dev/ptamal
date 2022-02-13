@@ -261,8 +261,8 @@
     }
 
     table.inventory .qyt {
-        text-align: center;
-        width: 30px;
+        text-align: center !important;
+        width: 10px !important;
     }
 
     table.inventory td:nth-child(4) {
@@ -438,21 +438,25 @@
         $date_item = false;
         $satuan = false;
         $qyt = false;
+        $r_po = false;
 
         foreach ($transaction['items'] as $cek) {
             if (!empty($cek['keterangan_item']))
                 $keterangan_item = true;
             if (!empty($cek['date_item']))
                 $date_item = true;
+            if (!empty($cek['pre_order']))
+                $r_po = true;
         } ?>
         <table class="inventory">
             <thead>
                 <tr>
                     <?= $keterangan_item ? '<th><span >Item #</span></th>' : '' ?>
                     <?= $date_item ? '<th><span >Date #</span></th>' : '' ?>
+                    <?= $r_po ? '<th><span >PO #</span></th>' : '' ?>
                     <!-- <th><span >Description</span></th> -->
-                    <th><span>Rate #</span></th>
                     <th style="width: 80px !important"><span>Quantity #</span></th>
+                    <th><span>Rate #</span></th>
                     <th><span>Price #</span></th>
                 </tr>
             </thead>
@@ -464,14 +468,18 @@
                         echo '    <td><span >' . $cek['keterangan_item'] . '</span></td>';
                     if ($date_item)
                         echo '    <td><span >' . $cek['date_item'] . '</span></td>';
-                    echo '    <td class="amount"><span >' . number_format($cek['amount'], 2, ',', '.') . '</span></td>
-                           <td class="qyt"><span >' . $cek['qyt'] . ' ' . $cek['satuan'] . '</span></td>
+                    if ($r_po)
+                        echo '    <td><span >' . $cek['pre_order'] . '</span></td>';
+                    echo '    
+                    <td class="qyt"><span >' . $cek['qyt'] . ' ' . $cek['satuan'] . '</span></td>
+                    <td class="amount"><span >' . number_format($cek['amount'], 2, ',', '.') . '</span></td>
                            <td class="amount"><span >' . number_format(($cek['qyt'] * $cek['amount']), 2, ',', '.') . '</span></td>';
                     echo '</tr>';
                 } ?>
                 <tr style="padding : 0px ; margin: 0px">
                     <?= $keterangan_item ? '<th></th>' : '' ?>
                     <?= $date_item ? '<th></th>' : '' ?>
+                    <?= $r_po ? '<th></th>' : '' ?>
                     <th></th>
                     <th></th>
                     <th></th>

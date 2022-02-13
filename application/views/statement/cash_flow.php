@@ -110,17 +110,21 @@
                         <td></td>
                     </tr>';
                     <?php
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Usaha : </h4></td><td></td><td class="fr-currency">' . number_format($journals['in_usaha']['value']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Bank : </h4></td><td></td><td class="fr-currency">' . number_format($journals['in_bank']['value']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Lainnya : </h4></td><td></td><td class="fr-currency">' . number_format($journals['in_dll']['value']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran HPP : </h4></td><td></td><td class="fr-currency">' . number_format($journals['out_usaha']['value']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran Biaya General Administrasi : </h4></td><td></td><td class="fr-currency">' . number_format($journals['out_general']['value']) . '</td><td></td></tr>';
-                    if (!empty($journals['out_general']['children'])) {
-                        foreach ($journals['out_general']['children'] as $ch)
-                            echo '<tr><td style="text-align:left;"><a href="' . base_url('accounting/show_journal/' . $ch['id']) . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ' . $ch['naration'] . ' : </a></td><td class="fr-currency">' . number_format($ch['amount']) . '</td><td></td></tr>';
-                    }
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran Pajak :</h4></td><td></td><td class="fr-currency">' . number_format($journals['out_pajak']['value']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4><b>&nbsp&nbsp&nbsp TOTAL : </b></h4></td><td></td><td></td><td class="fr-currency"> ' . number_format($journals['total']['operasi']) . '</td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Usaha : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['in_usaha']) . '</td><td></td></tr>';
+                    // if (!empty($journals['jenis']['in_usaha']['children'])) {
+                    //     foreach ($journals['jenis']['in_usaha']['children'] as $ch)
+                    //         echo '<tr><td style="text-align:left;"><a href="' . base_url('accounting/show_journal/' . $ch['id']) . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ' . $ch['naration'] . ' : </a></td><td class="fr-currency">' . number_format($ch['amount']) . '</td><td></td></tr>';
+                    // }
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Bank : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['in_bank']) . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Lainnya : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['in_dll']) . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran HPP : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['out_usaha']) . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran Biaya General Administrasi : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['out_general']) . '</td><td></td></tr>';
+                    // if (!empty($journals['jenis']['out_general']['children'])) {
+                    //     foreach ($journals['jenis']['out_general']['children'] as $ch)
+                    //         echo '<tr><td style="text-align:left;"><a href="' . base_url('accounting/show_journal/' . $ch['id']) . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ' . $ch['naration'] . ' : </a></td><td class="fr-currency">' . number_format($ch['amount']) . '</td><td></td></tr>';
+                    // }
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran Pajak :</h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['out_pajak']) . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4><b>&nbsp&nbsp&nbsp TOTAL : </b></h4></td><td></td><td></td><td class="fr-currency"> ' . number_format($journals['jenis']['total']['operasi']) . '</td></tr>';
                     ?>
                     <tr>
                         <td style="text-align:left;">
@@ -132,8 +136,8 @@
                         <td></td>
                     </tr>
                     <?php
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pinjaman Modal : </h4></td><td></td><td class="fr-currency">' . number_format($journals['inves_pinjaman']['value']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4><b>&nbsp&nbsp&nbsp TOTAL : </b></h4></td><td></td><td></td><td class="fr-currency"> ' . number_format($journals['total']['inves']) . '</td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pinjaman Modal : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['inves_pinjaman']) . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4><b>&nbsp&nbsp&nbsp TOTAL : </b></h4></td><td></td><td></td><td class="fr-currency"> ' . number_format($journals['jenis']['total']['inves']) . '</td></tr>';
                     ?>
                     <tr>
                         <td style="text-align:left;">
@@ -142,7 +146,7 @@
                         </td>
                         <td></td>
                         <td></td>
-                        <td class="fr-currency"><?= number_format($journals['total']['operasi'] + $journals['total']['inves']) ?></td>
+                        <td class="fr-currency"><?= number_format($journals['jenis']['total']['operasi'] + $journals['jenis']['total']['inves']) ?></td>
                     </tr>
                 </tbody>
             </table>
