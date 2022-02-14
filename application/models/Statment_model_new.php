@@ -106,35 +106,35 @@ class Statment_model_new extends CI_Model
     public function cash_flow($data, $filter = [])
     {
         // tester
-        $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.ref_number,dt_generalentry.naration,dt_generalentry.ref_number,mp_sub_entry.*");
-        $this->db->select("s2.id id_s2 ,h2.head_number h2");
-        $this->db->from('mp_sub_entry');
-        $this->db->join('dt_head', "dt_head.id = mp_sub_entry.accounthead");
-        $this->db->join('mp_sub_entry as s2', "s2.parent_id = mp_sub_entry.parent_id AND s2.type <> mp_sub_entry.type ");
-        $this->db->join('dt_head h2', "h2.id = s2.accounthead");
+        // $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.ref_number,dt_generalentry.naration,dt_generalentry.ref_number,mp_sub_entry.*");
+        // $this->db->select("s2.id id_s2 ,h2.head_number h2");
+        // $this->db->from('mp_sub_entry');
+        // $this->db->join('dt_head', "dt_head.id = mp_sub_entry.accounthead");
+        // $this->db->join('mp_sub_entry as s2', "s2.parent_id = mp_sub_entry.parent_id AND s2.type <> mp_sub_entry.type ");
+        // $this->db->join('dt_head h2', "h2.id = s2.accounthead");
 
-        $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
-        $this->db->where('h2.head_number NOT LIKE  "101%"');
-        $this->db->where('dt_generalentry.id > 0');
-        $this->db->where('mp_sub_entry.parent_id > 0');
-        if (!empty($filter['search'])) {
-            $this->db->where('(mp_sub_entry.sub_keterangan like "%' . $filter['search'] . '%" OR dt_generalentry.naration like "%' . $filter['search'] . '%")');
-        }
+        // $this->db->join('dt_generalentry', 'dt_generalentry.id = mp_sub_entry.parent_id');
+        // $this->db->where('h2.head_number NOT LIKE  "101%"');
+        // $this->db->where('dt_generalentry.id > 0');
+        // $this->db->where('mp_sub_entry.parent_id > 0');
+        // if (!empty($filter['search'])) {
+        //     $this->db->where('(mp_sub_entry.sub_keterangan like "%' . $filter['search'] . '%" OR dt_generalentry.naration like "%' . $filter['search'] . '%")');
+        // }
 
-        $this->db->where('dt_head.head_number like "101%"');
-        // $this->db->where('dt_generalentry.date >=', $date1);
-        // $this->db->where('dt_generalentry.date <=', $date2);
-        $this->db->order_by('dt_generalentry.date', 'asc');
-        $this->db->group_by('id', 'asc');
-        $res = $this->db->get();
-        $ret = DataStructure::detectCashFlow(
-            $res->result_array()
-        );
+        // $this->db->where('dt_head.head_number like "101%"');
+        // // $this->db->where('dt_generalentry.date >=', $date1);
+        // // $this->db->where('dt_generalentry.date <=', $date2);
+        // $this->db->order_by('dt_generalentry.date', 'asc');
+        // $this->db->group_by('id', 'asc');
+        // $res = $this->db->get();
+        // $ret = DataStructure::detectCashFlow(
+        //     $res->result_array()
+        // );
 
-        return $ret;
-        // $res['transactions'] = $query->result_array();
-        echo json_encode($ret);
-        die();
+        // return $ret;
+        // // $res['transactions'] = $query->result_array();
+        // echo json_encode($ret);
+        // die();
         // end tester
         $this->db->select("gen.id");
         $this->db->from('dt_generalentry as gen');
@@ -161,19 +161,20 @@ class Statment_model_new extends CI_Model
             $this->db->join('dt_head as head', "head.id = sub.accounthead", 'LEFT');
             $this->db->join('mp_payee as paye', "paye.id = gen.customer_id", 'LEFT');
             $this->db->where_in('gen.id', $gen_arr);
+            // $this->db->where('gen.id', 84);
             // if (!empty($filter['source'])) $this->db->where('gen.generated_source', $filter['source']);
             // if (!empty($filter['from'])) $this->db->where('gen.date >=', $filter['from']);
             // if (!empty($filter['to'])) $this->db->where('gen.date <=', $filter['to']);
             // if (!empty($filter['search'])) {
             //     $this->db->where('gen.ref_number like "%' . $filter['search'] . '%" OR gen.naration like "%' . $filter['search'] . '%"');
             // }
-            $this->db->order_by('gen.date, gen.id,  sub.id ', 'DESC');
+            $this->db->order_by('gen.date, gen.id, head.head_number', 'DESC');
             $res = $this->db->get();
             // echo json_encode(DataStructure::groupBy2($query->result_array(), 'parent_id', 'parent_id', ['parent_id', 'name', 'order_number'], 'items'));
             if (!empty($filter['by_id'])) {
                 return DataStructure::keyValue($res->result_array(), 'parent_id');
             }
-            $ret = DataStructure::renderJurnal(
+            $ret = DataStructure::renderCF(
                 // $ret = DataStructure::groupByRecursive2(
                 $res->result_array(),
                 ['parent_id'],
@@ -189,8 +190,9 @@ class Statment_model_new extends CI_Model
             $ret = array();
         }
         // $ret = $res->result_array();
-        // echo json_encode($ret);
-        // die();
+        return $ret;
+        echo json_encode($ret);
+        die();
         $datas = [];
         // $datas['out_general']['children'] = [];
         $datas['out_general']['children'] = [];

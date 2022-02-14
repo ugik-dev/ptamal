@@ -30,36 +30,39 @@
                     <!-- </div> -->
                 </div>
                 <div class="row col-lg-12">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <?php echo form_label('Akun'); ?>
-                            <select name="account_head" id="account_head" class="form-control select2">
-                                <?php echo $accounts_records; ?>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- <div class="col-lg-6">
-                        <div class="form-group">
-                            <?php echo form_label('Search'); ?>
-                            <input class="form-control" type="text" placeholder="Search" name="search" value="<?= $filter['search'] ?>" />
-                        </div>
-                    </div> -->
+
                     <div class="col-lg-3 ">
                         <div class="form-group">
-                            <?php echo form_label('Dari Tanggal'); ?>
+                            <select class="form-control" name="tahun">
+                                <?php for ($y = 2020; $y <= date('Y'); $y++) {
+                                    echo '<option value="' . $y . '">' . $y . '</option>';
+                                }
+                                ?>
+                            </select>
                             <?php
-                            $data = array('class' => 'form-control', 'type' => 'date', 'id' => 'date_start', 'name' => 'date_start', 'reqiured' => '', 'value' => $filter['date_start']);
-                            echo form_input($data);
+                            // echo form_label('Dari Tanggal');
+                            // $data = array('class' => 'form-control', 'type' => 'date', 'id' => 'date_start', 'name' => 'date_start', 'reqiured' => '', 'value' => $filter['date_start']);
+                            // echo form_input($data);
                             ?>
                         </div>
                     </div>
                     <div class="col-lg-3 ">
                         <div class="form-group">
+                            <select class="form-control" name="bulan">
+                                <?php
+                                $BULAN = [
+                                    0, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                                ];
+                                for ($i = 1; $i <= 12; $i++) {
+                                    echo '<option value="' . $i . '">' . $BULAN[$i] . '</option>';
+                                }
+                                ?>
+                            </select>
+
                             <?php
-                            echo form_label('Sampai Tanggal'); ?>
-                            <?php
-                            $data = array('class' => 'form-control input-lg', 'type' => 'date', 'id' => 'date_end', 'name' => 'date_end', 'reqiured' => '', 'value' => $filter['date_end']);
-                            echo form_input($data);
+                            // echo form_label('Sampai Tanggal');
+                            // $data = array('class' => 'form-control input-lg', 'type' => 'date', 'id' => 'date_end', 'name' => 'date_end', 'reqiured' => '', 'value' => $filter['date_end']);
+                            // echo form_input($data);
                             ?>
                         </div>
                     </div>
@@ -94,11 +97,11 @@
         <!-- </div> -->
         <div>
             <table id="1" class="table table-striped table-hover">
-                <thead class="ledger-table-head">
+                <!-- <thead class="ledger-table-head">
                     <th class="">NAMA AKUN</th>
                     <th class=""></th>
                     <th class=""></th>
-                </thead>
+                </thead> -->
                 <tbody>
                     <tr>
                         <td style="text-align:left;">
@@ -110,21 +113,21 @@
                         <td></td>
                     </tr>';
                     <?php
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Usaha : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['in_usaha']) . '</td><td></td></tr>';
-                    // if (!empty($journals['jenis']['in_usaha']['children'])) {
-                    //     foreach ($journals['jenis']['in_usaha']['children'] as $ch)
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Usaha : </h4></td><td></td><td class="fr-currency">' . number_format($journals['in_usaha'], 2, ',', '.') . '</td><td></td></tr>';
+                    // if (!empty($journals['in_usaha']['children'])) {
+                    //     foreach ($journals['in_usaha']['children'] as $ch)
                     //         echo '<tr><td style="text-align:left;"><a href="' . base_url('accounting/show_journal/' . $ch['id']) . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ' . $ch['naration'] . ' : </a></td><td class="fr-currency">' . number_format($ch['amount']) . '</td><td></td></tr>';
                     // }
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Bank : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['in_bank']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Lainnya : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['in_dll']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran HPP : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['out_usaha']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran Biaya General Administrasi : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['out_general']) . '</td><td></td></tr>';
-                    // if (!empty($journals['jenis']['out_general']['children'])) {
-                    //     foreach ($journals['jenis']['out_general']['children'] as $ch)
-                    //         echo '<tr><td style="text-align:left;"><a href="' . base_url('accounting/show_journal/' . $ch['id']) . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ' . $ch['naration'] . ' : </a></td><td class="fr-currency">' . number_format($ch['amount']) . '</td><td></td></tr>';
-                    // }
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran Pajak :</h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['out_pajak']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4><b>&nbsp&nbsp&nbsp TOTAL : </b></h4></td><td></td><td></td><td class="fr-currency"> ' . number_format($journals['jenis']['total']['operasi']) . '</td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Bank : </h4></td><td></td><td class="fr-currency">' . number_format($journals['in_bank'], 2, ',', '.') . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pendapatan Lainnya : </h4></td><td></td><td class="fr-currency">' . number_format($journals['in_dll'], 2, ',', '.') . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran HPP : </h4></td><td></td><td class="fr-currency">' . number_format($journals['out_usaha'], 2, ',', '.') . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran Biaya General Administrasi : </h4></td><td></td><td class="fr-currency">' . number_format($journals['out_general']) . '</td><td></td></tr>';
+                    if (!empty($journals['out_general']['children'])) {
+                        foreach ($journals['out_general']['children'] as $ch)
+                            echo '<tr><td style="text-align:left;"><a href="' . base_url('accounting/show_journal/' . $ch['id']) . '">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ' . $ch['naration'] . ' : </a></td><td class="fr-currency">' . number_format($ch['amount']) . '</td><td></td></tr>';
+                    }
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pengeluaran Pajak :</h4></td><td></td><td class="fr-currency">' . number_format($journals['out_pajak'], 2, ',', '.') . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4><b>&nbsp&nbsp&nbsp TOTAL : </b></h4></td><td></td><td></td><td class="fr-currency"> ' . number_format($journals['total']['operasi'], 2, ',', '.') . '</td></tr>';
                     ?>
                     <tr>
                         <td style="text-align:left;">
@@ -136,8 +139,8 @@
                         <td></td>
                     </tr>
                     <?php
-                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pinjaman Modal : </h4></td><td></td><td class="fr-currency">' . number_format($journals['jenis']['inves_pinjaman']) . '</td><td></td></tr>';
-                    echo '<tr><td style="text-align:left;"><h4><b>&nbsp&nbsp&nbsp TOTAL : </b></h4></td><td></td><td></td><td class="fr-currency"> ' . number_format($journals['jenis']['total']['inves']) . '</td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4>&nbsp&nbsp&nbsp Pinjaman Modal : </h4></td><td></td><td class="fr-currency">' . number_format($journals['inves_pinjaman'], 2, ',', '.') . '</td><td></td></tr>';
+                    echo '<tr><td style="text-align:left;"><h4><b>&nbsp&nbsp&nbsp TOTAL : </b></h4></td><td></td><td></td><td class="fr-currency"> ' . number_format($journals['total']['inves'], 2, ',', '.') . '</td></tr>';
                     ?>
                     <tr>
                         <td style="text-align:left;">
@@ -146,7 +149,28 @@
                         </td>
                         <td></td>
                         <td></td>
-                        <td class="fr-currency"><?= number_format($journals['jenis']['total']['operasi'] + $journals['jenis']['total']['inves']) ?></td>
+                        <td class="fr-currency"><b><?= number_format($journals['total']['all'], 2, ',', '.') ?></b></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">
+                            <h4><b> Periode Sebelumnya
+                                </b></h4>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td class="fr-currency"><b><?= number_format(135601146.66, 2, ',', '.') ?></b><br>
+                            <hr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left;">
+
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td class="fr-currency"><b>
+                                <?= number_format(135601146.66 + $journals['total']['all'], 2, ',', '.') ?>
+                            </b></td>
                     </tr>
                 </tbody>
             </table>

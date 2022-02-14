@@ -224,6 +224,133 @@ class DataStructure
     // die();
     return $ret;
   }
+
+  public static function renderCF($arr, $columns, $childKeys, $parentFields, $childNames, $assoc = TRUE)
+  {
+    if (count($columns) == 0) {
+      return DataStructure::slice2D($arr, $parentFields[0]);
+    }
+    $childName = $childNames[0];
+    $cek = array();
+    $ret = array();
+    // $ret = DataStructure::groupBy2($arr, array_shift($columns), array_shift($childKeys), array_shift($parentFields), array_shift($childNames));
+    // $ret = !$assoc ? DataStructure::associativeToArray($ret) : $ret;
+    foreach ($arr as $r) {
+      if (substr($r['head_number'], 0, 3) == '101') {
+        if (!isset($cek[$r['parent_id']][0])) {
+          $cek[$r['parent_id']]['0'] = 0;
+          $cek[$r['parent_id']]['1'] = 0;
+          if ($r['type'] == 0)
+            $cek[$r['parent_id']]['0'] = $r['amount'];
+          else
+            $cek[$r['parent_id']]['1'] = $r['amount'];
+        } else {
+          if ($r['type'] == 0)
+            $cek[$r['parent_id']]['0'] = $cek[$r['parent_id']]['0'] + $r['amount'];
+          else
+            $cek[$r['parent_id']]['1'] = $cek[$r['parent_id']]['1'] + $r['amount'];
+        }
+      }
+    }
+    foreach ($cek as $key => $r2) {
+      if ($r2[0] > $r2[1])
+        $cek[$key]['get_pos'] = 1;
+      else
+        $cek[$key]['get_pos'] = 0;
+    }
+
+    $datas['out_general'] = 0;
+    $datas['out_pajak'] = 0;
+    $datas['out_usaha'] = 0;
+
+    $datas['in_bank'] = 0;
+    $datas['in_dll'] = 0;
+    $datas['in_usaha'] = 0;
+    $datas['piutang_bank'] = 0;
+    //kegiatan investasi
+    $datas['inves_pinjaman'] = 0;
+    $i = 0;
+    $datas['tmp_total'] = 0;
+    $test = 0;
+    foreach ($arr as $key => $r3) {
+      if ($r3['type'] == $cek[$r3['parent_id']]['get_pos']) {
+
+        $datas['tmp_total'] = $datas['tmp_total'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+        if (substr($r3['head_number'], 0, 3) != '101') {
+          $test = $test + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+
+          if (substr($r3['head_number'], 0, 3) == '501') {
+            $datas['out_general'] = $datas['out_general'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+            // echo $i . '. ' . number_format($r3['amount']) . ' :General: ' . number_format($datas['out_general']) . '<br>';
+            // $i++;
+          } else if (substr($r3['head_number'], 0, 3) == '502') { // done out usaha
+            // echo $i . '. ' . number_format($r3['amount']) . ' :: ' . number_format($datas['in_usaha']) . '<br>';
+            // $i++;
+            $datas['out_usaha'] = $datas['out_usaha'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+          } else if (substr($r3['head_number'], 0, 3) == '403') { // done pend lain 
+            // echo $i . '. ' . number_format($r3['amount']) . ' :: ' . number_format($datas['in_usaha']) . '<br>';
+            // $i++;
+            $datas['in_dll'] = $datas['in_dll'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+          } else if (substr($r3['head_number'], 0, 3) == '503' or substr($r3['head_number'], 0, 3) == '201') { // done output pajak
+            // echo $i . '. ' . number_format($r3['amount']) . ' :: ' . number_format($datas['in_usaha']) . '<br>';
+            // $i++;
+            $datas['out_pajak'] = $datas['out_pajak'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+          } else if (substr($r3['head_number'], 0, 3) == '402') { //done pend bank
+            // echo $i . '. ' . number_format($r3['amount']) . ' :: ' . number_format($datas['in_usaha']) . '<br>';
+            // $i++;
+            $datas['in_bank'] = $datas['in_bank'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+          } else if (substr($r3['head_number'], 0, 3) == '103' or substr($r3['head_number'], 0, 3) == '401') {  //done pend usaha lewat piutang dan langsung
+            $datas['in_usaha'] = $datas['in_usaha'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+            // echo $i . '. ' . number_format($r3['amount']) . ' :: ' . number_format($datas['in_usaha']) . '<br>';
+            // $i++;
+          } else if (substr($r3['head_number'], 0, 3) == '104') {
+            // echo $i . '. ' . number_format($r3['amount']) . ' :: ' . number_format($datas['in_usaha']) . '<br>';
+            // $i++;
+            $datas['piutang_bank'] = $datas['piutang_bank'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+          } else if (substr($r3['head_number'], 0, 3) == '203') {
+            // echo $i . '. ' . number_format($r3['amount']) . ' :: ' . number_format($datas['in_usaha']) . '<br>';
+            // $i++;
+            $datas['inves_pinjaman'] = $datas['inves_pinjaman'] + ($r3['type'] == 1 ?  $r3['amount'] : -$r3['amount']); //ok
+          };
+        }
+      }
+    }
+
+    // echo 't' . $test;
+    $total['inves'] =
+      $datas['inves_pinjaman'];
+    $total['operasi'] =
+      $datas['out_general'] +
+      $datas['in_usaha'] +
+      $datas['out_usaha'] +
+      $datas['in_dll'] +
+      $datas['piutang_bank'] +
+      $datas['in_bank'] +
+      $datas['out_pajak'];
+
+    $total['all'] = $total['operasi'] + $total['inves'];
+    $datas['total'] = $total;
+    return $datas;
+    // return array('data' => $res, 'jenis' => $datas);
+
+    // echo json_encode($cek);
+    // echo json_encode($datas);
+    // die();
+    foreach ($ret as $k2 => $r2) {
+      // foreach()
+      $sort_col = array();
+
+      $child = DataStructure::associativeToArray($r2['children']);
+      $child = DataStructure::array_sort_by_column($child, 'head_number');
+      $ret[$k2]['children'] = $child;
+      // foreach ($r2['children'] as $key => $row) {
+      //   // $sort_col[$key] = $row[$col];
+      // }
+    }
+    // echo json_encode($ret);
+    // die();
+    return $ret;
+  }
   public static  function array_sort_by_column(&$arr, $col, $dir = SORT_ASC)
   {
     // var_dump($arr);
@@ -294,7 +421,55 @@ class DataStructure
     // die();
     return $jstree;
   }
+  public static function CashFlow($arr)
+  {
+    $res = array();
+    foreach ($arr as $k) {
+      // echo json_encode($k);
+      // if($k)
 
+      if (substr($k['head_number'], 0, 3) == '101') {
+        if (empty($res[$k['parent_id']]['kas'])) {
+          if ($k['type'] == 0) {
+            $res[$k['parent_id']]['kas'] = $k['amount'];
+          } else {
+            $res[$k['parent_id']]['kas'] = -$k['amount'];
+          }
+          // if ($k)
+        } else {
+          if ($k['type'] == 0) {
+            $res[$k['parent_id']]['kas'] = $res[$k['parent_id']]['kas'] + $k['amount'];
+          } else {
+            $res[$k['parent_id']]['kas'] = $res[$k['parent_id']]['kas'] - $k['amount'];
+          }
+        }
+        // $kas = true;
+      }
+
+      // die();
+      // if ($kas)
+      //   if (empty($res[$k['parent_id']]['kas'])) {
+      //     if ($k['type'] == 0) {
+      //       $res[$k['parent_id']]['kas'] = $k['amount'];
+      //     } else {
+      //       $res[$k['parent_id']]['kas'] = -$k['amount'];
+      //     }
+      //     // if ($k)
+      //   } else {
+      //     if ($k['type'] == 0) {
+      //       $res[$k['parent_id']]['kas'] = $res[$k['parent_id']]['kas'] + $k['amount'];
+      //     } else {
+      //       $res[$k['parent_id']]['kas'] = $res[$k['parent_id']]['kas'] - $k['amount'];
+      //     }
+      //   }
+
+
+
+      $res[$k['parent_id']]['child'][] = $k['sub_id'];
+    }
+    echo json_encode($res);
+    die();
+  }
   public static function detectCashFlow($arr)
   {
     $datas['out_general'] = 0;
