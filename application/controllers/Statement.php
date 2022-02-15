@@ -111,22 +111,13 @@ class Statement extends CI_Controller
         try {
             $crud = $this->SecurityModel->Aksessbility_VCRUD('statement', 'cash_flow', 'view');
             $filter = $this->input->get();
-            // $filter['by_DataStructure'] = true;
             if (empty($filter['search'])) $filter['search'] =  '';
-            // if (empty($filter['date_start'])) $filter['date_start'] = date('Y-m-' . '01');
-            // if (empty($filter['date_start'])) $filter['date_start'] = '2021-01-01';
-            // if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
-            if (empty($filter['tahun']) && empty($filter['bulan'])) $filter['date_start'] = date('Y-m') . '-01';
-            else  $filter['date_start'] = $filter['tahun'] . '-' . $filter['bulan'] . '-01';
+            if (empty($filter['tahun'])) $filter['tahun'] = date('Y');
+            if (empty($filter['bulan'])) $filter['bulan'] = date('m');
+
+            $filter['date_start'] = $filter['tahun'] . '-' . $filter['bulan'] . '-01';
             if (empty($filter['date_end'])) $filter['date_end'] = date('Y-m-' . date('t', strtotime($filter['date_start'])));
             $filter['akum_laba_rugi'] = $this->General_model->getAllRefAccount(array('by_type' => true, 'ref_type' => 'akum_laba_rugi'));
-            // echo json_encode($filter);
-            // die();
-            // $data['journals'] = array();
-            // $filter['nature'] = array('Expense', 'Revenue');
-            // $filter['nature'] = array('Assets', 'Liability', 'Equity');
-            // $filter['level'] = 2;
-            // $data['journals'] = $this->Accounting_model->getAllBaganAkun($filter);
             $data['journals'] = $this->Statment_model_new->cash_flow($filter);
             $data['title'] = 'Arus Kas';
             $data['table_name'] = 'Arus Kas';
@@ -211,27 +202,6 @@ class Statement extends CI_Controller
             ExceptionHandler::handle($e);
         }
     }
-
-    // public function edit_jurnal($id)
-    // {
-    //     try {
-    //         $crud = $this->SecurityModel->Aksessbility_VCRUD('accounting', 'journal_voucher', 'update');
-
-    //         $data['return_data'] = array();
-    //         $data['return_data'] = $this->Statment_model_new->getAllJournalVoucher(array('id' => $id))[$id];
-    //         $data['accounts'] = $this->Accounting_model->getAllBaganAkun(array('by_DataStructure' => true));
-    //         $data['form_url'] = 'editJournalVoucher';
-    //         $data['title'] = 'Edit Jurnal';
-    //         $data['table_name'] = 'Edit Jurnal';
-    //         $data['main_view'] = 'accounting/add_journal_voucher';
-    //         $data['vcrud'] = $crud;
-    //         // $data['filter'] = $filter;
-    //         $this->load->view('main/index2.php', $data);
-    //     } catch (Exception $e) {
-    //         ExceptionHandler::handle($e);
-    //     }
-    // }
-
 
     public function addJournalVoucher()
     {

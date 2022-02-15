@@ -33,8 +33,8 @@
 
                     <div class="col-lg-3 ">
                         <div class="form-group">
-                            <select class="form-control" name="tahun">
-                                <?php for ($y = 2020; $y <= date('Y'); $y++) {
+                            <select class="form-control" id="tahun" name="tahun">
+                                <?php for ($y = 2022; $y <= date('Y'); $y++) {
                                     echo '<option value="' . $y . '">' . $y . '</option>';
                                 }
                                 ?>
@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-lg-3 ">
                         <div class="form-group">
-                            <select class="form-control" name="bulan">
+                            <select class="form-control" id="bulan" name="bulan">
                                 <?php
                                 $BULAN = [
                                     0, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
@@ -158,7 +158,7 @@
                         </td>
                         <td></td>
                         <td></td>
-                        <td class="fr-currency"><b><?= number_format(135601146.66, 2, ',', '.') ?></b><br>
+                        <td class="fr-currency"><b><?= number_format($journals['total']['saldo_sebelum'], 2, ',', '.') ?></b><br>
                             <hr>
                         </td>
                     </tr>
@@ -169,7 +169,7 @@
                         <td></td>
                         <td></td>
                         <td class="fr-currency"><b>
-                                <?= number_format(135601146.66 + $journals['total']['all'], 2, ',', '.') ?>
+                                <?= number_format($journals['total']['saldo_sebelum'] + $journals['total']['all'], 2, ',', '.') ?>
                             </b></td>
                     </tr>
                 </tbody>
@@ -182,13 +182,14 @@
 <script>
     $('#menu_id_<?= $vcrud['parent_id'] ?>').addClass('menu-item-active menu-item-open menu-item-here"')
     $('#submenu_id_<?= $vcrud['id_menulist'] ?>').addClass('menu-item-active')
-
+    $('#tahun').val(<?= $filter['tahun'] ?>);
+    $('#bulan').val(<?= $filter['bulan'] ?>);
     $('#btn_export_excel').on('click', function() {
         console.log('s')
-        from = $('#from').val()
-        to = $('#to').val()
+        tahun = $('#tahun').val()
+        bulan = $('#bulan').val()
         account_head = $('#account_head').val()
-        url = `<?= base_url('statements/export_excel_ledger?from=') ?>` + from + '&to=' + to + '&account_head=' + account_head;
+        url = `<?= base_url('Excel/cash_flow?tahun=') ?>` + tahun + '&bulan=' + bulan;
         location.href = url;
     })
 </script>

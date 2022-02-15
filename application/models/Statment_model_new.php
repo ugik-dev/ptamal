@@ -103,8 +103,9 @@ class Statment_model_new extends CI_Model
         return $res;
     }
 
-    public function cash_flow($data, $filter = [])
+    public function cash_flow($filter = [])
     {
+
         // tester
         // $this->db->select("dt_generalentry.id as transaction_id,dt_generalentry.date,dt_generalentry.ref_number,dt_generalentry.naration,dt_generalentry.ref_number,mp_sub_entry.*");
         // $this->db->select("s2.id id_s2 ,h2.head_number h2");
@@ -148,125 +149,50 @@ class Statment_model_new extends CI_Model
         $q1 = $q1->result_array();
         $gen_arr = array();
         foreach ($q1 as $d) {
-            // if (!empty($idName)) $ret[] = [$key => $d, $idName => $counter++];
             $gen_arr[] = $d['id'];
         }
         // echo json_encode($gen_arr);
         // die();
-        if (!empty($gen_arr)) {
+        // if (!empty($gen_arr)) {
+        $this->db->select("gen.id as parent_id,generated_source,gen.ref_url, paye.customer_name, sub.id as sub_id,gen.ref_number,gen.date,gen.naration,gen.customer_id,gen.user_update,sub.accounthead,sub.amount,sub.type,sub.sub_keterangan,head.name as head_name, head_number    ");
+        $this->db->from('dt_generalentry as gen');
+        $this->db->join('mp_sub_entry as sub', "gen.id = sub.parent_id", 'LEFT');
+        $this->db->join('dt_head as head', "head.id = sub.accounthead", 'LEFT');
+        $this->db->join('mp_payee as paye', "paye.id = gen.customer_id", 'LEFT');
 
-            $this->db->select("gen.id as parent_id,generated_source,gen.ref_url, paye.customer_name, sub.id as sub_id,gen.ref_number,gen.date,gen.naration,gen.customer_id,gen.user_update,sub.accounthead,sub.amount,sub.type,sub.sub_keterangan,head.name as head_name, head_number    ");
-            $this->db->from('dt_generalentry as gen');
-            $this->db->join('mp_sub_entry as sub', "gen.id = sub.parent_id", 'LEFT');
-            $this->db->join('dt_head as head', "head.id = sub.accounthead", 'LEFT');
-            $this->db->join('mp_payee as paye', "paye.id = gen.customer_id", 'LEFT');
+        if (!empty($gen_arr))
             $this->db->where_in('gen.id', $gen_arr);
-            // $this->db->where('gen.id', 84);
-            // if (!empty($filter['source'])) $this->db->where('gen.generated_source', $filter['source']);
-            // if (!empty($filter['from'])) $this->db->where('gen.date >=', $filter['from']);
-            // if (!empty($filter['to'])) $this->db->where('gen.date <=', $filter['to']);
-            // if (!empty($filter['search'])) {
-            //     $this->db->where('gen.ref_number like "%' . $filter['search'] . '%" OR gen.naration like "%' . $filter['search'] . '%"');
-            // }
-            $this->db->order_by('gen.date, gen.id, head.head_number', 'DESC');
-            $res = $this->db->get();
-            // echo json_encode(DataStructure::groupBy2($query->result_array(), 'parent_id', 'parent_id', ['parent_id', 'name', 'order_number'], 'items'));
-            if (!empty($filter['by_id'])) {
-                return DataStructure::keyValue($res->result_array(), 'parent_id');
-            }
-            $ret = DataStructure::renderCF(
-                // $ret = DataStructure::groupByRecursive2(
-                $res->result_array(),
-                ['parent_id'],
-                ['sub_id'],
-                [
-                    ['parent_id', 'generated_source', 'ref_number', 'ref_url', 'date', 'naration', 'customer_id', 'user_update', 'customer_name'],
-                    ['sub_id', 'accounthead', 'head_name', 'amount', 'type', 'sub_keterangan', 'head_number']
-                ],
-                ['children'],
-                false
-            );
-        } else {
-            $ret = array();
+        else
+            $this->db->where_in('gen.id', false);
+        $this->db->order_by('gen.date, gen.id, head.head_number', 'DESC');
+        $res = $this->db->get();
+        // echo json_encode(DataStructure::groupBy2($query->result_array(), 'parent_id', 'parent_id', ['parent_id', 'name', 'order_number'], 'items'));
+        if (!empty($filter['by_id'])) {
+            return DataStructure::keyValue($res->result_array(), 'parent_id');
         }
+        $ret = DataStructure::renderCF(
+            // $ret = DataStructure::groupByRecursive2(
+            $res->result_array(),
+            ['parent_id'],
+            ['sub_id'],
+            [
+                ['parent_id', 'generated_source', 'ref_number', 'ref_url', 'date', 'naration', 'customer_id', 'user_update', 'customer_name'],
+                ['sub_id', 'accounthead', 'head_name', 'amount', 'type', 'sub_keterangan', 'head_number']
+            ],
+            ['children'],
+            false
+        );
+        // } else {
+        //     $ret = array();
+        // }
         // $ret = $res->result_array();
-        return $ret;
-        echo json_encode($ret);
-        die();
-        $datas = [];
-        // $datas['out_general']['children'] = [];
-        $datas['out_general']['children'] = [];
-        $datas['out_pajak']['children'] = [];
-        $datas['out_usaha']['children'] = [];
-        $datas['in_bank']['children'] = [];
-        $datas['in_dll']['children'] = [];
-        $datas['in_usaha']['children'] = [];
-        $datas['piutang_bank']['children'] = [];
-        $datas['inves_pinjaman']['children'] = [];
-
-
-
-        // Kegiatan operasi
-        $datas['out_general']['value'] = 0;
-        $datas['out_pajak']['value'] = 0;
-        $datas['out_usaha']['value'] = 0;
-
-        $datas['in_bank']['value'] = 0;
-        $datas['in_dll']['value'] = 0;
-        $datas['in_usaha']['value'] = 0;
-        $datas['piutang_bank']['value'] = 0;
-        //kegiatan investasi
-        $datas['inves_pinjaman']['value'] = 0;
-        foreach ($ret as $d) {
-            // if(substr($d))
-            $type = '';
-            $am_bank = 0;
-            foreach ($d['children'] as $e) {
-                if (substr($e['head_number'], 0, 3) == '101') {
-                    $am_bank = $am_bank + ($e['type'] == 0 ? $e['amount'] : -$e['amount']);
-                } else if (substr($e['head_number'], 0, 3) == '501') {
-                    // echo json_encode($e);
-                    // die();
-                    $datas['out_general']['value'] = $datas['out_general']['value'] + ($e['type'] == 1 ?  $e['amount'] : -$e['amount']); //ok
-                } else if (substr($e['head_number'], 0, 3) == '502') { // done out usaha
-                    $datas['out_usaha']['value'] = $datas['out_usaha']['value'] + ($e['type'] == 1 ?  $e['amount'] : -$e['amount']); //ok
-                } else if (substr($e['head_number'], 0, 3) == '403') { // done pend lain 
-                    $datas['in_dll']['value'] = $datas['in_dll']['value'] + ($e['type'] == 1 ?  $e['amount'] : -$e['amount']); //ok
-                } else if (substr($e['head_number'], 0, 3) == '503') { // done output pajak
-                    $datas['out_pajak']['value'] = $datas['out_pajak']['value'] + ($e['type'] == 1 ?  $e['amount'] : -$e['amount']); //ok
-                } else if (substr($e['head_number'], 0, 3) == '402') { //done pend bank
-                    $datas['in_bank']['value'] = $datas['in_bank']['value'] + ($e['type'] == 1 ?  $e['amount'] : -$e['amount']); //ok
-                } else if (substr($e['head_number'], 0, 3) == '103' or substr($e['head_number'], 0, 3) == '401') {  //done pend usaha lewat piutang dan langsung
-                    $datas['in_usaha']['value'] = $datas['in_usaha']['value'] + ($e['type'] == 1 ?  $e['amount'] : -$e['amount']); //ok
-                    $datas['in_usaha']['children'][] = array(
-                        'id' => $d['parent_id'],
-                        'ref_number' => $d['ref_number'],
-                        'naration' => $d['naration'],
-                        'amount' => $e['amount']
-                    );
-                } else if (substr($e['head_number'], 0, 3) == '104') {
-                    $datas['piutang_bank']['value'] = $datas['piutang_bank']['value'] + ($e['type'] == 1 ?  $e['amount'] : -$e['amount']); //ok
-                } else if (substr($e['head_number'], 0, 3) == '203') {
-                    $datas['inves_pinjaman']['value'] = $datas['inves_pinjaman']['value'] + ($e['type'] == 1 ?  $e['amount'] : -$e['amount']); //ok
-                };
-            }
+        if ($filter['tahun'] == '2022' && $filter['bulan'] == '1') $ret['total']['saldo_sebelum'] = 135601145.66;
+        else {
+            $ret['total']['saldo_sebelum'] = $this->akumulasi_head_number('101', array('date_end' => $filter['date_start']));
         }
-
-        $total['inves'] =
-            $datas['inves_pinjaman']['value'];
-        $total['operasi'] =
-            $datas['out_general']['value'] +
-            $datas['in_usaha']['value'] +
-            $datas['out_usaha']['value'] +
-            $datas['in_dll']['value'] +
-            $datas['piutang_bank']['value'] +
-            $datas['in_bank']['value'] +
-            $datas['out_pajak']['value'];
-
-        $datas['total'] = $total;
-        return $datas;
-        echo json_encode(array('data' => $datas, 'total' => $total, 'd' => $d));
-        die();
+        // echo json_encode($ret);
+        // die();
+        return $ret;
     }
 
     public function cash_flow2($data, $filter = [])
