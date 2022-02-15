@@ -154,11 +154,6 @@ class Excel extends CI_Controller
 
         $sheet->getStyle('F:H')->getNumberFormat()->setFormatCode("_(* #,##0.00_);_(* \(#,##0.00\);_(* \"-\"??_);_(@_)");
 
-        $sheet->mergeCells("A1:G1");
-        $sheet->mergeCells("A2:G2");
-        $sheet->mergeCells("A3:G3");
-        $sheet->mergeCells("A4:G4");
-        // $sheet->mergeCells("A5:G5");
         $spreadsheet->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 6);
         $sheet->getHeaderFooter()->setOddFooter('&L' . $company['title1'] . ' - CASH FLOW &R &P of &N');
 
@@ -199,10 +194,7 @@ class Excel extends CI_Controller
             $sheet->getColumnDimension($row_1)->setWidth(18);
             $sheet->getColumnDimension($row_2)->setWidth(18);
             $spreadsheet->getActiveSheet()->getStyle($row_1 . "5:" . $row_2 . "5")->getAlignment()->setVertical('center')->setHorizontal('center')->setWrapText(true);
-            $sheet->mergeCells("A1:" . $row_2 . "1");
-            $sheet->mergeCells("A2:" . $row_2 . "2");
-            $sheet->mergeCells("A3:" . $row_2 . "3");
-            $sheet->mergeCells("A4:" . $row_2 . "4");
+
             // $row_1 = chr(ord('E'));  
             // echo $row_1;
             // echo $row_2;
@@ -232,6 +224,11 @@ class Excel extends CI_Controller
                 // die();
             }
         }
+
+        $sheet->mergeCells("A1:" . $row_2 . "1");
+        $sheet->mergeCells("A2:" . $row_2 . "2");
+        $sheet->mergeCells("A3:" . $row_2 . "3");
+        $sheet->mergeCells("A4:" . $row_2 . "4");
         $writer = new Xlsx($spreadsheet);
 
 
