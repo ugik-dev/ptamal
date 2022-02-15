@@ -507,7 +507,7 @@ class Excel extends CI_Controller
 
         $sheet->setCellValue('A1', $company['title1']);
         $sheet->setCellValue('A2', $company['address'] . ' - ' . $company['town']);
-        $sheet->setCellValue('A3', 'BAGAN AKUN');
+        $sheet->setCellValue('A3', 'ARUS KAS');
         $spreadsheet->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 4);
 
         $namaBulan = array('-', "JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "September", "Oktober", "November", "Desember");
