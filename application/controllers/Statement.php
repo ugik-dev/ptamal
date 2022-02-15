@@ -62,9 +62,6 @@ class Statement extends CI_Controller
             $data['accounts'] = $this->General_model->getAllBaganAkun(array('by_DataStructure' => true));
             $data['journals'] = array();
             $data['journals'] = $this->General_model->getAllBaganAkun($filter);
-
-            // echo json_encode($data['journals']);
-            // die();
             $data['journals'] = $this->Statment_model_new->the_ledger($data['journals'], $filter);
             $data['title'] = 'Jurnal Umum';
             $data['table_name'] = 'Jurnal Umum';

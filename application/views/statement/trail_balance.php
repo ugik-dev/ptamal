@@ -24,7 +24,7 @@
                     <!-- </div> -->
                 </div>
                 <div class="row col-lg-12">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" hidden>
                         <div class="form-group">
                             <?php echo form_label('Akun'); ?>
                             <select name="account_head" id="account_head" class="form-control select2">
@@ -32,7 +32,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6" hidden>
                         <div class="form-group">
                             <?php echo form_label('Search'); ?>
                             <input class="form-control" type="text" placeholder="Search" name="search" value="<?= $filter['search'] ?>" />
@@ -149,10 +149,10 @@
 
     $('#btn_export_excel').on('click', function() {
         console.log('s')
-        from = $('#from').val()
-        to = $('#to').val()
+        date_start = $('#date_start').val()
+        date_end = $('#date_end').val()
         account_head = $('#account_head').val()
-        url = `<?= base_url('statements/export_excel_ledger?from=') ?>` + from + '&to=' + to + '&account_head=' + account_head;
+        url = `<?= base_url('excel/trail_balance?date_start=') ?>` + date_start + '&date_end=' + date_end;
         location.href = url;
     })
 </script>

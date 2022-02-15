@@ -197,10 +197,10 @@
 
     $('#btn_export_excel').on('click', function() {
         console.log('s')
-        from = $('#from').val()
-        to = $('#to').val()
-        account_head = $('#account_head').val()
-        url = `<?= base_url('statements/export_excel_ledger?from=') ?>` + from + '&to=' + to + '&account_head=' + account_head;
+        from = $('#date_start').val()
+        to = $('#date_end').val()
+        account_head = $('#s_head_number').val()
+        url = `<?= base_url('Excel/buku_besar?date_start=') ?>` + from + '&date_end=' + to + '&s_head_number=' + account_head;
         location.href = url;
     })
 </script>

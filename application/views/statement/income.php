@@ -24,11 +24,9 @@
                     <!-- </div> -->
                 </div>
                 <div class="row col-lg-12">
-                    <div class="col-lg-6">
+                    <!-- <div style="display: none" class="col-lg-6">
                         <div class="form-group">
-                            <?php echo form_label('Akun'); ?>
                             <select name="account_head" id="account_head" class="form-control select2">
-                                <?php echo $accounts_records; ?>
                             </select>
                         </div>
                     </div>
@@ -37,7 +35,7 @@
                             <?php echo form_label('Search'); ?>
                             <input class="form-control" type="text" placeholder="Search" name="search" value="<?= $filter['search'] ?>" />
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-lg-3 ">
                         <div class="form-group">
                             <?php echo form_label('Dari Tanggal'); ?>
@@ -170,10 +168,9 @@
 
     $('#btn_export_excel').on('click', function() {
         console.log('s')
-        from = $('#from').val()
-        to = $('#to').val()
-        account_head = $('#account_head').val()
-        url = `<?= base_url('statements/export_excel_ledger?from=') ?>` + from + '&to=' + to + '&account_head=' + account_head;
+        date_start = $('#date_start').val()
+        date_end = $('#date_end').val()
+        url = `<?= base_url('excel/income_statement?date_start=') ?>` + date_start + '&date_end=' + date_end;
         location.href = url;
     })
 </script>
