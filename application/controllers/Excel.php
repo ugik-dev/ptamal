@@ -143,7 +143,7 @@ class Excel extends CI_Controller
         $sheet->getColumnDimension('B')->setWidth(5);
         $sheet->getColumnDimension('C')->setWidth(5);
         $sheet->getColumnDimension('D')->setWidth(5);
-        $sheet->getColumnDimension('E')->setWidth(35);
+        $sheet->getColumnDimension('E')->setWidth(15);
         $sheet->getColumnDimension('F')->setWidth(15);
         $sheet->getColumnDimension('G')->setWidth(13);
         $spreadsheet->getActiveSheet()->getStyle('A6:G6')->getAlignment()->setVertical('center')->setHorizontal('center')->setWrapText(true);
@@ -152,7 +152,6 @@ class Excel extends CI_Controller
         // $spreadsheet->getActiveSheet()->getStyle('A1')->getFont()->setSize(13)->setBold(true);
         $spreadsheet->getActiveSheet()->getStyle('A1:A5')->getAlignment()->setVertical('center')->setHorizontal('center')->setWrapText(true);
 
-        $sheet->getStyle('F:H')->getNumberFormat()->setFormatCode("_(* #,##0.00_);_(* \(#,##0.00\);_(* \"-\"??_);_(@_)");
 
         $spreadsheet->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 6);
         $sheet->getHeaderFooter()->setOddFooter('&L' . $company['title1'] . ' - CASH FLOW &R &P of &N');
@@ -160,6 +159,7 @@ class Excel extends CI_Controller
         $sheet->setCellValue('A1', $company['title1']);
         $sheet->setCellValue('A2', $company['address'] . ' - ' . $company['town']);
         $sheet->setCellValue('A3', 'BAGAN AKUN');
+        $spreadsheet->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 4);
 
         $namaBulan = array('-', "JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "September", "Oktober", "November", "Desember");
         // $sheet->setCellValue('A5', 'KETERANGAN');
@@ -180,9 +180,9 @@ class Excel extends CI_Controller
         $sheet->mergeCells("B17:E17")->setCellValue('B17', 'Pinjaman Modal');
         $sheet->mergeCells("B18:E18")->setCellValue('B18', '-- TOTAL --');
 
-        $sheet->mergeCells("A19:E19")->setCellValue('A19', 'Kenaikkan KAS');
-        $sheet->mergeCells("A20:E20")->setCellValue('A20', 'Kas Periode Sebelumnya');
-        $sheet->mergeCells("A21:E21")->setCellValue('A21', 'Kas Periode Sekarang');
+        $sheet->mergeCells("A20:E20")->setCellValue('A20', 'Kenaikkan KAS');
+        $sheet->mergeCells("A21:E21")->setCellValue('A21', 'Kas Periode Sebelumnya');
+        $sheet->mergeCells("A22:E22")->setCellValue('A22', 'Kas Periode Sekarang');
 
         // $asci = 'E';
         // echo ord($asci);
@@ -214,14 +214,9 @@ class Excel extends CI_Controller
                 $sheet->setCellValue($row_1 . "16", $current_data['inves_pinjaman']);
                 $sheet->setCellValue($row_2 . "17", $current_data['total']['inves']);
 
-                $sheet->setCellValue($row_2 . "19", $current_data['total']['all']);
-                $sheet->setCellValue($row_2 . "20", $current_data['total']['saldo_sebelum']);
-                $sheet->setCellValue($row_2 . "21", $current_data['total']['all'] + $current_data['total']['saldo_sebelum']);
-            }
-            if ($i == 2) {
-
-                // echo json_encode($current_data);
-                // die();
+                $sheet->setCellValue($row_2 . "20", $current_data['total']['all']);
+                $sheet->setCellValue($row_2 . "21", $current_data['total']['saldo_sebelum']);
+                $sheet->setCellValue($row_2 . "22", $current_data['total']['all'] + $current_data['total']['saldo_sebelum']);
             }
         }
 
@@ -229,11 +224,12 @@ class Excel extends CI_Controller
         $sheet->mergeCells("A2:" . $row_2 . "2");
         $sheet->mergeCells("A3:" . $row_2 . "3");
         $sheet->mergeCells("A4:" . $row_2 . "4");
+        $sheet->getStyle('F:' . $row_2)->getNumberFormat()->setFormatCode("_(* #,##0.00_);_(* \(#,##0.00\);_(* \"-\"??_);_(@_)");
         $writer = new Xlsx($spreadsheet);
 
 
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="cash-flow.xlsx"');
+        header('Content-Disposition: attachment;filename="cash-flow-' . $filter['tahun'] . '-' . $namaBulan[$filter['bulan']] . '.xlsx"');
         header('Cache-Control: max-age=0');
 
         $writer->save('php://output'); // download file 
